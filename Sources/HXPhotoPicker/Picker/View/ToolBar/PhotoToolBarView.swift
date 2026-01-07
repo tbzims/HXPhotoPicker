@@ -19,7 +19,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         if pickerConfig.selectMode == .single, isShowPrompt {
             return 0
         }
-        return 50 + UIDevice.bottomMargin
+        return 0 + UIDevice.bottomMargin
     }
     
     public var viewHeight: CGFloat {
@@ -74,7 +74,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     private var promptView: PhotoPermissionPromptView!
     private var selectedView: PhotoPreviewSelectedView!
     private var previewListView: PhotoPreviewListView!
-    private var backgroundView: UIVisualEffectView!
+    private var backgroundView: UIView!
     private var contentView: UIView!
     private var previewBtn: UIButton!
     private var originalView: UIControl!
@@ -124,13 +124,14 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         self.type = type
         super.init(frame: .zero)
         
-        backgroundView = UIVisualEffectView()
+        backgroundView = UIView()
+        backgroundView.backgroundColor = .black
         addSubview(backgroundView)
-        
         contentView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 50 + UIDevice.bottomMargin))
-        
+        contentView.isHidden = false
         let viewConfig: PickerBottomViewConfiguration
         if type == .picker {
+            contentView.isHidden = true
             if pickerConfig.selectMode != .single {
                 addSubview(contentView)
             }
@@ -451,6 +452,9 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         backgroundView.frame = bounds
         contentView.width = width
         contentView.height = 50 + UIDevice.bottomMargin
+        if type == .picker {
+//            contentView.height = 0 + UIDevice.bottomMargin
+        }
         let leftMargin = self.leftMargin
         if type == .picker {
             if isShowPrompt {
@@ -696,7 +700,7 @@ extension PhotoToolBarView {
                 return config.barStyle == .default ? .extraLight : .dark
             }
         }()
-        backgroundView.effect = UIBlurEffect(style: style)
+//        backgroundView.effect = UIBlurEffect(style: style)
         
         if type == .picker {
             let previewTitleColor = config.previewButtonTitleColor

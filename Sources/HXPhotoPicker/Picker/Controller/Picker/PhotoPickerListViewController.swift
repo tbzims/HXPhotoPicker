@@ -59,7 +59,7 @@ open class PhotoPickerListViewController:
     public var swipeSelectPanGR: UIPanGestureRecognizer?
     public var swipeSelectLastLocalPoint: CGPoint?
     private var promptView: TMHXPhotoPromptView!
-    private var postFeedTopBgV: TMHXPhotoPostFeedBtnView!
+    private var postFeedTopBgV: UIView?
     private var isShowPrompt: Bool {
         AssetPermissionsUtil.isLimitedAuthorizationStatus
     }
@@ -129,15 +129,18 @@ open class PhotoPickerListViewController:
             swipeSelectPanGR = panGR
         }
         emptyView = PhotoPickerEmptyView(config: config.emptyView)
-        postFeedTopBgV = TMHXPhotoPostFeedBtnView()
-        postFeedTopBgV.backgroundColor = .black
-        postFeedTopBgV.isHidden = true
-        view.addSubview(postFeedTopBgV)
+
         if isShowPrompt {
             promptView = TMHXPhotoPromptView()
             view.addSubview(promptView)
         }
-        
+        if pickerConfig.entranceType == .postFeed {
+            if let postFeedBtnView = pickerConfig.postFeedBtnView {
+                postFeedBtnView.backgroundColor = .black
+                view.addSubview(postFeedBtnView)
+                postFeedTopBgV = postFeedBtnView
+            }
+        }
         
     }
     
@@ -400,12 +403,14 @@ open class PhotoPickerListViewController:
         }
         
         if pickerConfig.entranceType == .postFeed {
-            postFeedTopBgV.frame = CGRect(x: 0, y: topHeight + UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 92.5)
-            collectionView.frame = CGRect(x: 0, y: topHeight + 92.5, width: view.bounds.size.width, height: view.bounds.size.height - topHeight - 92.5)
-            postFeedTopBgV.isHidden = false
+            if let postFeedTopBgV = postFeedTopBgV {
+                postFeedTopBgV.frame = CGRect(x: 0, y: topHeight + UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 92.5)
+                collectionView.frame = CGRect(x: 0, y: topHeight + 92.5, width: view.bounds.size.width, height: view.bounds.size.height - topHeight - 92.5)
+                postFeedTopBgV.isHidden = false
+            }
         }else {
-            collectionView.frame = view.bounds
-            postFeedTopBgV.isHidden = true
+            collectionView.frame = CGRect(x: 0, y: topHeight, width: view.bounds.size.width, height: view.bounds.size.height - topHeight)
+//            postFeedTopBgV.isHidden = true
         }
         
         emptyView.width = view.width

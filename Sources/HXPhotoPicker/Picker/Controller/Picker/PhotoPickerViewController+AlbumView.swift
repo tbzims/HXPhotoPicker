@@ -124,8 +124,8 @@ extension PhotoPickerViewController: PhotoAlbumListDelegate {
             pickerConfig.allowLoadPhotoLibrary {
             albumViewHeight += 40
         }
-        if albumViewHeight > view.height * 0.75 {
-            albumViewHeight = view.height * 0.75
+        if albumViewHeight > view.height * 1.0 {
+            albumViewHeight = view.height * 1.0
         }
         return albumViewHeight
     }

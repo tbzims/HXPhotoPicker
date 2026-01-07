@@ -49,6 +49,10 @@ open class AlbumViewCell: AlbumViewBaseCell {
         albumCoverView = UIImageView()
         albumCoverView.contentMode = .scaleAspectFill
         albumCoverView.clipsToBounds = true
+        albumCoverView.layer.masksToBounds = true
+        albumCoverView.layer.cornerRadius = 4
+        albumCoverView.layer.borderColor = UIColor(hexString: "#FFFFFF").withAlphaComponent(0.5).cgColor
+        albumCoverView.layer.borderWidth = 0.5
         contentView.addSubview(albumCoverView)
         
         albumNameLb = UILabel()
@@ -110,7 +114,7 @@ open class AlbumViewCell: AlbumViewBaseCell {
     /// 布局，重写此方法修改布局
     open func layoutView() {
         let width = contentView.width
-        let coverMargin: CGFloat = 5
+        let coverMargin: CGFloat = 16
         let coverWidth = height - (coverMargin * 2)
         albumCoverView.hxPicker_frame = CGRect(x: coverMargin, y: coverMargin, width: coverWidth, height: coverWidth)
         
@@ -124,17 +128,17 @@ open class AlbumViewCell: AlbumViewBaseCell {
         //设置albumNameLb坐标
         let albumNameLbX = albumCoverView.hxPicker_maxX + 10
         //内容size自适应
-        let albumNameLbSize = albumNameLb.sizeThatFits(CGSize(width: tickView.hxPicker_x - albumNameLbX - 20, height: 16))
-        albumNameLb.hxPicker_frame = CGRect(origin: CGPoint(x: albumNameLbX, y: 0), size: albumNameLbSize)
+        let albumNameLbSize = albumNameLb.sizeThatFits(CGSize(width: tickView.hxPicker_x - albumNameLbX - 20, height: 20))
+        albumNameLb.hxPicker_frame = CGRect(origin: CGPoint(x: albumNameLbX, y: 23), size: albumNameLbSize)
 
         if config.isShowPhotoCount {
-            albumNameLb.centerY = height / 2 - albumNameLb.height / 2
+//            albumNameLb.centerY = height / 2 - albumNameLb.height / 2 - 5
             
             //设置photoCountL坐标
             let photoCountLbX = albumNameLb.hxPicker_x
-            let photoCountLbY = albumNameLb.hxPicker_frame.maxY + 5
+            let photoCountLbY = albumNameLb.hxPicker_frame.maxY + 10
             //内容size自适应
-            let photoCountLbSize = photoCountLb.sizeThatFits(CGSize(width: width - photoCountLbX - 20, height: 14))
+            let photoCountLbSize = photoCountLb.sizeThatFits(CGSize(width: width - photoCountLbX - 20, height: 16))
             photoCountLb.hxPicker_frame = CGRect(origin: CGPoint(x: photoCountLbX, y: photoCountLbY), size: photoCountLbSize)
         }else {
             albumNameLb.centerY = height / 2

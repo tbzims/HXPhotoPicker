@@ -10,6 +10,8 @@ import UIKit
 
 public struct PickerConfiguration: IndicatorTypeConfig, PhotoDebugLogsConfig, PhotoHUDConfig, ImageViewConfig {
     
+    /// postFeed顶部3个按钮控制器
+    public var postFeedBtnView: UIView?
     /// 图片资源
     public var imageResource: HX.ImageResource { HX.ImageResource.shared }
     
