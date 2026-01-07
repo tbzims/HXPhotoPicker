@@ -236,7 +236,7 @@ public class PhotoToolBarGlassView: UIView, PhotoToolBar {
         contentView.insetsLayoutMarginsFromSafeArea = false
         
         let tmpBtn = UIButton(type: .system)
-        tmpBtn.configuration = .glass()
+//        tmpBtn.configuration = .glass()
         let tmpItem = UIBarButtonItem(customView: tmpBtn).hidesShared()
         let tmpToolView = UIToolbar()
         tmpToolView.setItems([tmpItem], animated: false)

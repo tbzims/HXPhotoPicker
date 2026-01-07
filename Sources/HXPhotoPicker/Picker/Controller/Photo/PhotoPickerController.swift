@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 open class PhotoPickerController: UINavigationController {
-    public weak var pickerDelegate: PhotoPickerControllerDelegate?
+    public weak var pickerDelegate: HXPhotoPickerControllerDelegate?
     public var finishHandler: FinishHandler?
     public var cancelHandler: CancelHandler?
     
@@ -239,6 +239,7 @@ open class PhotoPickerController: UINavigationController {
             requestAuthorization()
         }
         setupInteractiveTransition()
+        view.backgroundColor = .black
     }
     
     open override func viewDidLayoutSubviews() {
@@ -350,7 +351,7 @@ open class PhotoPickerController: UINavigationController {
     
     /// 选择资源初始化
     /// - Parameter config: 相关配置
-    public init(picker config: PickerConfiguration, delegate: PhotoPickerControllerDelegate? = nil) {
+    public init(picker config: PickerConfiguration, delegate: HXPhotoPickerControllerDelegate? = nil) {
         PhotoManager.shared.appearanceStyle = config.appearanceStyle
         PhotoManager.shared.createLanguageBundle(languageType: config.languageType)
         self.config = config
@@ -401,7 +402,7 @@ open class PhotoPickerController: UINavigationController {
         selectedAssets: [PhotoAsset] = [],
         previewType: PhotoPreviewType = .browser,
         modalPresentationStyle: UIModalPresentationStyle = .custom,
-        delegate: PhotoPickerControllerDelegate? = nil
+        delegate: HXPhotoPickerControllerDelegate? = nil
     ) {
         PhotoManager.shared.appearanceStyle = config.appearanceStyle
         PhotoManager.shared.createLanguageBundle(languageType: config.languageType)
@@ -444,7 +445,7 @@ open class PhotoPickerController: UINavigationController {
     
     public init(
         splitPicker config: PickerConfiguration,
-        delegate: PhotoPickerControllerDelegate? = nil
+        delegate: HXPhotoPickerControllerDelegate? = nil
     ) {
         var tmpConfig = config
         tmpConfig.albumShowMode = .popup
@@ -541,41 +542,19 @@ extension PhotoPickerController {
                 .foregroundColor:
                     isDark ? config.navigationTitleDarkColor : config.navigationTitleColor
             ]
-            navigationBar.titleTextAttributes = titleTextAttributes
-            let tintColor = isDark ? config.navigationDarkTintColor : config.navigationTintColor
-            navigationBar.tintColor = tintColor
-            let barStyle = isDark ? config.navigationBarDarkStyle : config.navigationBarStyle
-            navigationBar.barStyle = barStyle
-            navigationBar.isTranslucent = config.navigationBarIsTranslucent
             
-            let navigationBackgroundImage = isDark ? config.navigationBackgroundDarkImage : config.navigationBackgroundImage
-            let navigationBackgroundColor = isDark ? config.navigationBackgroundDarkColor : config.navigationBackgroundColor
-            if let image = navigationBackgroundImage {
-                navigationBar.setBackgroundImage(image, for: .default)
-            }
-            if let color = navigationBackgroundColor {
-                navigationBar.backgroundColor = color
-            }
-            if #available(iOS 15.0, *), config.adaptiveBarAppearance {
+            if #available(iOS 13.0, *) {
                 let appearance = UINavigationBarAppearance()
-                appearance.titleTextAttributes = titleTextAttributes
-                switch barStyle {
-                case .`default`:
-                    appearance.backgroundEffect = UIBlurEffect(style: .extraLight)
-                default:
-                    appearance.backgroundEffect = UIBlurEffect(style: .dark)
-                }
-                if let image = navigationBackgroundImage {
-                    appearance.backgroundImage = image
-                }
-                if let color = navigationBackgroundColor {
-                    appearance.backgroundColor = color
-                }
+                appearance.configureWithOpaqueBackground()   //关闭毛玻璃
+                appearance.backgroundColor = .black
+                appearance.shadowColor = .clear
+                
                 navigationBar.standardAppearance = appearance
                 navigationBar.scrollEdgeAppearance = appearance
                 navigationBar.compactAppearance = appearance
-                navigationBar.compactScrollEdgeAppearance = appearance
             }
+            
+            navigationBar.isTranslucent = false
         }
     }
     
@@ -738,7 +717,7 @@ public extension PhotoPickerController {
     static func picker<T: PhotoAssetObject>(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         compression: PhotoAsset.Compression? = nil,
         fromVC: UIViewController? = nil,
         toFile fileConfig: PickerResult.FileConfigHandler? = nil
@@ -752,7 +731,7 @@ public extension PhotoPickerController {
     static func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         fromVC: UIViewController? = nil
     ) async throws -> PickerResult {
         let vc = show(config, selectedAssets: selectedAssets, isSplit: UIDevice.isPad, delegate: delegate, fromVC: fromVC)
@@ -764,7 +743,7 @@ public extension PhotoPickerController {
     static func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         targetSize: CGSize,
         targetMode: HX.ImageTargetMode = .fill,
         fromVC: UIViewController? = nil,
@@ -780,7 +759,7 @@ public extension PhotoPickerController {
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
         isSplit: Bool = false,
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         fromVC: UIViewController? = nil
     ) -> PhotoPickerController {
         let topVC: UIViewController?

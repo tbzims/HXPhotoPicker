@@ -17,7 +17,7 @@ public extension HXPickerWrapper where Base: UIViewController {
     @available(iOS 13.0, *)
     func picker<T: PhotoAssetObject>(
         _ config: PickerConfiguration,
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         compression: PhotoAsset.Compression? = nil,
         toFile fileConfig: PickerResult.FileConfigHandler? = nil
     ) async throws -> [T] {
@@ -33,7 +33,7 @@ public extension HXPickerWrapper where Base: UIViewController {
     @available(iOS 13.0, *)
     func picker(
         _ config: PickerConfiguration,
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         fromVC: UIViewController? = nil
     ) async throws -> PickerResult {
         try await PhotoPickerController.picker(config, delegate: delegate, fromVC: base)
@@ -43,7 +43,7 @@ public extension HXPickerWrapper where Base: UIViewController {
     func present(
         picker config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         finish: PhotoPickerController.FinishHandler? = nil,
         cancel: PhotoPickerController.CancelHandler? = nil
     ) -> PhotoPickerController {
@@ -67,7 +67,7 @@ public extension HXPickerWrapper where Base: UIViewController {
         pageIndex: Int = 0,
         config: PickerConfiguration,
         modalPresentationStyle: UIModalPresentationStyle = .fullScreen,
-        delegate: PhotoPickerControllerDelegate? = nil
+        delegate: HXPhotoPickerControllerDelegate? = nil
     ) -> PhotoPickerController {
         let previewController = PhotoPickerController(
             preview: config,

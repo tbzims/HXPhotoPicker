@@ -135,7 +135,7 @@ public struct PickerBottomViewConfiguration {
     
     /// Display a prompt when album permissions are selected
     /// 相册权限为选部分时显示提示
-    public var isShowPrompt: Bool = true
+    public var isShowPrompt: Bool = false
     
     /// Hint icon color
     /// 提示图标颜色

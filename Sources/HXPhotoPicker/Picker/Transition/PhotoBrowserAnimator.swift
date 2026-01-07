@@ -335,7 +335,7 @@ open class PhotoBrowserAnimator: NSObject, PhotoBrowserAnimationTransitioning {
                 fromView.frame = toRect
             }
             fromVC.pickerDelegate?
-                .pickerController(fromVC, animateTransition: .dismiss)
+                .pickerController(fromVC, animateTransition: PickerTransitionType.dismiss)
         } completion: { _ in
             previewView?.isHidden = false
             fromVC.isBrowserTransitioning = false

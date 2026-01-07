@@ -24,6 +24,8 @@
 		7B8629AA237D0F8D00F8A584 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629A9237D0F8C00F8A584 /* EventKit.framework */; };
 		7B8629AC237D0F9400F8A584 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AB237D0F9400F8A584 /* Contacts.framework */; };
 		7B8629AE237D0FAA00F8A584 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AD237D0FAA00F8A584 /* AddressBook.framework */; };
+		8EFBA78B2F0D3A3900A4000A /* TMHXPhotoPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */; };
+		8EFBA78D2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */; };
 		D30234362E9B728A00C59905 /* AlbumGlassTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30234352E9B728900C59905 /* AlbumGlassTitleView.swift */; };
 		D3050B5C2B89885200F7FD5D /* PhotoPickerControllerAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3050B5B2B89885200F7FD5D /* PhotoPickerControllerAnimationTransitioning.swift */; };
 		D3050B5E2B898DC000F7FD5D /* PhotoPickerControllerInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3050B5D2B898DC000F7FD5D /* PhotoPickerControllerInteractiveTransition.swift */; };
@@ -541,6 +543,8 @@
 		7B8629AB237D0F9400F8A584 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		7B8629AD237D0FAA00F8A584 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		7B9BA7CA27C0E3EA009326C1 /* HXPHPickerExample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HXPHPickerExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPromptView.swift; sourceTree = "<group>"; };
+		8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPostFeedBtnView.swift; sourceTree = "<group>"; };
 		959F4241B27103D2A105B2CB /* Pods-SwiftUIExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIExample.release.xcconfig"; path = "Target Support Files/Pods-SwiftUIExample/Pods-SwiftUIExample.release.xcconfig"; sourceTree = "<group>"; };
 		BD48C3E6E6347457D779C67B /* Pods_HXPhotoPickerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HXPhotoPickerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFD28551AEE6C4173CCBE4E8 /* Pods_SwiftUIExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftUIExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1599,6 +1603,8 @@
 				D367E4982AE4B3BE00C225D1 /* PhotoTextCancelItemView.swift */,
 				D367E49A2AE4B3CE00C225D1 /* PhotoPickerFilterItemView.swift */,
 				D367E49C2AE4B3E000C225D1 /* PhotoPickerFinishItemView.swift */,
+				8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */,
+				8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */,
 				D3BCE8042AE37E450044CEBE /* Album */,
 				D36879072A399B8C00E70910 /* Cell */,
 				D3A1BE6A2AB2AC48004D1DE6 /* Kit */,
@@ -2674,6 +2680,7 @@
 				D360E7702A6B726500740B6B /* PhotoPickerView+Function.swift in Sources */,
 				D38F47AE2D686ABC0073C4D9 /* HXImageViewProtocol.swift in Sources */,
 				D36BA2D02BB3B9A60061E8FD /* EditorDrawTool.swift in Sources */,
+				8EFBA78B2F0D3A3900A4000A /* TMHXPhotoPromptView.swift in Sources */,
 				D3A8243B2BC13C49006226FD /* AssetManager+ImageData.swift in Sources */,
 				D360E7712A6B726500740B6B /* PhotoPickerView+Preview.swift in Sources */,
 				D360E7722A6B726500740B6B /* PhotoPickerViewProtocol.swift in Sources */,
@@ -2724,6 +2731,7 @@
 				D3A8243C2BC13C49006226FD /* AssetManager.swift in Sources */,
 				D360E7912A6B726500740B6B /* PickerManager.swift in Sources */,
 				D3CF484E2AE75C57006B0591 /* PhotoPreviewContentLivePhotoView.swift in Sources */,
+				8EFBA78D2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift in Sources */,
 				D360E7922A6B726500740B6B /* PickerTypes.swift in Sources */,
 				D3A824322BC13C49006226FD /* AssetManager+ImageURL.swift in Sources */,
 				D360E7932A6B726500740B6B /* Picker+Int.swift in Sources */,

@@ -20,7 +20,7 @@ public enum Photo {
     public static func picker<T: PhotoAssetObject>(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         compression: PhotoAsset.Compression? = nil,
         fromVC: UIViewController? = nil,
         toFile fileConfig: PickerResult.FileConfigHandler? = nil
@@ -40,7 +40,7 @@ public enum Photo {
     public static func picker<T: PhotoAssetObject>(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         compression: PhotoAsset.Compression? = nil,
         fromVC: UIViewController? = nil,
         toFile fileConfig: PickerResult.FileConfigHandler? = nil
@@ -60,7 +60,7 @@ public enum Photo {
     public static func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         targetSize: CGSize,
         targetMode: HX.ImageTargetMode = .fill,
         fromVC: UIViewController? = nil,
@@ -82,7 +82,7 @@ public enum Photo {
     public static func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         fromVC: UIViewController? = nil
     ) async throws -> PickerResult {
         try await PhotoPickerController.picker(
@@ -98,7 +98,7 @@ public enum Photo {
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
         sender: UIViewController? = nil,
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         finish: PhotoPickerController.FinishHandler? = nil,
         cancel: PhotoPickerController.CancelHandler? = nil
     ) -> PhotoPickerController {
@@ -205,7 +205,7 @@ public enum HX {
     public static func picker<T: PhotoAssetObject>(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         compression: PhotoAsset.Compression? = nil,
         fromVC: UIViewController? = nil,
         toFile fileConfig: PickerResult.FileConfigHandler? = nil
@@ -225,7 +225,7 @@ public enum HX {
     public func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         targetSize: CGSize,
         targetMode: HX.ImageTargetMode = .fill,
         fromVC: UIViewController? = nil,
@@ -248,7 +248,7 @@ public enum HX {
     public static func picker(
         _ config: PickerConfiguration,
         selectedAssets: [PhotoAsset] = [],
-        delegate: PhotoPickerControllerDelegate? = nil,
+        delegate: HXPhotoPickerControllerDelegate? = nil,
         fromVC: UIViewController? = nil
     ) async throws -> PickerResult {
         try await Photo.picker(

@@ -45,6 +45,8 @@ public struct PickerConfiguration: IndicatorTypeConfig, PhotoDebugLogsConfig, Ph
     /// Appearance style
     /// 外观风格
     public var appearanceStyle: AppearanceStyle = .varied
+    /// 入口
+    public var entranceType: PhotoPickerEntranceType = .other
     
     /// hide status bar
     /// 隐藏状态栏

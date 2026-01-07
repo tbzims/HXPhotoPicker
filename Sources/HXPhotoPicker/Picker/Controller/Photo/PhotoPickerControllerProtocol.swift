@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-public protocol PhotoPickerControllerDelegate: AnyObject {
+public protocol HXPhotoPickerControllerDelegate: AnyObject {
     
     /// 选择完成之后调用
     /// - Parameters:
@@ -509,7 +509,7 @@ public protocol PhotoPickerControllerDelegate: AnyObject {
     )
 }
 
-public extension PhotoPickerControllerDelegate {
+public extension HXPhotoPickerControllerDelegate {
     
     func pickerController(
         _ pickerController: PhotoPickerController,

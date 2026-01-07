@@ -535,7 +535,7 @@ extension PhotoBrowser {
     }
 }
 
-extension PhotoBrowser: PhotoPickerControllerDelegate {
+extension PhotoBrowser: HXPhotoPickerControllerDelegate {
     public func pickerController(
         _ pickerController: PhotoPickerController,
         viewControllersWillAppear viewController: UIViewController

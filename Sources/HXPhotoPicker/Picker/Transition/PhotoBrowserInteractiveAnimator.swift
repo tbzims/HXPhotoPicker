@@ -265,7 +265,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
             navigationBarAlpha = alpha
         }
         pickerController.pickerDelegate?
-            .pickerController(pickerController, interPercentUpdate: alpha, type: .dismiss)
+            .pickerController(pickerController, interPercentUpdate: alpha, type: PickerInteractiveTransitionType.dismiss)
         
         update(1 - alpha)
     }

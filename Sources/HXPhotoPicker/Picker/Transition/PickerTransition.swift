@@ -402,7 +402,7 @@ class PickerTransition: NSObject, UIViewControllerAnimatedTransitioning {
                     fromView?.frame = rect
                 }
                 pickerVC.pickerController.pickerDelegate?
-                    .pickerController(pickerVC.pickerController, animateTransition: .pop)
+                    .pickerController(pickerVC.pickerController, animateTransition: PickerTransitionType.pop)
             } completion: { _ in
                 pickerVC.photoToolbar.mask = nil
                 previewVC.photoToolbar.mask = nil

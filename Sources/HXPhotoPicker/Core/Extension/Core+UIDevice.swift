@@ -67,13 +67,13 @@ extension UIDevice {
         return statusBarHeight
     }
     class var topMargin: CGFloat {
-        safeAreaInsets.top
+        HXsafeAreaInsets.top
     }
     class var leftMargin: CGFloat {
-        safeAreaInsets.left
+        HXsafeAreaInsets.left
     }
     class var rightMargin: CGFloat {
-        safeAreaInsets.right
+        HXsafeAreaInsets.right
     }
     class var bottomMargin: CGFloat {
         if UIDevice.isPad {
@@ -87,7 +87,7 @@ extension UIDevice {
             }
             #endif
         }
-        return safeAreaInsets.bottom
+        return HXsafeAreaInsets.bottom
     }
     class var isPad: Bool {
         if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
@@ -107,7 +107,7 @@ extension UIDevice {
         return UIScreen._size
     }
     class var isAllIPhoneX: Bool {
-        let safeArea = safeAreaInsets
+        let safeArea = HXsafeAreaInsets
         let margin: CGFloat
         if isPortrait {
             margin = safeArea.bottom
@@ -117,7 +117,7 @@ extension UIDevice {
         return margin != 0
     }
     
-    class var safeAreaInsets: UIEdgeInsets {
+    class var HXsafeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
             if let safeAreaInsets = UIApplication.hx_keyWindow?.safeAreaInsets {
                 return safeAreaInsets

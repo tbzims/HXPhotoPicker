@@ -138,7 +138,7 @@ public class PhotoAlbumViewController: HXBaseViewController, PhotoAlbumControlle
                 }
                 navigationController?.navigationBar.standardAppearance = appearance
                 navigationController?.navigationBar.compactAppearance = appearance
-                navigationController?.navigationBar.scrollEdgeAppearance = appearance
+//                navigationController?.navigationBar.scrollEdgeAppearance = appearance
             }
         }
     }
@@ -150,9 +150,9 @@ public class PhotoAlbumViewController: HXBaseViewController, PhotoAlbumControlle
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         delegate?.albumController(didAppear: self)
-        if #available(iOS 26.0, *) {
-            navigationController?.navigationBar.setNeedsUpdateProperties()
-        }
+//        if #available(iOS 26.0, *) {
+//            navigationController?.navigationBar.setNeedsUpdateProperties()
+//        }
     }
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

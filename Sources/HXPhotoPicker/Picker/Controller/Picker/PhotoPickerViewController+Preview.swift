@@ -209,7 +209,7 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
     #endif
 }
 
-extension PhotoPickerViewController: PhotoPickerControllerDelegate {
+extension PhotoPickerViewController: HXPhotoPickerControllerDelegate {
     
     // MARK: 单独预览时的自定义转场动画
     /// present预览时展示的image

@@ -58,6 +58,11 @@ open class PhotoPickerListViewController:
     public var swipeSelectAutoScrollTimer: DispatchSourceTimer?
     public var swipeSelectPanGR: UIPanGestureRecognizer?
     public var swipeSelectLastLocalPoint: CGPoint?
+    private var promptView: TMHXPhotoPromptView!
+    private var postFeedTopBgV: TMHXPhotoPostFeedBtnView!
+    private var isShowPrompt: Bool {
+        AssetPermissionsUtil.isLimitedAuthorizationStatus
+    }
     
     public var filterOptions: PhotoPickerFilterSection.Options = .any {
         didSet {
@@ -101,6 +106,7 @@ open class PhotoPickerListViewController:
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.clipsToBounds = true
         if !config.allowSwipeToSelect {
             collectionView.delaysContentTouches = false
         }
@@ -123,6 +129,16 @@ open class PhotoPickerListViewController:
             swipeSelectPanGR = panGR
         }
         emptyView = PhotoPickerEmptyView(config: config.emptyView)
+        postFeedTopBgV = TMHXPhotoPostFeedBtnView()
+        postFeedTopBgV.backgroundColor = .black
+        postFeedTopBgV.isHidden = true
+        view.addSubview(postFeedTopBgV)
+        if isShowPrompt {
+            promptView = TMHXPhotoPromptView()
+            view.addSubview(promptView)
+        }
+        
+        
     }
     
     @objc
@@ -376,7 +392,21 @@ open class PhotoPickerListViewController:
         }
         let itemWidth = (view.width - space * (count - CGFloat(1))) / count
         collectionViewLayout.itemSize = .init(width: itemWidth, height: itemWidth)
-        collectionView.frame = view.bounds
+        var topHeight = 0.0
+        if isShowPrompt {
+            promptView.isHidden = false
+            promptView.frame = CGRect(x: 0, y: UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 56)
+            topHeight = 56.0
+        }
+        
+        if pickerConfig.entranceType == .postFeed {
+            postFeedTopBgV.frame = CGRect(x: 0, y: topHeight + UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 92.5)
+            collectionView.frame = CGRect(x: 0, y: topHeight + 92.5, width: view.bounds.size.width, height: view.bounds.size.height - topHeight - 92.5)
+            postFeedTopBgV.isHidden = false
+        }else {
+            collectionView.frame = view.bounds
+            postFeedTopBgV.isHidden = true
+        }
         
         emptyView.width = view.width
         emptyView.center = CGPoint(
