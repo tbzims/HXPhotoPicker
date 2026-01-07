@@ -66,7 +66,10 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
         }
         
         photoView = PhotoThumbnailView()
-        photoView.imageView.size = size
+        photoView.layer.masksToBounds = true
+        photoView.layer.cornerRadius = 2.5
+//        photoView.imageView.size = size
+        photoView.imageView.size = CGSize(width: 40, height: 40)
         contentView.addSubview(photoView)
         
         deleteBtn = UIButton(type: .custom)

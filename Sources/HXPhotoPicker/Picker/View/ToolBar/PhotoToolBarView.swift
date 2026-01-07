@@ -240,6 +240,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             if type == .picker {
                 finishBtn.setTitle(.textPhotoList.bottomView.finishTitle.text, for: .normal)
                 finishBtn.titleLabel?.font = .textPhotoList.bottomView.finishTitleFont
+                finishBtn.backgroundColor = UIColor(hexString: "#00D0DB")
             }else {
                 finishBtn.setTitle(.textPreview.bottomView.finishTitle.text, for: .normal)
                 finishBtn.titleLabel?.font = .textPreview.bottomView.finishTitleFont
@@ -250,7 +251,8 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
                 finishBtn.isEnabled = false
             }
             finishBtn.addTarget(self, action: #selector(didFinishButtonClick), for: .touchUpInside)
-            contentView.addSubview(finishBtn)
+//            contentView.addSubview(finishBtn)
+            selectedView.addSubview(finishBtn)
         }
         layoutSubviews()
         bringSubviewToFront(contentView)
@@ -881,7 +883,7 @@ extension PhotoToolBarView {
                 previewBtn.isEnabled = true
             }
             finishBtn.setTitle(
-                finishTitle + " (\(count))",
+                "\(count) " + finishTitle,
                 for: .normal
             )
         }else {
@@ -910,13 +912,14 @@ extension PhotoToolBarView {
         if finishWidth < 60 {
             finishWidth = 60
         }
-        finishBtn.size = .init(width: finishWidth, height: 33)
+        finishWidth = 79
+        finishBtn.size = .init(width: finishWidth, height: 32)
         if UIDevice.rightMargin > 0 {
             finishBtn.hxPicker_x = width - UIDevice.rightMargin - finishWidth
         }else {
             finishBtn.hxPicker_x = width - finishWidth - 12
         }
-        finishBtn.centerY = 25
+        finishBtn.centerY = selectedView.centerY
     }
 }
 

@@ -43,7 +43,7 @@ class CustomPickerCellViewController: UIViewController {
         }
     }
 }
-extension CustomPickerCellViewController: PhotoPickerControllerDelegate {
+extension CustomPickerCellViewController: HXPhotoPickerControllerDelegate {
     func pickerController(_ pickerController: PhotoPickerController, didFinishSelection result: PickerResult) {
         pickerController.dismiss(true) {
             let pickerResultVC = PickerResultViewController.init()

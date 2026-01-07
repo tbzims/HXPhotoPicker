@@ -52,7 +52,8 @@ class PhotoPreviewSelectedView: UIView,
         collectionViewLayout.scrollDirection = .horizontal
         collectionViewLayout.minimumLineSpacing = 5
         collectionViewLayout.minimumInteritemSpacing = 5
-        collectionView = HXCollectionView(frame: bounds, collectionViewLayout: collectionViewLayout)
+        let frame = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: bounds.size.width - 79 - 16 - 20, height: bounds.size.height)
+        collectionView = HXCollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -107,7 +108,7 @@ class PhotoPreviewSelectedView: UIView,
             if UIDevice.rightMargin > 0 {
                 rightInset = UIDevice.rightMargin
             }else {
-                rightInset = 12
+                rightInset = 52
             }
             if #available(iOS 26.0, *), !PhotoManager.isIos26Compatibility {
                 if leftMargin > 0 {
@@ -307,7 +308,8 @@ class PhotoPreviewSelectedView: UIView,
         if !collectionView.frame.equalTo(bounds) {
             reloadSectionInset()
         }
-        collectionView.frame = bounds
+        let frame = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: bounds.size.width - 79 - 16 - 20, height: bounds.size.height)
+        collectionView.frame = frame
     }
     
     required init?(coder: NSCoder) {
