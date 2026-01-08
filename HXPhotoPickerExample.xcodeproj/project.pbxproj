@@ -24,6 +24,7 @@
 		7B8629AA237D0F8D00F8A584 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629A9237D0F8C00F8A584 /* EventKit.framework */; };
 		7B8629AC237D0F9400F8A584 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AB237D0F9400F8A584 /* Contacts.framework */; };
 		7B8629AE237D0FAA00F8A584 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AD237D0FAA00F8A584 /* AddressBook.framework */; };
+		8EE06F132F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */; };
 		8EFBA78B2F0D3A3900A4000A /* TMHXPhotoPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */; };
 		8EFBA78D2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */; };
 		D30234362E9B728A00C59905 /* AlbumGlassTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30234352E9B728900C59905 /* AlbumGlassTitleView.swift */; };
@@ -543,6 +544,7 @@
 		7B8629AB237D0F9400F8A584 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		7B8629AD237D0FAA00F8A584 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		7B9BA7CA27C0E3EA009326C1 /* HXPHPickerExample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HXPHPickerExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMPreviewSelectedGradientMaskView.swift; sourceTree = "<group>"; };
 		8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPromptView.swift; sourceTree = "<group>"; };
 		8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPostFeedBtnView.swift; sourceTree = "<group>"; };
 		959F4241B27103D2A105B2CB /* Pods-SwiftUIExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUIExample.release.xcconfig"; path = "Target Support Files/Pods-SwiftUIExample/Pods-SwiftUIExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -1605,6 +1607,7 @@
 				D367E49C2AE4B3E000C225D1 /* PhotoPickerFinishItemView.swift */,
 				8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */,
 				8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */,
+				8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */,
 				D3BCE8042AE37E450044CEBE /* Album */,
 				D36879072A399B8C00E70910 /* Cell */,
 				D3A1BE6A2AB2AC48004D1DE6 /* Kit */,
@@ -2691,6 +2694,7 @@
 				D367E49B2AE4B3CE00C225D1 /* PhotoPickerFilterItemView.swift in Sources */,
 				D360E93F2A6BBC5700740B6B /* EditorViewController+Action.swift in Sources */,
 				D3513E172ADA316300A3930C /* PhotoAsset+Equatable.swift in Sources */,
+				8EE06F132F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift in Sources */,
 				D3E51E682D6EC20700E7A2E5 /* GIFImageView.swift in Sources */,
 				D360E7762A6B726500740B6B /* PhotoThumbnailView.swift in Sources */,
 				D360E7772A6B726500740B6B /* AlbumViewCell.swift in Sources */,

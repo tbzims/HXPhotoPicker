@@ -82,6 +82,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     private var originalTitleLb: UILabel!
     private var originalLoadingView: UIActivityIndicatorView!
     private var finishBtn: UIButton!
+    private var finishMaskView: TMPreviewSelectedGradientMaskView?
     private var isOriginalLoading: Bool = false
     private var originalobserve: NSKeyValueObservation?
     
@@ -920,6 +921,15 @@ extension PhotoToolBarView {
             finishBtn.hxPicker_x = width - finishWidth - 12
         }
         finishBtn.centerY = selectedView.centerY
+        let maskFrame = CGRect(
+            x: finishBtn.frame.origin.x - 60,
+            y: 0,
+            width: 60,
+            height: selectedView.frame.height
+        )
+        self.finishMaskView?.removeFromSuperview()
+        self.finishMaskView = TMPreviewSelectedGradientMaskView(frame: maskFrame)
+        selectedView.addSubview(self.finishMaskView!)
     }
 }
 

@@ -25,7 +25,7 @@ class TMHXPhotoPromptView: UIView {
         button.setTitle("Manage", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-//        button.addTarget(self, action: #selector(manageButtonTapped), for: .touchUpInside)
+        button.addTarget(TMHXPhotoPromptView.self, action: #selector(manageButtonTapped), for: .touchUpInside)
         button.backgroundColor = UIColor(hexString: "#00D0DB")
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 8
