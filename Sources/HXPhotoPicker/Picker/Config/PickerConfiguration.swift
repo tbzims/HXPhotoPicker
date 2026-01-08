@@ -12,6 +12,7 @@ public struct PickerConfiguration: IndicatorTypeConfig, PhotoDebugLogsConfig, Ph
     
     /// postFeed顶部3个按钮控制器
     public var postFeedBtnView: UIView?
+    public var onPickerListViewReady: ((PhotoPickerListViewController) -> Void)?
     /// 图片资源
     public var imageResource: HX.ImageResource { HX.ImageResource.shared }
     

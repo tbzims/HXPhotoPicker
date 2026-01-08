@@ -611,7 +611,7 @@ extension PhotoPickerController {
             return
         }
         let status = AssetPermissionsUtil.authorizationStatus
-        if status.rawValue >= 3 {
+        if status.rawValue >= 1 {
             // 有权限
             PHPhotoLibrary.shared().register(self)
             if !PhotoManager.shared.didRegisterObserver {
@@ -620,13 +620,6 @@ extension PhotoPickerController {
                 PhotoManager.HUDView.show(with: nil, delay: 0.15, animated: true, addedTo: view)
             }
             fetchData.fetchCameraAssetCollection()
-        }else if status.rawValue >= 1 {
-            // 无权限
-            if splitType.isSplit {
-                splitViewController?.view.addSubview(deniedView)
-            }else {
-                view.addSubview(deniedView)
-            }
         }else {
             // 用户还没做出选择，请求权限
             isFirstAuthorization = true

@@ -51,7 +51,17 @@ public struct AssetPermissionsUtil {
     /// 当前相册权限状态是否是Limited
     public static var isLimitedAuthorizationStatus:  Bool {
         #if !targetEnvironment(macCatalyst)
-        if #available(iOS 14, *), authorizationStatus == .limited  {
+        if #available(iOS 14, *), authorizationStatus == .limited {
+            return true
+        }
+        #endif
+        return false
+    }
+    
+    /// 当前相册权限状态是否是应该展示prompt
+    public static var isPromptShow:  Bool {
+        #if !targetEnvironment(macCatalyst)
+        if #available(iOS 14, *), authorizationStatus == .limited || authorizationStatus == .notDetermined || authorizationStatus == .denied || authorizationStatus == .restricted  {
             return true
         }
         #endif

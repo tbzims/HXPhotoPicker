@@ -158,6 +158,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             previewBtn.width = previewWidth
             contentView.addSubview(previewBtn)
         }else if type == .preview {
+            contentView.isHidden = true
             addSubview(contentView)
             viewConfig = pickerConfig.previewView.bottomView
             if isShowPreviewList {

@@ -17,7 +17,7 @@ open class CameraViewController: HXBaseViewController, CameraViewControllerProto
     public weak var delegate: CameraViewControllerDelegate?
     
     /// 相机配置
-    public let config: CameraConfiguration
+    public var config: CameraConfiguration
     /// 相机类型
     public let type: CameraController.CaptureType
     
@@ -323,6 +323,25 @@ extension CameraViewController {
         normalPreviewView.resetOrientation()
     }
     
+    @objc
+    public func didSwitchFlashClick() {
+
+        if config.flashMode == .auto {
+            config.flashMode = .off
+            cameraManager.setFlashMode(.off)
+            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashClose.image
+        }else if config.flashMode == .off {
+            config.flashMode = .on
+            cameraManager.setFlashMode(.on)
+            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashOpen.image
+        }else {
+            config.flashMode = .auto
+            cameraManager.setFlashMode(.auto)
+            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashAuto.image
+        }
+
+    }
+    
     func switchCameraFailed() {
         PhotoManager.HUDView.showInfo(with: .textManager.camera.switchCameraFailedTitle.text, delay: 1.5, animated: true, addedTo: view)
     }
@@ -424,6 +443,7 @@ extension CameraViewController {
     func sessionCompletion() {
         if cameraManager.canSwitchCameras() {
             addSwithCameraButton()
+            addSwithFlashButton()
         }
         normalPreviewView.setupGestureRecognizer()
         bottomView.addGesture(for: type)
@@ -439,6 +459,15 @@ extension CameraViewController {
             style: .plain,
             target: self,
             action: #selector(didSwitchCameraClick)
+        )
+    }
+    
+    func addSwithFlashButton() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: .imageResource.camera.switchFlashAuto.image,
+            style: .plain,
+            target: self,
+            action: #selector(didSwitchFlashClick)
         )
     }
 }

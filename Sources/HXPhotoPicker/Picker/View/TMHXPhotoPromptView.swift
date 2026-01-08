@@ -10,6 +10,8 @@ import UIKit
 
 class TMHXPhotoPromptView: UIView {
 
+    public var promptStr: String = ""
+    
     private let promptLabel: UILabel = {
         let label = UILabel()
         label.text = "Tmm can only access a limited number of authorized photos."
@@ -25,7 +27,7 @@ class TMHXPhotoPromptView: UIView {
         button.setTitle("Manage", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        button.addTarget(TMHXPhotoPromptView.self, action: #selector(manageButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(manageButtonTapped), for: .touchUpInside)
         button.backgroundColor = UIColor(hexString: "#00D0DB")
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 8
@@ -38,16 +40,22 @@ class TMHXPhotoPromptView: UIView {
         return view
     }()
     
-    override init(frame: CGRect) {
+    init(frame: CGRect,promptStr: String) {
+        self.promptStr = promptStr
         super.init(frame: frame)
         setupUI()
         setupConstraints()
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder: NSCoder,promptStr: String) {
+        self.promptStr = promptStr
         super.init(coder: coder)
         setupUI()
         setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupUI() {
@@ -61,6 +69,8 @@ class TMHXPhotoPromptView: UIView {
         promptLabel.translatesAutoresizingMaskIntoConstraints = false
         manageButton.translatesAutoresizingMaskIntoConstraints = false
         line.translatesAutoresizingMaskIntoConstraints = false
+        
+        promptLabel.text = promptStr
     }
     
     private func setupConstraints() {
@@ -88,13 +98,15 @@ class TMHXPhotoPromptView: UIView {
     }
     
     @objc private func manageButtonTapped() {
-
+        
+        onManageButtonTap?()
     }
+    
+    public var onManageButtonTap: (() -> Void)?
 
     public func setPromptText(_ text: String) {
         promptLabel.text = text
     }
 
-    public var onManageButtonTap: (() -> Void)?
     
 }

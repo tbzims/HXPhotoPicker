@@ -113,7 +113,7 @@ public struct CameraConfiguration: IndicatorTypeConfig, PhotoHUDConfig {
     }
     
     /// 聚焦框的颜色
-    public var focusColor: UIColor = .systemBlue
+    public var focusColor: UIColor = .white
     
     /// 摄像头最大缩放比例
     public var videoMaxZoomScale: CGFloat = 6

@@ -47,11 +47,11 @@ extension PhotoPickerView {
     public func fetchAsset() {
         manager.requestAuthorization { [weak self] status in
             guard let self = self else { return }
-            if status == .denied {
-                self.hideLoading()
-                self.setupDeniedView()
-                return
-            }
+//            if status == .denied {
+//                self.hideLoading()
+//                self.setupDeniedView()
+//                return
+//            }
             self.manager.reloadAssetCollection = { [weak self] in
                 self?.showLoading()
             }

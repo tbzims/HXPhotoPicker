@@ -11,6 +11,10 @@ import UIKit
 // MARK: Bottom toolbar configuration class / 底部工具栏配置类
 public struct PickerBottomViewConfiguration {
     
+    public var selectMorePictures: String?
+    public var changeSettings: String?
+    public var cancel: String?
+    public var can_only_access_limited_authorized_photos: String?
     /// UIToolbar
     public var backgroundColor: UIColor?
     public var backgroundDarkColor: UIColor?

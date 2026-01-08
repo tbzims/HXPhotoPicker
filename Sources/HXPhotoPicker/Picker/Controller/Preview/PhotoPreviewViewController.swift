@@ -283,6 +283,15 @@ extension PhotoPreviewViewController {
         if previewType != .none && pickerController.modalPresentationStyle != .custom {
             updateColors()
         }
+        let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
+        let cancelItem = UIBarButtonItem(
+            image: imageType.image,
+            style: .plain,
+            target: self,
+            action: #selector(didCancelItemClick)
+        ).hidesShared()
+        cancelItem.tintColor = .white
+        navigationItem.leftBarButtonItem = cancelItem
         if pickerConfig.isMultipleSelect || previewType != .browser {
             if previewType != .browser {
                 if previewType == .picker {

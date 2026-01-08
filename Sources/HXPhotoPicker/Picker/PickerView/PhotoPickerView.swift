@@ -244,9 +244,9 @@ open class PhotoPickerView: UIView {
         }else {
             emptyView.centerX = collectionView.width * 0.5
         }
-        if AssetPermissionsUtil.authorizationStatus == .denied {
-            deniedView.frame = bounds
-        }
+//        if AssetPermissionsUtil.authorizationStatus == .denied {
+//            deniedView.frame = bounds
+//        }
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

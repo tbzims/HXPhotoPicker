@@ -373,6 +373,15 @@ public extension HX.ImageResource {
         
         /// 相机切换
         public var switchCamera: ImageType = .local("hx_camera_overturn")
+        
+        ///  闪光灯关闭
+        public var switchFlashClose: ImageType = .local("tm_hx_camera_flash_close")
+        
+        ///  闪光灯自动
+        public var switchFlashAuto: ImageType = .local("hx_camera_down_back")
+        
+        ///  闪光灯开启
+        public var switchFlashOpen: ImageType = .local("hx_camera_overturn")
     }
     #endif
 }

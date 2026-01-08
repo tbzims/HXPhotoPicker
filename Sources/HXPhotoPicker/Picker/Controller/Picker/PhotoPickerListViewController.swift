@@ -61,7 +61,7 @@ open class PhotoPickerListViewController:
     private var promptView: TMHXPhotoPromptView!
     private var postFeedTopBgV: UIView?
     private var isShowPrompt: Bool {
-        AssetPermissionsUtil.isLimitedAuthorizationStatus
+        AssetPermissionsUtil.isPromptShow
     }
     
     public var filterOptions: PhotoPickerFilterSection.Options = .any {
@@ -96,6 +96,7 @@ open class PhotoPickerListViewController:
     open override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
+        self.pickerConfig.onPickerListViewReady?(self)
     }
     
     func initViews() {
@@ -131,7 +132,21 @@ open class PhotoPickerListViewController:
         emptyView = PhotoPickerEmptyView(config: config.emptyView)
 
         if isShowPrompt {
-            promptView = TMHXPhotoPromptView()
+            promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
+            promptView.onManageButtonTap = { [weak self] in
+                guard let self = self else { return }
+                TMHXActionSheet.show(
+                    actions: [
+                        .init(title: self.config.bottomView.selectMorePictures ?? "Select More pictures") {
+                            self.delegate?.photoList(didLimitCell: self)
+                        },
+                        .init(title: self.config.bottomView.changeSettings ?? "Change settings") {
+                            PhotoTools.openSettingsURL()
+                        }
+                    ],cancelStr: self.config.bottomView.cancel ?? "Cancel",
+                    cancelColor: config.bottomView.finishButtonBackgroundColor
+                )
+            }
             view.addSubview(promptView)
         }
         if pickerConfig.entranceType == .postFeed {
@@ -397,6 +412,24 @@ open class PhotoPickerListViewController:
         collectionViewLayout.itemSize = .init(width: itemWidth, height: itemWidth)
         var topHeight = 0.0
         if isShowPrompt {
+            if promptView == nil {
+                promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
+                promptView.onManageButtonTap = { [weak self] in
+                    guard let self = self else { return }
+                    TMHXActionSheet.show(
+                        actions: [
+                            .init(title: self.config.bottomView.selectMorePictures ?? "Select More pictures") {
+                                self.delegate?.photoList(didLimitCell: self)
+                            },
+                            .init(title: self.config.bottomView.changeSettings ?? "Change settings") {
+                                PhotoTools.openSettingsURL()
+                            }
+                        ],cancelStr: self.config.bottomView.cancel ?? "Cancel",
+                        cancelColor: config.bottomView.finishButtonBackgroundColor
+                    )
+                }
+                view.addSubview(promptView)
+            }
             promptView.isHidden = false
             promptView.frame = CGRect(x: 0, y: UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 56)
             topHeight = 56.0
