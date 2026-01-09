@@ -47,6 +47,18 @@ extension PhotoPreviewViewController: EditorViewControllerDelegate {
                     }
                 }
             }
+            
+//            Task {
+//                do {
+//                    let image = try await photoAsset.image()
+//                    await MainActor.run {
+//                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+//                    }
+//                } catch {
+//                    print("获取图片并保存失败：\(error)")
+//                }
+//            }
+            
             pickerController.didEditAsset(photoAsset: photoAsset, atIndex: currentPreviewIndex)
         }else {
             let beforeHasEdit = photoAsset.editedResult != nil

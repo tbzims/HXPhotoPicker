@@ -195,7 +195,9 @@ public extension PhotoPickerViewDelegate {
     func photoPickerView(
         _ photoPickerView: PhotoPickerView,
         didFinishSelection result: PickerResult
-    ) { }
+    ) {
+        print("完成照片选择")
+    }
     
     func photoPickerView(
         _ photoPickerView: PhotoPickerView,

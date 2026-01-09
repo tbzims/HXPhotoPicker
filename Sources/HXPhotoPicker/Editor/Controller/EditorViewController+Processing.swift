@@ -461,11 +461,11 @@ extension EditorViewController {
             PHImageManager.default().cancelImageRequest(assetRequestID)
         }
         if config.isAutoBack {
-//            if let navigationController = navigationController, navigationController.viewControllers.count > 1 {
-//                navigationController.popViewController(animated: true)
-//            }else {
+            if let navigationController = navigationController, navigationController.viewControllers.count > 1 {
+                navigationController.popViewController(animated: true)
+            }else {
                 dismiss(animated: true, completion: nil)
-//            }
+            }
         }
     }
 }

@@ -236,6 +236,8 @@ public extension HX.ImageResource {
             public var filter: ImageType = .local("hx_editor_tools_filter")
             /// 配乐
             public var music: ImageType = .local("hx_editor_tools_music")
+            
+            public var tmEditImg: ImageType = .local("TMHX_preview_edit")
         }
         
         public struct Brush {

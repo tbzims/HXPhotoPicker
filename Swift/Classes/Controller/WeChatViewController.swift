@@ -102,7 +102,7 @@ extension WeChatViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension WeChatViewController: PhotoPickerControllerDelegate {
+extension WeChatViewController: HXPhotoPickerControllerDelegate {
     func pickerController(
         _ pickerController: PhotoPickerController,
         didFinishSelection result: PickerResult

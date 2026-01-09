@@ -50,6 +50,8 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         return previewAssets.count
     }
     
+    public var TMEditBtn: UIButton!
+    
     
     override init(config: PickerConfiguration) {
         self.config = config.previewView
@@ -125,6 +127,7 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
             navHeight = 0
         }
         navBgView?.frame = .init(x: 0, y: 0, width: view.width, height: navHeight)
+        TMEditBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
     }
     
     public override func deviceOrientationWillChanged(notify: Notification) {
@@ -412,6 +415,15 @@ extension PhotoPreviewViewController {
         //强制LTR，避免阿语下预览图片内容被镜像
         view.semanticContentAttribute = .forceLeftToRight
         collectionView.semanticContentAttribute = .forceLeftToRight
+        
+        TMEditBtn = UIButton(type: .custom)
+        TMEditBtn.setImage(.imageResource.editor.tools.tmEditImg.image, for: .normal)
+        TMEditBtn.addTarget(self, action: #selector(TMEditBtnAction), for: .touchUpInside)
+        view.addSubview(TMEditBtn)
+    }
+    
+    @objc func TMEditBtnAction() {
+        self.photoToolbar(didEditClick: self.photoToolbar)
     }
     
     func configBottomViewFrame() {
@@ -641,7 +653,13 @@ extension PhotoPreviewViewController {
     }
     
     @objc func didCancelItemClick() {
-        pickerController.cancelCallback()
+//        pickerController.cancelCallback()
+        if let viewControllers = navigationController?.viewControllers,
+           viewControllers.count > 1 {
+            navigationController?.popViewController(animated: true)
+        }else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     func removeSelectedAssetWhenRemovingAssets(_ assets: [PhotoAsset]) {

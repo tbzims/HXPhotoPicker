@@ -66,7 +66,7 @@ public struct CameraConfiguration: IndicatorTypeConfig, PhotoHUDConfig {
     
     /// After the photo is completed, save it to the system album
     /// 拍照完成后保存到系统相册
-    public var isSaveSystemAlbum: Bool = false
+    public var isSaveSystemAlbum: Bool = true
     
     /// 保存到自定义相册的类型
     public var saveSystemAlbumType: AssetSaveUtil.AlbumType = .displayName

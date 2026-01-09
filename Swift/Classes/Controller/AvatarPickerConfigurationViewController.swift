@@ -94,7 +94,7 @@ class AvatarPickerConfigurationViewController: UITableViewController {
         return AvatarPickerSection.allCases[section].title
     }
 }
-extension AvatarPickerConfigurationViewController: PhotoPickerControllerDelegate {
+extension AvatarPickerConfigurationViewController: HXPhotoPickerControllerDelegate {
     func pickerController(_ pickerController: PhotoPickerController, didFinishSelection result: PickerResult) {
         pickerController.dismiss(true) {
             let pickerResultVC = PickerResultViewController.init()

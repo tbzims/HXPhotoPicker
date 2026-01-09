@@ -243,7 +243,7 @@ class PickerConfigurationViewController: UITableViewController {
         }
     }
 }
-extension PickerConfigurationViewController: PhotoPickerControllerDelegate {
+extension PickerConfigurationViewController: HXPhotoPickerControllerDelegate {
     func pickerController(_ pickerController: PhotoPickerController, didFinishSelection result: PickerResult) {
         #if OCEXAMPLE
         pickerController.dismiss(true) {

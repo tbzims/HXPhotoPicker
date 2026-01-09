@@ -178,7 +178,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: PhotoPickerControllerDelegate {
+extension ViewController: HXPhotoPickerControllerDelegate {
     
     /// Called after the selection is complete
     /// - Parameters:

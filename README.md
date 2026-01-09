@@ -208,7 +208,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: PhotoPickerControllerDelegate {
+extension ViewController: HXPhotoPickerControllerDelegate {
     
     /// 选择完成之后调用
     /// - Parameters:

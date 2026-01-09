@@ -743,8 +743,8 @@ class PickerResultViewController: UIViewController,
     }
 }
 
-// MARK: PhotoPickerControllerDelegate
-extension PickerResultViewController: PhotoPickerControllerDelegate {
+// MARK: HXPhotoPickerControllerDelegate
+extension PickerResultViewController: HXPhotoPickerControllerDelegate {
     
     func createEditorDocumentPath() {
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! + "/hxphotopicker_editor"

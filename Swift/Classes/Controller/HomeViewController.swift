@@ -256,7 +256,7 @@ extension HomeViewController {
     }
 }
 
-extension HomeViewController: PhotoPickerControllerDelegate {
+extension HomeViewController: HXPhotoPickerControllerDelegate {
     func pickerController(_ pickerController: PhotoPickerController, didFinishSelection result: PickerResult) {
         pickerController.dismiss(true) {
             let pickerResultVC = PickerResultViewController.init()

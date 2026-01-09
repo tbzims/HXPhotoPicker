@@ -200,6 +200,7 @@ class PickerInteractiveTransition: UIPercentDrivenInteractiveTransition, UIGestu
             }
             previewViewController.photoToolbar.alpha = bottomViewAlpha
             previewViewController.navBgView?.alpha = bottomViewAlpha
+            previewViewController.TMEditBtn.alpha = bottomViewAlpha
         }else {
             toVC?.navigationController?.navigationBar.alpha = 1 - alpha
             toVC?.photoToolbar.alpha = 1 - alpha
