@@ -30,6 +30,8 @@ public struct EmptyViewConfiguration {
     public var titleStr: String = "No data available"
     
     public var subStr: String = "There is currently no content here"
+    
+    public var emptyLottieView: UIView?
         
     public init() { }
 }

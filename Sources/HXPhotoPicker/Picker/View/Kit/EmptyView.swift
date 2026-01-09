@@ -11,7 +11,8 @@ import UIKit
 public class PhotoPickerEmptyView: UIView {
     private var titleLb: UILabel!
     private var subTitleLb: UILabel!
-    private var emptyImgV: UIImageView!
+    private var emptyImgV: UIView!
+    private var emptyBgV: UIView!
     
     let config: EmptyViewConfiguration
     init(config: EmptyViewConfiguration) {
@@ -32,9 +33,24 @@ public class PhotoPickerEmptyView: UIView {
         subTitleLb.font = .textPhotoList.emptySubTitleFont
         addSubview(subTitleLb)
         
-        emptyImgV = UIImageView()
-        emptyImgV.image =  UIImage(named: "TMHXBlack_No_data")
-        addSubview(emptyImgV)
+//        emptyImgV = UIImageView()
+//        emptyImgV.image =  UIImage(named: "TMHXBlack_No_data")
+//        addSubview(emptyImgV)
+        
+        
+        
+        if let emptyLottieView = config.emptyLottieView {
+            
+//            emptyImgV = emptyLottieView
+//            emptyImgV.frame = CGRect(x: 0, y: 0, width: 160, height: 120)
+//            emptyImgV.centerX = centerX
+//            emptyBgV.addSubview(emptyImgV)
+            
+            emptyBgV = emptyLottieView
+            emptyBgV.backgroundColor = .clear
+            addSubview(emptyBgV)
+            
+        }
         
         configColor()
     }
@@ -48,10 +64,12 @@ public class PhotoPickerEmptyView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        emptyImgV.frame = CGRect(x: 0, y: 30, width: 160, height: 120)
-        emptyImgV.centerX = centerX
+        emptyBgV.frame = CGRect(x: 0, y: 30, width: 160, height: 120)
+        emptyBgV.centerX = centerX
+//        emptyImgV.frame = CGRect(x: 0, y: 30, width: 160, height: 120)
+//        emptyImgV.centerX = centerX
         if let titleHeight = titleLb.text?.height(ofFont: titleLb.font, maxWidth: width - 20) {
-            titleLb.frame = CGRect(x: 10, y: CGRectGetMaxY(emptyImgV.frame) + 12, width: width - 20, height: titleHeight)
+            titleLb.frame = CGRect(x: 10, y: CGRectGetMaxY(emptyBgV.frame) + 12, width: width - 20, height: titleHeight)
         }
         if let subTitleHeight = subTitleLb.text?.height(ofFont: subTitleLb.font, maxWidth: width - 20) {
             subTitleLb.frame = CGRect(x: 10, y: titleLb.frame.maxY + 8, width: width - 20, height: subTitleHeight)
