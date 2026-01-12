@@ -25,7 +25,6 @@
 		7B8629AC237D0F9400F8A584 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AB237D0F9400F8A584 /* Contacts.framework */; };
 		7B8629AE237D0FAA00F8A584 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B8629AD237D0FAA00F8A584 /* AddressBook.framework */; };
 		8EE06F132F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */; };
-		8EE06F422F0F7DF2003CDE69 /* TMHXActionSheetAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE06F412F0F7DF2003CDE69 /* TMHXActionSheetAlert.swift */; };
 		8EE06F442F0F82D3003CDE69 /* TMHXActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE06F432F0F82D3003CDE69 /* TMHXActionSheet.swift */; };
 		8EFBA78B2F0D3A3900A4000A /* TMHXPhotoPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */; };
 		8EFBA78D2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */; };
@@ -547,7 +546,6 @@
 		7B8629AD237D0FAA00F8A584 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		7B9BA7CA27C0E3EA009326C1 /* HXPHPickerExample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HXPHPickerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMPreviewSelectedGradientMaskView.swift; sourceTree = "<group>"; };
-		8EE06F412F0F7DF2003CDE69 /* TMHXActionSheetAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXActionSheetAlert.swift; sourceTree = "<group>"; };
 		8EE06F432F0F82D3003CDE69 /* TMHXActionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXActionSheet.swift; sourceTree = "<group>"; };
 		8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPromptView.swift; sourceTree = "<group>"; };
 		8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMHXPhotoPostFeedBtnView.swift; sourceTree = "<group>"; };
@@ -1612,7 +1610,6 @@
 				8EFBA78A2F0D3A3900A4000A /* TMHXPhotoPromptView.swift */,
 				8EFBA78C2F0D3FC800A4000A /* TMHXPhotoPostFeedBtnView.swift */,
 				8EE06F122F0E96CC003CDE69 /* TMPreviewSelectedGradientMaskView.swift */,
-				8EE06F412F0F7DF2003CDE69 /* TMHXActionSheetAlert.swift */,
 				8EE06F432F0F82D3003CDE69 /* TMHXActionSheet.swift */,
 				D3BCE8042AE37E450044CEBE /* Album */,
 				D36879072A399B8C00E70910 /* Cell */,
@@ -2853,7 +2850,6 @@
 				D345BAFC2AE0E2D400D3A1C5 /* PhotoAlbumHeaderView.swift in Sources */,
 				D3418DBF2AA6D33D005EB5FF /* ProgressCircleView.swift in Sources */,
 				D3A824392BC13C49006226FD /* AssetManager+AVAsset.swift in Sources */,
-				8EE06F422F0F7DF2003CDE69 /* TMHXActionSheetAlert.swift in Sources */,
 				D360E7DF2A6B726600740B6B /* EditorAdjusterView+ContentView.swift in Sources */,
 				D360E7E02A6B726600740B6B /* EditorAdjusterView+Croper.swift in Sources */,
 				D360E7E12A6B726600740B6B /* EditorAdjusterView+Edit.swift in Sources */,
