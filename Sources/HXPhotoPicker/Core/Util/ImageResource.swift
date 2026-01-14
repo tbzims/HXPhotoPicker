@@ -380,10 +380,10 @@ public extension HX.ImageResource {
         public var switchFlashClose: ImageType = .local("tm_hx_camera_flash_close")
         
         ///  闪光灯自动
-        public var switchFlashAuto: ImageType = .local("hx_camera_down_back")
+        public var switchFlashAuto: ImageType = .local("tm_hx_camera_flash_open")
         
         ///  闪光灯开启
-        public var switchFlashOpen: ImageType = .local("hx_camera_overturn")
+        public var switchFlashOpen: ImageType = .local("tm_hx_camera_flash_open")
     }
     #endif
 }

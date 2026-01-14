@@ -331,13 +331,13 @@ extension CameraViewController {
             cameraManager.setFlashMode(.off)
             navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashClose.image
         }else if config.flashMode == .off {
-            config.flashMode = .on
-            cameraManager.setFlashMode(.on)
-            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashOpen.image
-        }else {
             config.flashMode = .auto
             cameraManager.setFlashMode(.auto)
-            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashAuto.image
+            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashOpen.image
+        }else {
+            config.flashMode = .off
+            cameraManager.setFlashMode(.off)
+            navigationItem.leftBarButtonItem?.image = .imageResource.camera.switchFlashOpen.image
         }
 
     }
