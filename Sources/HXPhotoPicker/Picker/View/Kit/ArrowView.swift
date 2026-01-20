@@ -66,6 +66,8 @@ class ArrowView: UIView {
         arrowLayer.strokeColor = PhotoManager.isDark ?
         arrowColor.withAlphaComponent(0.4).cgColor :
         arrowColor.cgColor
+        backgroundLayer.fillColor = UIColor.clear.cgColor
+        arrowLayer.strokeColor = UIColor.white.cgColor
     }
     
     override func layoutSubviews() {

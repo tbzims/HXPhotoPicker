@@ -287,6 +287,12 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         }
         selectedView.delegate = self
         addSubview(selectedView)
+        //预览界面底部小图隐藏
+        if self.type == .preview {
+            selectedView.collectionView.isHidden = true
+        }else {
+            selectedView.collectionView.isHidden = false
+        }
     }
     public func updateOriginalState(_ isSelected: Bool) {
         originalBox.isSelected = isSelected

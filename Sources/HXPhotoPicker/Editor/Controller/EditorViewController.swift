@@ -212,6 +212,7 @@ open class EditorViewController: HXBaseViewController {
         
         toolsView = EditorToolsView(config: config.toolsView, contentType: selectedAsset.type.contentType)
         toolsView.delegate = self
+        toolsView.isHidden = true
         
         cancelButton = UIButton(type: .custom)
         cancelButton.setTitle(.textManager.editor.tools.cancelTitle.text, for: .normal)

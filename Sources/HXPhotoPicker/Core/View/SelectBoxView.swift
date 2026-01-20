@@ -125,6 +125,8 @@ public final class SelectBoxView: UIControl {
                 selectedBackgroundColor.cgColor
             }
             backgroundLayer.lineWidth = config.borderWidth
+            backgroundLayer.strokeColor = config.selectedBackgroundBorderColor.cgColor
+            backgroundLayer.borderColor = config.selectedBackgroundBorderColor.cgColor
         }else {
             backgroundLayer.lineWidth = config.borderWidth
             let backgroundColor = config.backgroundColor

@@ -43,6 +43,8 @@ public struct SelectBoxConfiguration {
     
     /// 选中之后的背景颜色
     public var selectedBackgroundColor: UIColor = .systemBlue
+    public var selectedBackgroundBorderColor: UIColor = .systemBlue
+
     
     /// 暗黑风格下选中之后的背景颜色
     public var selectedBackgroudDarkColor: UIColor = .systemBlue

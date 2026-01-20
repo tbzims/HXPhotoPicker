@@ -18,6 +18,7 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
     public var deleteBtn: UIButton!
     public var photoView: PhotoThumbnailView!
     public var selectedView: UIView!
+    public var playImgV: UIImageView!
     public var isPhotoList: Bool = false {
         didSet {
             if isPhotoList {
@@ -27,6 +28,7 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
             }else {
                 deleteBtn.isHidden = true
             }
+            deleteBtn.isHidden = true
         }
     }
     var tickView: TickView!
@@ -46,6 +48,11 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
         didSet {
             photoView.photoAsset = photoAsset
             reqeustAssetImage()
+            if photoAsset.mediaType == .video {
+                playImgV.isHidden = false
+            }else {
+                playImgV.isHidden = true
+            }
         }
     }
     
@@ -54,7 +61,11 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
             if isPhotoList {
                 return
             }
-            selectedView.isHidden = !isSelected
+//            if photoAsset.mediaType == .video {
+//                selectedView.isHidden = true
+//            }else {
+//                selectedView.isHidden = !isSelected
+//            }
         }
     }
     
@@ -82,6 +93,9 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
         selectedView.backgroundColor = .black.withAlphaComponent(0.6)
         contentView.addSubview(selectedView)
         
+        playImgV = UIImageView(image: UIImage(named: "preview_video_play"))
+        contentView.addSubview(playImgV)
+        
         tickView = TickView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         selectedView.addSubview(tickView)
     }
@@ -108,6 +122,9 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
         deleteBtn.size = .init(width: 18, height: 18)
         deleteBtn.y = 0
         deleteBtn.x = width - deleteBtn.width
+        
+        playImgV.center = contentView.center
+        playImgV.size = .init(width: 24, height: 24)
     }
     
     required public init?(coder: NSCoder) {

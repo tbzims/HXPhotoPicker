@@ -39,7 +39,8 @@ class PhotoPreviewSelectedView: UIView,
     }
     
     var isPhotoList: Bool = false
-    var allowDrop: Bool = true
+    //长按拖拽移动位置
+    var allowDrop: Bool = false
     var assetCount: Int { photoAssetArray.count }
     
     var photoAssetArray: [PhotoAsset] = []
