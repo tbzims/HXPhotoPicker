@@ -247,6 +247,7 @@ extension PhotoPreviewViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isPagingEnabled = true
+        collectionView.isScrollEnabled = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         if #available(iOS 11.0, *) {
@@ -416,10 +417,12 @@ extension PhotoPreviewViewController {
         view.semanticContentAttribute = .forceLeftToRight
         collectionView.semanticContentAttribute = .forceLeftToRight
         
+        //自定义编辑按钮
         TMEditBtn = UIButton(type: .custom)
         TMEditBtn.setImage(.imageResource.editor.tools.tmEditImg.image, for: .normal)
         TMEditBtn.addTarget(self, action: #selector(TMEditBtnAction), for: .touchUpInside)
         view.addSubview(TMEditBtn)
+        TMEditBtn.isHidden = true
     }
     
     @objc func TMEditBtnAction() {

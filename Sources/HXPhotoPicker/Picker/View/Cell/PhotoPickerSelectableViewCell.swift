@@ -219,6 +219,7 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
         livePhotoButton?.size = .init(width: 50, height: 20)
         livePhotoButton?.hxPicker_x = assetTypeIcon.hxPicker_x
         livePhotoButton?.hxPicker_center.y = assetTypeIcon.hxPicker_center.y
+        assetTypeIcon.isHidden = true
     }
     
     open func setupLivePhotoState() {

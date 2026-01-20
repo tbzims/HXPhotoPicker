@@ -185,6 +185,7 @@ open class AlbumListView: UIView, PhotoAlbumList, UITableViewDataSource, UITable
     open override func layoutSubviews() {
         super.layoutSubviews()
         tableView.hxPicker_frame = bounds
+        tableView.hxPicker_frame = CGRect(x: 0, y: 0, width: bounds.size.width, height: bounds.size.height - UIDevice.navigationBarHeight - UIDevice.HXsafeAreaInsets.bottom)
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
