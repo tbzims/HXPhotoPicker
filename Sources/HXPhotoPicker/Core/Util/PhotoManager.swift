@@ -41,7 +41,9 @@ public final class PhotoManager: NSObject {
     #elseif canImport(SwiftyGif) && HXPICKER_ENABLE_CORE_IMAGEVIEW_GIF
     public static var ImageView: HXImageViewProtocol.Type = GIFImageView.self
     #else
-    public static var ImageView: HXImageViewProtocol.Type = HXImageView.self
+    public static var ImageView: HXImageViewProtocol.Type = GIFImageView.self
+
+//    public static var ImageView: HXImageViewProtocol.Type = HXImageView.self
     #endif
     
     #if DEBUG

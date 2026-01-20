@@ -6,32 +6,32 @@
 //  Copyright © 2025 Silence. All rights reserved.
 //
 
-#if canImport(SwiftyGif) && HXPICKER_ENABLE_CORE_IMAGEVIEW_GIF && HXPICKER_ENABLE_CORE
-import UIKit
-import SwiftyGif
+//#if canImport(SwiftyGif) && HXPICKER_ENABLE_CORE_IMAGEVIEW_GIF && HXPICKER_ENABLE_CORE
+    import UIKit
+//    import SwiftyGif
 
-public class GIFImageView: UIImageView, HXImageViewProtocol {
-    
-    public func setImageData(_ imageData: Data?) {
-        guard let imageData else {
-            clear()
-            SwiftyGifManager.defaultManager.deleteImageView(self)
-            image = nil
-            return
+    public class GIFImageView: UIImageView, HXImageViewProtocol {
+        
+        public func setImageData(_ imageData: Data?) {
+            guard let imageData else {
+                clear()
+                SwiftyGifManager.defaultManager.deleteImageView(self)
+                image = nil
+                return
+            }
+            if let image = try? UIImage(gifData: imageData) {
+                setGifImage(image)
+            }else {
+                image = .init(data: imageData)
+            }
         }
-        if let image = try? UIImage(gifData: imageData) {
-            setGifImage(image)
-        }else {
-            image = .init(data: imageData)
+        
+        public func _startAnimating() {
+            startAnimatingGif()
+        }
+        
+        public func _stopAnimating() {
+            stopAnimatingGif()
         }
     }
-    
-    public func _startAnimating() {
-        startAnimatingGif()
-    }
-    
-    public func _stopAnimating() {
-        stopAnimatingGif()
-    }
-}
-#endif
+//#endif
