@@ -32,4 +32,6 @@ public enum PhotoPickerEntranceType: Int {
     case changeProfileCover = 5
     /// 通用场景
     case other = 6
+    /// 发布动态时增加图片
+    case addPostFeed = 7
 }
