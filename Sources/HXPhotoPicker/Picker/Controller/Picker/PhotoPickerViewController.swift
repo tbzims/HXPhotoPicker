@@ -304,7 +304,20 @@ extension PhotoPickerViewController {
                 }
             }
             if isLeft {
-                leftItems.append(.initCustomView(customView: view))
+                if view.itemType == .cancel {
+                    let negativeSpacer = UIBarButtonItem(
+                        barButtonSystemItem: .fixedSpace,
+                        target: nil,
+                        action: #selector(didCancelItemClick)
+                    )
+                    negativeSpacer.width = -30
+                    let cancelItem = makeCustomCancelItem()
+                    leftItems.append(negativeSpacer)
+                    leftItems.append(cancelItem)
+                } else {
+                    leftItems.append(.initCustomView(customView: view))
+                }
+//                leftItems.append(.initCustomView(customView: view))
             }else {
                 rightItems.append(.initCustomView(customView: view))
             }
@@ -320,6 +333,22 @@ extension PhotoPickerViewController {
         }
         navigationItem.leftBarButtonItems = leftItems
         navigationItem.rightBarButtonItems = rightItems
+    }
+    
+    private func makeCustomCancelItem() -> UIBarButtonItem {
+
+        let img: UIImage = .imageResource.picker.preview.cancel.image ?? UIImage()   // 或者 back.image
+
+        let btn = UIButton(type: .custom)
+        btn.setImage(img, for: .normal)
+        btn.tintColor = .white
+
+        btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
+        btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+
+        btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
+
+        return UIBarButtonItem(customView: btn)
     }
     
     @objc 

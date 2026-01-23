@@ -32,23 +32,23 @@ extension CameraViewController: CameraResultViewControllerDelegate {
         location = currentLocation
         #endif
         let result = CameraController.Result.image(image)
-        if config.isSaveSystemAlbum {
-            navigationController?.view.hx.show()
-            AssetSaveUtil.save(
-                type: .image(image),
-                albumType: config.saveSystemAlbumType,
-                location: location
-            ) {
-                self.navigationController?.view.hx.hide()
-                switch $0 {
-                case .success(let phAsset):
-                    self.didFinish(result, phAsset: phAsset, location: location)
-                case .failure:
-                    PhotoManager.HUDView.showInfo(with: .textManager.camera.saveSystemAlbumFailedHudTitle.text, delay: 1.5, animated: true, addedTo: self.navigationController?.view)
-                }
-            }
-            return
-        }
+//        if config.isSaveSystemAlbum {
+//            navigationController?.view.hx.show()
+//            AssetSaveUtil.save(
+//                type: .image(image),
+//                albumType: config.saveSystemAlbumType,
+//                location: location
+//            ) {
+//                self.navigationController?.view.hx.hide()
+//                switch $0 {
+//                case .success(let phAsset):
+//                    self.didFinish(result, phAsset: phAsset, location: location)
+//                case .failure:
+//                    PhotoManager.HUDView.showInfo(with: .textManager.camera.saveSystemAlbumFailedHudTitle.text, delay: 1.5, animated: true, addedTo: self.navigationController?.view)
+//                }
+//            }
+//            return
+//        }
         didFinish(result, location: location)
     }
     func didFinish(withVideo videoURL: URL) {
@@ -57,23 +57,23 @@ extension CameraViewController: CameraResultViewControllerDelegate {
         location = currentLocation
         #endif
         let result = CameraController.Result.video(videoURL)
-        if config.isSaveSystemAlbum {
-            navigationController?.view.hx.show()
-            AssetSaveUtil.save(
-                type: .videoURL(videoURL),
-                albumType: config.saveSystemAlbumType,
-                location: location
-            ) {
-                self.navigationController?.view.hx.hide()
-                switch $0 {
-                case .success(let phAsset):
-                    self.didFinish(result, phAsset: phAsset, location: location)
-                case .failure:
-                    PhotoManager.HUDView.showInfo(with: .textManager.camera.saveSystemAlbumFailedHudTitle.text, delay: 1.5, animated: true, addedTo: self.navigationController?.view)
-                }
-            }
-            return
-        }
+//        if config.isSaveSystemAlbum {
+//            navigationController?.view.hx.show()
+//            AssetSaveUtil.save(
+//                type: .videoURL(videoURL),
+//                albumType: config.saveSystemAlbumType,
+//                location: location
+//            ) {
+//                self.navigationController?.view.hx.hide()
+//                switch $0 {
+//                case .success(let phAsset):
+//                    self.didFinish(result, phAsset: phAsset, location: location)
+//                case .failure:
+//                    PhotoManager.HUDView.showInfo(with: .textManager.camera.saveSystemAlbumFailedHudTitle.text, delay: 1.5, animated: true, addedTo: self.navigationController?.view)
+//                }
+//            }
+//            return
+//        }
         didFinish(result, location: location)
     }
     

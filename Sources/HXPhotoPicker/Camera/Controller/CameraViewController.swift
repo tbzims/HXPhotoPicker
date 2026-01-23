@@ -426,7 +426,9 @@ extension CameraViewController {
     }
     
     func addAudioInputFailed() {
-        PhotoManager.HUDView.showInfo(with: .textManager.camera.audioInputFailedTitle.text, delay: 1.5, animated: true, addedTo: view)
+        //没有麦克风权限就关闭相机
+        dismiss(animated: true)
+//        PhotoManager.HUDView.showInfo(with: .textManager.camera.audioInputFailedTitle.text, delay: 1.5, animated: true, addedTo: view)
     }
     
     func addOutputCompletion() {

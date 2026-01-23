@@ -165,10 +165,17 @@ public extension PhotoPickerListFectchCell {
     func updateCellSelectedTitle() {
         for case let cell as PhotoPickerBaseViewCell in collectionView.visibleCells {
             guard let photoAsset = cell.photoAsset else { continue }
+//            if !photoAsset.isSelected &&
+//                config.cell.isShowDisableMask &&
+//                pickerConfig.maximumSelectedVideoFileSize == 0  &&
+//                pickerConfig.maximumSelectedPhotoFileSize == 0 {
+//                cell.canSelect = pickerController.pickerData.canSelect(
+//                    photoAsset,
+//                    isShowHUD: false
+//                )
+//            }
             if !photoAsset.isSelected &&
-                config.cell.isShowDisableMask &&
-                pickerConfig.maximumSelectedVideoFileSize == 0  &&
-                pickerConfig.maximumSelectedPhotoFileSize == 0 {
+                config.cell.isShowDisableMask {
                 cell.canSelect = pickerController.pickerData.canSelect(
                     photoAsset,
                     isShowHUD: false

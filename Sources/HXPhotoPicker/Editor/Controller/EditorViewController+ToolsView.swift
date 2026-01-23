@@ -116,7 +116,8 @@ extension EditorViewController: EditorToolsViewDelegate {
         if let tool = selectedTool, tool.type == .graffiti, editorView.drawType == .canvas {
             return
         }
-        toolsView.isHidden = false
+        //编辑工具栏隐藏
+        toolsView.isHidden = true
         cancelButton.isHidden = false
         finishButton.isHidden = false
         topMaskView.isHidden = false
@@ -619,7 +620,8 @@ extension EditorViewController: EditorToolsViewDelegate {
         if rotateScaleView.isHidden || rotateScaleView.alpha == 0 {
             return
         }
-        toolsView.isHidden = false
+        //编辑工具栏隐藏
+        toolsView.isHidden = true
         hideScaleSwitchView()
         UIView.animate(withDuration: 0.2) {
             if !self.config.cropSize.aspectRatios.isEmpty {

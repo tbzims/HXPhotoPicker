@@ -288,24 +288,50 @@ extension PhotoPreviewViewController {
             updateColors()
         }
         let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
-        let cancelItem = UIBarButtonItem(
-            image: imageType.image,
-            style: .plain,
-            target: self,
-            action: #selector(didCancelItemClick)
-        ).hidesShared()
-        cancelItem.tintColor = .white
+//        let cancelItem = UIBarButtonItem(
+//            image: imageType.image,
+//            style: .plain,
+//            target: self,
+//            action: #selector(didCancelItemClick)
+//        ).hidesShared()
+//        cancelItem.tintColor = .white
+//        navigationItem.leftBarButtonItem = cancelItem
+        let btn = UIButton(type: .custom)
+        btn.setImage(imageType.image, for: .normal)
+        btn.tintColor = .white
+        btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
+
+        // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
+        btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
+        btn.contentHorizontalAlignment = .center
+        btn.contentVerticalAlignment = .center
+
+        let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
         navigationItem.leftBarButtonItem = cancelItem
         if pickerConfig.isMultipleSelect || previewType != .browser {
             if previewType != .browser {
                 if previewType == .picker {
                     let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
-                    let cancelItem = UIBarButtonItem(
-                        image: imageType.image,
-                        style: .plain,
-                        target: self,
-                        action: #selector(didCancelItemClick)
-                    ).hidesShared()
+//                    let cancelItem = UIBarButtonItem(
+//                        image: imageType.image,
+//                        style: .plain,
+//                        target: self,
+//                        action: #selector(didCancelItemClick)
+//                    ).hidesShared()
+//                    navigationItem.leftBarButtonItem = cancelItem
+                    let btn = UIButton(type: .custom)
+                    btn.setImage(imageType.image, for: .normal)
+                    btn.tintColor = .white
+                    btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
+
+                    // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
+                    btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                    btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
+                    btn.contentHorizontalAlignment = .center
+                    btn.contentVerticalAlignment = .center
+
+                    let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
                     navigationItem.leftBarButtonItem = cancelItem
                 }
                 if pickerConfig.isMultipleSelect {
@@ -380,12 +406,25 @@ extension PhotoPreviewViewController {
             }
         }else if !pickerConfig.isMultipleSelect {
             if previewType == .picker {
-                let cancelItem = UIBarButtonItem(
-                    image: .imageResource.picker.preview.cancel.image,
-                    style: .plain,
-                    target: self,
-                    action: #selector(didCancelItemClick)
-                ).hidesShared()
+//                let cancelItem = UIBarButtonItem(
+//                    image: .imageResource.picker.preview.cancel.image,
+//                    style: .plain,
+//                    target: self,
+//                    action: #selector(didCancelItemClick)
+//                ).hidesShared()
+//                navigationItem.leftBarButtonItem = cancelItem
+                let btn = UIButton(type: .custom)
+                btn.setImage(imageType.image, for: .normal)
+                btn.tintColor = .white
+                btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
+
+                // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
+                btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
+                btn.contentHorizontalAlignment = .center
+                btn.contentVerticalAlignment = .center
+
+                let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
                 navigationItem.leftBarButtonItem = cancelItem
             }
             if assetCount > 0 && currentPreviewIndex == 0 {
