@@ -247,7 +247,7 @@ extension PhotoPreviewViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isPagingEnabled = true
-        collectionView.isScrollEnabled = false
+//        collectionView.isScrollEnabled = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         if #available(iOS 11.0, *) {
