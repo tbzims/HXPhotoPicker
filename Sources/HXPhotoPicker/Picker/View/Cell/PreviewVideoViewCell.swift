@@ -113,7 +113,7 @@ open class PreviewVideoViewCell: PhotoPreviewViewCell {
     open override func layoutSubviews() {
         super.layoutSubviews()
         playButton.centerX = width * 0.5
-        playButton.centerY = height * 0.5
+        playButton.centerY = height * 0.45
     }
     
     required public init?(coder: NSCoder) {
