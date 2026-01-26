@@ -82,7 +82,8 @@ public struct PickerBottomViewConfiguration {
     /// Done button title color
     /// 完成按钮标题颜色
     public var finishButtonTitleColor: UIColor = .white
-    
+    /// 完成按钮标题
+    public var finishButtonTitle: String = "Next"
     /// Done button title color in dark style
     /// 暗黑风格下完成按钮标题颜色
     public var finishButtonTitleDarkColor: UIColor = .white

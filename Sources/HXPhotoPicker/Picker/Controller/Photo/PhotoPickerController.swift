@@ -546,7 +546,7 @@ extension PhotoPickerController {
             if #available(iOS 13.0, *) {
                 let appearance = UINavigationBarAppearance()
                 appearance.configureWithOpaqueBackground()   //关闭毛玻璃
-                appearance.backgroundColor = .black
+                appearance.backgroundColor = config.navigationViewBackgroundColor
                 appearance.shadowColor = .clear
                 
                 navigationBar.standardAppearance = appearance

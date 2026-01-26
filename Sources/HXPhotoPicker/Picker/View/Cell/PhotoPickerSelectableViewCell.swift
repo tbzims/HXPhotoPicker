@@ -161,6 +161,8 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
             livePhotoView?.isHidden = true
             removeLivePhotoView()
         }
+        //取消选中蒙层
+        selectMaskLayer.isHidden = true
     }
     
     /// 更新选择框大小

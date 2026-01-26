@@ -151,7 +151,6 @@ open class PhotoPickerListViewController:
         }
         if pickerConfig.entranceType == .postFeed {
             if let postFeedBtnView = pickerConfig.postFeedBtnView {
-                postFeedBtnView.backgroundColor = .black
                 view.addSubview(postFeedBtnView)
                 postFeedTopBgV = postFeedBtnView
             }
@@ -510,10 +509,19 @@ extension PhotoPickerListViewController: UICollectionViewDelegate {
         }
         myCell.request()
         let photoAsset = getAsset(for: indexPath.item)
+//        if !photoAsset.isSelected &&
+//            config.cell.isShowDisableMask &&
+//            pickerConfig.maximumSelectedVideoFileSize == 0 &&
+//            pickerConfig.maximumSelectedPhotoFileSize == 0 {
+//            myCell.canSelect = pickerController.pickerData.canSelect(
+//                photoAsset,
+//                isShowHUD: false
+//            )
+//        }else {
+//            myCell.canSelect = true
+//        }
         if !photoAsset.isSelected &&
-            config.cell.isShowDisableMask &&
-            pickerConfig.maximumSelectedVideoFileSize == 0 &&
-            pickerConfig.maximumSelectedPhotoFileSize == 0 {
+            config.cell.isShowDisableMask {
             myCell.canSelect = pickerController.pickerData.canSelect(
                 photoAsset,
                 isShowHUD: false

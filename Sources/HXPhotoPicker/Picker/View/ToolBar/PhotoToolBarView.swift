@@ -23,6 +23,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     }
     
     public var viewHeight: CGFloat {
+        backgroundView.backgroundColor = .clear
         if pickerConfig.selectMode == .single, isShowPrompt, type != .browser {
             return 55 + UIDevice.bottomMargin
         }
@@ -32,6 +33,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
                 viewHeight += 70
             }else {
                 if isShowSelectedView, selectedView.assetCount > 0 {
+                    backgroundView.backgroundColor = pickerConfig.navigationViewBackgroundColor
                     viewHeight += 70
                 }
             }
@@ -126,7 +128,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         super.init(frame: .zero)
         
         backgroundView = UIView()
-        backgroundView.backgroundColor = .black
+        backgroundView.backgroundColor = .clear
         addSubview(backgroundView)
         contentView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 50 + UIDevice.bottomMargin))
         contentView.isHidden = false
@@ -881,9 +883,9 @@ extension PhotoToolBarView {
         assetCount = count
         let finishTitle: String
         if type == .picker {
-            finishTitle = .textPhotoList.bottomView.finishTitle.text
+            finishTitle = pickerConfig.photoList.bottomView.finishButtonTitle
         }else {
-            finishTitle = .textPreview.bottomView.finishTitle.text
+            finishTitle = pickerConfig.photoList.bottomView.finishButtonTitle
         }
         if count > 0 {
             finishBtn.isEnabled = true
@@ -935,7 +937,7 @@ extension PhotoToolBarView {
             height: selectedView.frame.height
         )
         self.finishMaskView?.removeFromSuperview()
-        self.finishMaskView = TMPreviewSelectedGradientMaskView(frame: maskFrame)
+        self.finishMaskView = TMPreviewSelectedGradientMaskView(frame: maskFrame,maskColor: pickerConfig.navigationViewBackgroundColor)
         selectedView.addSubview(self.finishMaskView!)
     }
 }

@@ -69,6 +69,9 @@ public struct PhotoListCellConfiguration {
     /// 是否显示控制`LivePhoto`禁用按钮
     public var isShowLivePhotoControl: Bool = true
     
+    public var disableMaskLayerBackgroundColor: UIColor = UIColor.black.withAlphaComponent(0.7)
+
+    
     /// 选中`LivePhoto`时是否播放预览
     public var isPlayLivePhoto: Bool = true
     

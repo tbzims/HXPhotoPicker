@@ -81,7 +81,8 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
         contentView.addSubview(assetEditMarkIcon)
         
         disableMaskLayer = CALayer()
-        disableMaskLayer.backgroundColor = UIColor.white.withAlphaComponent(0.6).cgColor
+//        disableMaskLayer.backgroundColor = UIColor.white.withAlphaComponent(0.6).cgColor
+        disableMaskLayer.backgroundColor = config.disableMaskLayerBackgroundColor.cgColor
         disableMaskLayer.isHidden = true
         contentView.layer.addSublayer(disableMaskLayer)
         
@@ -264,7 +265,8 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
     open func setupHighlightedMask() {
         guard let photoAsset = photoAsset else { return }
         if !photoAsset.isSelected {
-            selectMaskLayer.isHidden = !isHighlighted
+            //禁用高亮遮罩
+//            selectMaskLayer.isHidden = !isHighlighted
         }
     }
     
