@@ -297,7 +297,8 @@ extension PhotoPreviewViewController {
 //        cancelItem.tintColor = .white
 //        navigationItem.leftBarButtonItem = cancelItem
         let btn = UIButton(type: .custom)
-        btn.setImage(imageType.image, for: .normal)
+//        btn.setImage(imageType.image, for: .normal)
+        btn.setImage(UIImage(named: "moment_nav_back"), for: .normal)
         btn.tintColor = .white
         btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
 
@@ -321,7 +322,8 @@ extension PhotoPreviewViewController {
 //                    ).hidesShared()
 //                    navigationItem.leftBarButtonItem = cancelItem
                     let btn = UIButton(type: .custom)
-                    btn.setImage(imageType.image, for: .normal)
+//                    btn.setImage(imageType.image, for: .normal)
+                    btn.setImage(UIImage(named: "moment_nav_back"), for: .normal)
                     btn.tintColor = .white
                     btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
 

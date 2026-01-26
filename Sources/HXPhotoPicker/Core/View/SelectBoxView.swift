@@ -145,6 +145,7 @@ public final class SelectBoxView: UIControl {
                 backgroundLayer.strokeColor = PhotoManager.isDark ? borderDarkColor.cgColor : borderColor.cgColor
             }
         }
+        backgroundLayer.strokeColor = UIColor.white.withAlphaComponent(0.64).cgColor
     }
     private func drawTextLayer() {
         if config.style != .number {
