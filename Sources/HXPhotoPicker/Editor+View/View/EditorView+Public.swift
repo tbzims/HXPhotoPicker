@@ -798,7 +798,8 @@ public extension EditorView {
     /// Does the video need to be cropped
     /// 视频是否需要裁剪
     var isCropedVideo: Bool {
-        adjusterView.isCropedVideo
+//        adjusterView.isCropedVideo
+        return false
     }
     
     /// 裁剪视频

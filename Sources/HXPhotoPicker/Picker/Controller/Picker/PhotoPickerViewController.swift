@@ -340,12 +340,12 @@ extension PhotoPickerViewController {
         let img: UIImage = .imageResource.picker.preview.cancel.image ?? UIImage()   // 或者 back.image
 
         let btn = UIButton(type: .custom)
-        btn.setImage(img, for: .normal)
+//        btn.setImage(img, for: .normal)
         btn.tintColor = .white
 
         btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
         btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-
+        btn.setImage(UIImage(named: "photo_picker_cancel"), for: .normal)
         btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
 
         return UIBarButtonItem(customView: btn)
