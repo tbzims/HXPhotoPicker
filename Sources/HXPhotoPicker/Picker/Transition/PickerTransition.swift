@@ -388,8 +388,9 @@ class PickerTransition: NSObject, UIViewControllerAnimatedTransitioning {
                     }
                 }
             }
+            ///设置图片预览图回到选择器的速度，原为duration = 0.5s，这里自己设置成0.25秒
             UIView.animate(
-                withDuration: duration,
+                withDuration: duration / 2,
                 delay: 0,
                 usingSpringWithDamping: 0.8,
                 initialSpringVelocity: 0,
