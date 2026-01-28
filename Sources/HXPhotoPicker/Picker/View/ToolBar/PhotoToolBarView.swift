@@ -292,8 +292,10 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         //预览界面底部小图隐藏
         if self.type == .preview {
             selectedView.collectionView.isHidden = true
+            finishMaskView?.isHidden = true
         }else {
             selectedView.collectionView.isHidden = false
+            finishMaskView?.isHidden = false
         }
     }
     public func updateOriginalState(_ isSelected: Bool) {
@@ -939,6 +941,11 @@ extension PhotoToolBarView {
         self.finishMaskView?.removeFromSuperview()
         self.finishMaskView = TMPreviewSelectedGradientMaskView(frame: maskFrame,maskColor: pickerConfig.navigationViewBackgroundColor)
         selectedView.addSubview(self.finishMaskView!)
+        if self.type == .preview {
+            self.finishMaskView?.isHidden = true
+        }else {
+            self.finishMaskView?.isHidden = false
+        }
     }
 }
 
