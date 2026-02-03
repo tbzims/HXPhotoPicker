@@ -133,6 +133,7 @@ open class PhotoPickerListViewController:
 
         if isShowPrompt {
             promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
+            promptView.backgroundColor = config.backgroundColor
             promptView.onManageButtonTap = { [weak self] in
                 guard let self = self else { return }
                 TMHXActionSheet.show(
@@ -738,7 +739,7 @@ extension PhotoPickerListViewController: UICollectionViewDelegate {
                         cell.updatePhotoAsset(photoAsset)
                     }
                     if photoAsset.isSelected,
-                       !self.pickerController.pickerData.canSelect(photoAsset, isShowHUD: true) {
+                       !self.pickerController.pickerData.canSelect(photoAsset, isShowHUD: false) {
                         self.pickerCell(cell, didSelectControl: photoAsset.isSelected)
                     }else {
                         self.delegate?.photoList(self, updateAsset: photoAsset)
@@ -938,7 +939,7 @@ extension PhotoPickerListViewController: PhotoPickerViewCellDelegate {
                 pickerConfig.editorOptions.isVideo {
                 if pickerController.pickerData.canSelect(
                     cell.photoAsset,
-                    isShowHUD: true
+                    isShowHUD: false
                 ) {
                     delegate?.photoList(self, openEditor: cell.photoAsset, with: cell.photoView.image)
                 }
