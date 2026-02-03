@@ -170,6 +170,9 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         if isShowToolbar {
             photoToolbar.viewDidAppear(self)
         }
+        if config.isShowSelectBox == false {
+            self.changeSelectBoxControlClick(isSelect: true)
+        }
     }
     
     func requestPreviewAsset() {
@@ -193,6 +196,9 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         super.viewWillDisappear(animated)
         if isShowToolbar {
             photoToolbar.viewWillDisappear(self)
+        }
+        if config.isShowSelectBox == false {
+            self.changeSelectBoxControlClick(isSelect: false)
         }
     }
     
@@ -398,6 +404,9 @@ extension PhotoPreviewViewController {
                         } else {
                             updateSelectBox(photoAsset.isSelected, photoAsset: photoAsset)
                             selectBoxControl.isSelected = photoAsset.isSelected
+                        }
+                        if config.isShowSelectBox == false {
+                            selectBoxControl.isHidden = true
                         }
                     }
                     pickerController.previewUpdateCurrentlyDisplayedAsset(

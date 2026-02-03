@@ -136,6 +136,9 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
                     }
                     updateSelectBox(photoAsset.isSelected, photoAsset: photoAsset)
                     selectBoxControl.isSelected = photoAsset.isSelected
+                    if config.isShowSelectBox == false {
+                        selectBoxControl.isHidden = true
+                    }
                 }
             }
             if !firstLayoutSubviews && isShowToolbar {

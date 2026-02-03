@@ -254,6 +254,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             if config.selectMode == .multiple {
                 finishBtn.isEnabled = false
             }
+            guard let finishBtn = finishBtn else { return }
             finishBtn.addTarget(self, action: #selector(didFinishButtonClick), for: .touchUpInside)
 //            contentView.addSubview(finishBtn)
             selectedView.addSubview(finishBtn)

@@ -11,6 +11,8 @@ import UIKit
 // MARK: Photo list Cell configuration class / 照片列表Cell配置类
 public struct PhotoListCellConfiguration {
     
+    public var isShowSelectBox: Bool = true
+
     /// Customize cell without select box
     /// Inherit PhotoPickerBaseViewCell only UIImageView, other controls need to be added by themselves
     /// Inherit PhotoPickerViewCell and modify it on the basis of its own

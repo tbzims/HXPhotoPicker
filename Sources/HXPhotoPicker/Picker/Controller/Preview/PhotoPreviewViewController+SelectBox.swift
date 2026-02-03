@@ -97,6 +97,95 @@ extension PhotoPreviewViewController {
         }
     }
     
+    @objc func changeSelectBoxControlClick(isSelect:Bool) {
+        guard let photoAsset = photoAsset(for: currentPreviewIndex) else {
+            return
+        }
+        let isSelected = isSelect
+        var canUpdate = false
+        var bottomNeedAnimated = false
+        var pickerUpdateCell = false
+        let beforeIsEmpty = pickerController.selectedAssetArray.isEmpty
+        if isSelected {
+            // 选中
+            #if HXPICKER_ENABLE_EDITOR
+            if photoAsset.mediaType == .video &&
+                pickerController.pickerData.videoDurationExceedsTheLimit(photoAsset) &&
+                pickerConfig.editorOptions.isVideo {
+                if pickerController.pickerData.canSelect(photoAsset, isShowHUD: true) {
+                    openEditor(photoAsset)
+                }
+                return
+            }
+            #endif
+            func addAsset() {
+                if pickerController.pickerData.append(photoAsset) {
+                    canUpdate = true
+                    if isShowToolbar {
+                        photoToolbar.insertSelectedAsset(photoAsset)
+                        photoToolbar.previewListReload([photoAsset])
+                    }
+                    if beforeIsEmpty {
+                        bottomNeedAnimated = true
+                    }
+                }
+            }
+            let inICloud = photoAsset.checkICloundStatus(
+                allowSyncPhoto: pickerConfig.allowSyncICloudWhenSelectPhoto
+            ) { _, isSuccess in
+                if isSuccess {
+                    addAsset()
+                    if canUpdate {
+                        self.updateSelectBox(
+                            photoAsset: photoAsset,
+                            isSelected: isSelected,
+                            pickerUpdateCell: pickerUpdateCell,
+                            bottomNeedAnimated: bottomNeedAnimated)
+                    }
+                }
+            }
+            if !inICloud {
+                addAsset()
+            }
+        }else {
+            // 取消选中
+            pickerController.pickerData.remove(photoAsset)
+            if !beforeIsEmpty && pickerController.selectedAssetArray.isEmpty {
+                bottomNeedAnimated = true
+            }
+            if isShowToolbar {
+                photoToolbar.removeSelectedAssets([photoAsset])
+                photoToolbar.previewListReload([photoAsset])
+            }
+            #if HXPICKER_ENABLE_EDITOR
+            if photoAsset.videoEditedResult != nil, pickerConfig.isDeselectVideoRemoveEdited {
+                photoAsset.editedResult = nil
+                let cell = getCell(for: currentPreviewIndex)
+                cell?.photoAsset = photoAsset
+                cell?.cancelRequest()
+                cell?.requestPreviewAsset()
+                pickerUpdateCell = true
+            }else  if photoAsset.photoEditedResult != nil, pickerConfig.isDeselectPhotoRemoveEdited {
+                photoAsset.editedResult = nil
+                let cell = getCell(for: currentPreviewIndex)
+                cell?.photoAsset = photoAsset
+                cell?.cancelRequest()
+                cell?.requestPreviewAsset()
+                pickerUpdateCell = true
+            }
+            #endif
+            canUpdate = true
+        }
+        if canUpdate {
+            updateSelectBox(
+                photoAsset: photoAsset,
+                isSelected: isSelected,
+                pickerUpdateCell: pickerUpdateCell,
+                bottomNeedAnimated: bottomNeedAnimated
+            )
+        }
+    }
+    
     func updateSelectBox(
         photoAsset: PhotoAsset,
         isSelected: Bool,

@@ -44,6 +44,9 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
             if !inICloud {
                 selectControl.isHidden = false
             }
+            if config.isShowSelectBox == false {
+                selectControl.isHidden = true
+            }
         }
         super.requestThumbnailImage(targetWidth: targetWidth)
     }
@@ -55,6 +58,9 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
                 selectControl.isHidden = false
             }
             didLoadCompletion = true
+            if config.isShowSelectBox == false {
+                selectControl.isHidden = true
+            }
         }
     }
     
@@ -62,6 +68,9 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
         super.requestICloudStateCompletion(inICloud)
         selectControl.isHidden = inICloud
         selectControl.isEnabled = !inICloud
+        if config.isShowSelectBox == false {
+            selectControl.isHidden = true
+        }
     }
     
     open func requestLivePhoto(isPlay: Bool) {
