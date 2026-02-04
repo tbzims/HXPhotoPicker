@@ -495,6 +495,13 @@ extension PhotoPickerListViewController: UICollectionViewDataSource {
         cell.config = config.cell
         cell.isRequestDirectly = false
         cell.photoAsset = asset
+        cell.onDidCell = { [weak self] in
+            guard let self = self else { return }
+            self.didSelectItem(
+                indexPath: indexPath,
+                animated: true
+            )
+        }
         return cell
     }
 }

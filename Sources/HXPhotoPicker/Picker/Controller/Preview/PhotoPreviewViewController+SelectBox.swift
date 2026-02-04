@@ -9,6 +9,9 @@ import UIKit
 
 extension PhotoPreviewViewController {
     @objc func didSelectBoxControlClick() {
+        if config.isShowSelectBox == false {
+            return
+        }
         guard let photoAsset = photoAsset(for: currentPreviewIndex) else {
             return
         }

@@ -407,6 +407,11 @@ extension PhotoPreviewViewController {
                         }
                         if config.isShowSelectBox == false {
                             selectBoxControl.isHidden = true
+                            if #available(iOS 16.0, *) {
+                                selectBoxItem.isHidden = true
+                            } else {
+                                selectBoxItem = nil
+                            }
                         }
                     }
                     pickerController.previewUpdateCurrentlyDisplayedAsset(

@@ -95,6 +95,10 @@ open class PhotoPickerSelectableViewCell: PhotoPickerViewCell {
     /// 选择框点击事件
     /// - Parameter control: 选择框
     @objc open func didSelectControlClick(control: SelectBoxView) {
+        if config.isShowSelectBox == false {
+            self.onDidCell?()
+            return
+        }
         if inICloud {
             return
         }

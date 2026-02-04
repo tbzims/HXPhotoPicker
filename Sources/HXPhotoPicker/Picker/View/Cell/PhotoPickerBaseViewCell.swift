@@ -22,6 +22,8 @@ public extension PhotoPickerViewCellDelegate {
 
 open class PhotoPickerBaseViewCell: UICollectionViewCell {
     
+    var onDidCell: (() -> Void)?
+
     public weak var delegate: PhotoPickerViewCellDelegate?
     
     public var config: PhotoListCellConfiguration = .init() {
