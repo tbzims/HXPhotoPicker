@@ -66,7 +66,7 @@ open class PhotoPickerController: UINavigationController {
     /// 可以在传入 selectedAssetArray 之后重新加载数据将重新设置的被选择的 PhotoAsset 选中
     /// - Parameter assetCollection: 切换显示其他资源集合
     public func reloadData(assetCollection: PhotoAssetCollection?) {
-        pickerViewController?.updateAssetCollection(assetCollection)
+        pickerViewController?.updateAssetCollection(assetCollection,isShow: false)
         reloadAlbumData()
     }
     
