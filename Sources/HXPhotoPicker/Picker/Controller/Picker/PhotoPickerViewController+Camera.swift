@@ -266,7 +266,7 @@ extension PhotoPickerViewController: CameraControllerDelegate {
             didDismiss = true
             cameraController.dismiss(animated: true)
         }
-        PhotoManager.HUDView.show(with: nil, delay: 0, animated: true, addedTo: self.navigationController?.view)
+//        PhotoManager.HUDView.show(with: nil, delay: 0, animated: true, addedTo: self.navigationController?.view)
         let pickerController = pickerController
         DispatchQueue.global().async {
             let saveType: AssetSaveUtil.SaveType
