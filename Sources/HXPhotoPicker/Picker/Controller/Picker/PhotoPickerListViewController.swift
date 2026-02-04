@@ -739,7 +739,7 @@ extension PhotoPickerListViewController: UICollectionViewDelegate {
                         cell.updatePhotoAsset(photoAsset)
                     }
                     if photoAsset.isSelected,
-                       !self.pickerController.pickerData.canSelect(photoAsset, isShowHUD: false) {
+                       !self.pickerController.pickerData.canSelect(photoAsset, isShowHUD: true) {
                         self.pickerCell(cell, didSelectControl: photoAsset.isSelected)
                     }else {
                         self.delegate?.photoList(self, updateAsset: photoAsset)
@@ -939,7 +939,7 @@ extension PhotoPickerListViewController: PhotoPickerViewCellDelegate {
                 pickerConfig.editorOptions.isVideo {
                 if pickerController.pickerData.canSelect(
                     cell.photoAsset,
-                    isShowHUD: false
+                    isShowHUD: true
                 ) {
                     delegate?.photoList(self, openEditor: cell.photoAsset, with: cell.photoView.image)
                 }
