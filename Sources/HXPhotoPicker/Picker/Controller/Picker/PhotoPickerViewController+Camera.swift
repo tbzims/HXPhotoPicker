@@ -42,6 +42,7 @@ extension PhotoPickerViewController: UIImagePickerControllerDelegate, UINavigati
                 type: type,
                 delegate: self
             )
+            vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true)
             return
         default:

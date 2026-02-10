@@ -437,7 +437,7 @@ open class PhotoPickerListViewController:
         
         if pickerConfig.entranceType == .postFeed {
             if let postFeedTopBgV = postFeedTopBgV {
-                postFeedTopBgV.frame = CGRect(x: 0, y: topHeight + UIDevice.navigationBarHeight, width: view.bounds.size.width, height: 92.5)
+                postFeedTopBgV.frame = CGRect(x: 0, y: topHeight + UIDevice.navigationBarHeight - 1, width: view.bounds.size.width, height: 92.5)
                 collectionView.frame = CGRect(x: 0, y: topHeight + 92.5, width: view.bounds.size.width, height: view.bounds.size.height - topHeight - 92.5)
                 postFeedTopBgV.isHidden = false
             }
