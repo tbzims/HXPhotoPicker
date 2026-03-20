@@ -50,6 +50,7 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
         _ previewController: PhotoPreviewViewController,
         didOriginalButton isOriginal: Bool
     ) {
+        pickerController.config.isSelectedOriginal = isOriginal
         if config.previewStyle == .present {
             pickerController.isOriginal = isOriginal
             pickerController.originalButtonCallback()

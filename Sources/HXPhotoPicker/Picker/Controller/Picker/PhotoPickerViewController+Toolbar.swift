@@ -69,6 +69,7 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
     }
     
     public func photoToolbar(_ toolbar: PhotoToolBar, didOriginalClick isSelected: Bool) {
+        pickerController.config.isSelectedOriginal = isSelected
         pickerController.isOriginal = isSelected
         pickerController.originalButtonCallback()
         if isSelected {
@@ -131,6 +132,7 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
         }else {
             photoToolbar.requestOriginalAssetBtyes()
         }
+        pickerController.config.isSelectedOriginal = isOriginal
         pickerController.isOriginal = isOriginal
         pickerController.originalButtonCallback()
     }

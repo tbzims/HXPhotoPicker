@@ -111,6 +111,7 @@ public extension HX.ImageResource {
             public var filterNormal: ImageType = .local("hx_picker_photolist_nav_filter_normal")
             /// 筛选按钮选中状态
             public var filterSelected: ImageType = .local("hx_picker_photolist_nav_filter_selected")
+            public var moreNormal: ImageType = .local("hx_picker_photolist_nav_more_normal")
             /// 筛选界面
             public var filter: Filter = .init()
             

@@ -408,6 +408,33 @@ extension PhotoPickerViewController: PhotoNavigationItemDelegate {
     public func photoItem(presentFilterAssets photoItem: PhotoNavigationItem, modalPresentationStyle: UIModalPresentationStyle) {
         didFilterItemClick(modalPresentationStyle: modalPresentationStyle)
     }
+    public func photoItem(_ photoItem: PhotoNavigationItem, didSelected isSelected: Bool) {
+        if photoItem.itemType == .more {
+            let items = [
+//                TMHXMoreItemModel(id: "file", title: "Send as Files", icon: UIImage(named: "icon_20_fillwhite_File")),
+                TMHXMoreItemModel(
+                    id: "hd",
+                    title: "Send in High Quality",
+                    icon: UIImage(named: "icon_20_hd"),
+                    isSelected: pickerController.isOriginal
+                )
+//                TMHXMoreItemModel(id: "ungroup", title: "Send Without Group", icon: UIImage(named: "icon_20_ungroup"))
+            ]
+
+            let alert = TMHXMoreShowAlert(items: items)
+
+            alert.onClickItem = { [weak self] model, _ in
+                guard let self else {
+                    return
+                }
+                if model.id == "hd" {
+                    self.setOriginal(model.isSelected)
+                }
+            }
+
+            alert.show(from: photoItem, in: UIApplication.hx_keyWindow)
+        }
+    }
 }
 
 extension PhotoPickerViewController: PhotoControllerEvent {

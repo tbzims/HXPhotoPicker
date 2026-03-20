@@ -24,7 +24,7 @@ extension Data {
         }
     }
     
-    var isGif: Bool {
+    public var isGif: Bool {
         imageContentType == .gif
     }
     

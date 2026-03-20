@@ -13,6 +13,7 @@ public enum PhotoNavigationItemType {
 //    case select
     case filter
     case finish
+    case more
 }
 
 public protocol PhotoNavigationItemDelegate: PhotoControllerEvent {
