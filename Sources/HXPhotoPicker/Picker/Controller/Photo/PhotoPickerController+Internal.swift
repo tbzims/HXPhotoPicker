@@ -12,25 +12,68 @@ import Photos
 // MARK: ViewControllers function
 extension PhotoPickerController {
     func finishCallback() {
-        #if HXPICKER_ENABLE_EDITOR
+#if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
-        #endif
-        let result = PickerResult(
-            photoAssets: selectedAssetArray,
-            isOriginal: isOriginal
-        )
-        finishHandler?(result, self)
-        pickerDelegate?.pickerController(
-            self,
-            didFinishSelection: result
-        )
-        if previewType == .picker {
-            disablesCustomDismiss = true
+#endif
+        if config.entranceType == .chatSend {
+            let maxSize = isOriginal
+            ? config.maximumSelectedToastOriginaPhotoFileSize
+            : config.maximumSelectedToastPhotoFileSize
+            let filteredAssets: [PhotoAsset]
+            if maxSize > 0 {
+                filteredAssets = selectedAssetArray.filter { asset in
+                    return asset.fileSize <= maxSize
+                }
+            } else {
+                filteredAssets = selectedAssetArray
+            }
+            if filteredAssets.count == 0 {
+                let text = isOriginal ? config.maximumSelectedToastOriginaSend_chat_full_image_sizeToastStr : config.maximumSelectedToastNormalSend_chat_full_image_sizeToastStr
+                PhotoManager.HUDView.showInfo(with: text, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
+                return
+            }
+            if filteredAssets.count != selectedAssetArray.count {
+                let text = isOriginal ? config.maximumSelectedToastOriginaSend_chat_file_sizeToastStr : config.maximumSelectedToastNormalSend_chat_file_sizeToastStr
+                PhotoManager.HUDView.showInfo(with: text, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
+            }
+            let result = PickerResult(
+                photoAssets: filteredAssets,
+                isOriginal: isOriginal
+            )
+            
+            finishHandler?(result, self)
+            pickerDelegate?.pickerController(
+                self,
+                didFinishSelection: result
+            )
+            
+            if previewType == .picker {
+                disablesCustomDismiss = true
+            }
+            isDismissed = true
+            if autoDismiss {
+                dismiss(true)
+            }
+        }else {
+            let result = PickerResult(
+                photoAssets: selectedAssetArray,
+                isOriginal: isOriginal
+            )
+            finishHandler?(result, self)
+            pickerDelegate?.pickerController(
+                self,
+                didFinishSelection: result
+            )
+            if previewType == .picker {
+                disablesCustomDismiss = true
+            }
+            isDismissed = true
+            if autoDismiss {
+                dismiss(true)
+            }
         }
-        isDismissed = true
-        if autoDismiss {
-            dismiss(true)
-        }
+        
+        
     }
     func singleFinishCallback(for photoAsset: PhotoAsset) {
         #if HXPICKER_ENABLE_EDITOR
