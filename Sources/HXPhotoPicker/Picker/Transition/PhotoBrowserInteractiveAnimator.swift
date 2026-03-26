@@ -263,6 +263,8 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
             previewViewController.navBgView?.alpha = bottomViewAlpha
             previewViewController.navigationController?.navigationBar.alpha = alpha
             previewViewController.TMEditBtn.alpha = bottomViewAlpha
+            previewViewController.TMOriginalBtn.alpha = bottomViewAlpha
+            previewViewController.TMOriginalBtn.transform = CGAffineTransform.init(scaleX: previewViewScale, y: previewViewScale)
             navigationBarAlpha = alpha
         }
         pickerController.pickerDelegate?

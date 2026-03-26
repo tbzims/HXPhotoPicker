@@ -110,6 +110,8 @@ public final class PhotoManager: NSObject {
     var cameraAlbumResultOptions: PickerAssetOptions?
     var thumbnailLoadMode: ThumbnailLoadMode = .complete
     var pickerCaptureTime: TimeInterval = 0
+    public var entranceType: PhotoPickerEntranceType = .other
+
     #endif
     
     #if HXPICKER_ENABLE_PICKER || HXPICKER_ENABLE_EDITOR

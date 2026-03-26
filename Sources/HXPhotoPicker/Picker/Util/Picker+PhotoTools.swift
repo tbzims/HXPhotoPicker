@@ -280,7 +280,11 @@ extension PhotoTools {
         
         config.photoList.backgroundColor = "#2E2F30".color
         config.photoList.leftNavigationItems = [PhotoImageCancelItemView.self]
-        config.photoList.rightNavigationItems = [PhotoPickerMoreItemView.self]
+        if PhotoManager.shared.entranceType == .chatSend {
+            config.photoList.rightNavigationItems = [PhotoPickerMoreItemView.self]
+        }else {
+            config.photoList.rightNavigationItems = [PhotoPickerFilterItemView.self]
+        }
         
         config.photoList.titleView.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
         config.photoList.titleView.arrow.backgroundColor = "#B2B2B2".color

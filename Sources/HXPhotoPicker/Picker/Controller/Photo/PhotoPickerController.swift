@@ -230,6 +230,7 @@ open class PhotoPickerController: UINavigationController {
         PhotoManager.shared.indicatorType = config.indicatorType
         PhotoManager.shared.loadNetworkVideoMode = config.previewView.loadNetworkVideoMode
         PhotoManager.shared.thumbnailLoadMode = .complete
+        PhotoManager.shared.entranceType = config.entranceType
         initViews()
         if splitType.isSplit, splitType == .picker {
             requestAuthorization()

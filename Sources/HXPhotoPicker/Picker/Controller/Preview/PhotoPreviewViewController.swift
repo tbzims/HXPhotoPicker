@@ -51,7 +51,8 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
     }
     
     public var TMEditBtn: UIButton!
-    
+    public var TMOriginalBtn: UIButton!
+
     
     override init(config: PickerConfiguration) {
         self.config = config.previewView
@@ -128,6 +129,7 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         }
         navBgView?.frame = .init(x: 0, y: 0, width: view.width, height: navHeight)
         TMEditBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
+        TMOriginalBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
     }
     
     public override func deviceOrientationWillChanged(notify: Notification) {
@@ -253,7 +255,7 @@ extension PhotoPreviewViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isPagingEnabled = true
-//        collectionView.isScrollEnabled = false
+        //        collectionView.isScrollEnabled = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         if #available(iOS 11.0, *) {
@@ -294,51 +296,51 @@ extension PhotoPreviewViewController {
             updateColors()
         }
         let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
-//        let cancelItem = UIBarButtonItem(
-//            image: imageType.image,
-//            style: .plain,
-//            target: self,
-//            action: #selector(didCancelItemClick)
-//        ).hidesShared()
-//        cancelItem.tintColor = .white
-//        navigationItem.leftBarButtonItem = cancelItem
+        //        let cancelItem = UIBarButtonItem(
+        //            image: imageType.image,
+        //            style: .plain,
+        //            target: self,
+        //            action: #selector(didCancelItemClick)
+        //        ).hidesShared()
+        //        cancelItem.tintColor = .white
+        //        navigationItem.leftBarButtonItem = cancelItem
         let btn = UIButton(type: .custom)
-//        btn.setImage(imageType.image, for: .normal)
+        //        btn.setImage(imageType.image, for: .normal)
         btn.setImage(UIImage(named: "moment_nav_back"), for: .normal)
         btn.tintColor = .white
         btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
-
+        
         // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
         btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
         btn.contentHorizontalAlignment = .center
         btn.contentVerticalAlignment = .center
-
+        
         let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
         navigationItem.leftBarButtonItem = cancelItem
         if pickerConfig.isMultipleSelect || previewType != .browser {
             if previewType != .browser {
                 if previewType == .picker {
                     let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
-//                    let cancelItem = UIBarButtonItem(
-//                        image: imageType.image,
-//                        style: .plain,
-//                        target: self,
-//                        action: #selector(didCancelItemClick)
-//                    ).hidesShared()
-//                    navigationItem.leftBarButtonItem = cancelItem
+                    //                    let cancelItem = UIBarButtonItem(
+                    //                        image: imageType.image,
+                    //                        style: .plain,
+                    //                        target: self,
+                    //                        action: #selector(didCancelItemClick)
+                    //                    ).hidesShared()
+                    //                    navigationItem.leftBarButtonItem = cancelItem
                     let btn = UIButton(type: .custom)
-//                    btn.setImage(imageType.image, for: .normal)
+                    //                    btn.setImage(imageType.image, for: .normal)
                     btn.setImage(UIImage(named: "moment_nav_back"), for: .normal)
                     btn.tintColor = .white
                     btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
-
+                    
                     // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
                     btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
                     btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
                     btn.contentHorizontalAlignment = .center
                     btn.contentVerticalAlignment = .center
-
+                    
                     let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
                     navigationItem.leftBarButtonItem = cancelItem
                 }
@@ -386,13 +388,13 @@ extension PhotoPreviewViewController {
                     if config.isShowBottomView {
                         photoToolbar.selectedViewScrollTo(photoAsset, animated: true)
                         
-                        #if HXPICKER_ENABLE_EDITOR
+#if HXPICKER_ENABLE_EDITOR
                         if photoAsset.mediaType == .photo {
                             photoToolbar.updateEditState(pickerController.config.editorOptions.isPhoto)
                         }else if photoAsset.mediaType == .video {
                             photoToolbar.updateEditState(pickerController.config.editorOptions.contains(.video))
                         }
-                        #endif
+#endif
                     }
                     if previewType != .browser {
                         if photoAsset.mediaType == .video && pickerConfig.isSingleVideo {
@@ -422,30 +424,30 @@ extension PhotoPreviewViewController {
             }
         }else if !pickerConfig.isMultipleSelect {
             if previewType == .picker {
-//                let cancelItem = UIBarButtonItem(
-//                    image: .imageResource.picker.preview.cancel.image,
-//                    style: .plain,
-//                    target: self,
-//                    action: #selector(didCancelItemClick)
-//                ).hidesShared()
-//                navigationItem.leftBarButtonItem = cancelItem
+                //                let cancelItem = UIBarButtonItem(
+                //                    image: .imageResource.picker.preview.cancel.image,
+                //                    style: .plain,
+                //                    target: self,
+                //                    action: #selector(didCancelItemClick)
+                //                ).hidesShared()
+                //                navigationItem.leftBarButtonItem = cancelItem
                 let btn = UIButton(type: .custom)
                 btn.setImage(imageType.image, for: .normal)
                 btn.tintColor = .white
                 btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
-
+                
                 // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
                 btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
                 btn.contentEdgeInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 20)
                 btn.contentHorizontalAlignment = .center
                 btn.contentVerticalAlignment = .center
-
+                
                 let cancelItem = UIBarButtonItem(customView: btn).hidesShared()
                 navigationItem.leftBarButtonItem = cancelItem
             }
             if assetCount > 0 && currentPreviewIndex == 0 {
                 if let photoAsset = photoAsset(for: 0) {
-                    #if HXPICKER_ENABLE_EDITOR
+#if HXPICKER_ENABLE_EDITOR
                     if config.isShowBottomView {
                         if photoAsset.mediaType == .photo {
                             photoToolbar.updateEditState(pickerController.config.editorOptions.isPhoto)
@@ -453,7 +455,7 @@ extension PhotoPreviewViewController {
                             photoToolbar.updateEditState(pickerController.config.editorOptions.contains(.video))
                         }
                     }
-                    #endif
+#endif
                     pickerController.previewUpdateCurrentlyDisplayedAsset(
                         photoAsset: photoAsset,
                         index: currentPreviewIndex
@@ -478,6 +480,17 @@ extension PhotoPreviewViewController {
         TMEditBtn.addTarget(self, action: #selector(TMEditBtnAction), for: .touchUpInside)
         view.addSubview(TMEditBtn)
         TMEditBtn.isHidden = true
+        TMOriginalBtn = UIButton(type: .custom)
+        TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalSDImg.image, for: .normal)
+        TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalHDImg.image, for: .selected)
+        TMOriginalBtn.addTarget(self, action: #selector(TMOriginalBtnAction), for: .touchUpInside)
+        view.addSubview(TMOriginalBtn)
+        TMOriginalBtn.isSelected = pickerController.config.isSelectedOriginal
+    }
+    
+    @objc func TMOriginalBtnAction() {
+        TMOriginalBtn.isSelected.toggle()
+        self.setOriginal(TMOriginalBtn.isSelected)
     }
     
     @objc func TMEditBtnAction() {
@@ -712,6 +725,7 @@ extension PhotoPreviewViewController {
     
     @objc func didCancelItemClick() {
 //        pickerController.cancelCallback()
+        self.TMOriginalBtn.isHidden = true
         if let viewControllers = navigationController?.viewControllers,
            viewControllers.count > 1 {
             navigationController?.popViewController(animated: true)
