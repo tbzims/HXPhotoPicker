@@ -234,6 +234,10 @@ public class PhotoPickerViewController: PhotoBaseViewController {
 
 extension PhotoPickerViewController {
     
+    var shouldShowMoreNavigationItem: Bool {
+        !listView.assets.isEmpty
+    }
+    
     func initView() {
         if didInitViews {
             return
@@ -272,6 +276,9 @@ extension PhotoPickerViewController {
                    !UIDevice.isPortrait {
                     continue
                 }
+            }
+            if view.itemType == .more, !shouldShowMoreNavigationItem {
+                continue
             }
             if view.itemType == .filter {
                 if !addFilter || !config.isShowFilterItem {

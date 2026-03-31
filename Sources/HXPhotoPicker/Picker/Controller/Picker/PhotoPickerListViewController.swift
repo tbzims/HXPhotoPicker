@@ -133,6 +133,7 @@ open class PhotoPickerListViewController:
 
         if isShowPrompt {
             promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
+            promptView.manageButton.setTitle(config.manageBtnName, for: .normal)
             promptView.backgroundColor = config.backgroundColor
             promptView.onManageButtonTap = { [weak self] in
                 guard let self = self else { return }
@@ -414,6 +415,7 @@ open class PhotoPickerListViewController:
         if isShowPrompt {
             if promptView == nil {
                 promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
+                promptView.manageButton.setTitle(config.manageBtnName, for: .normal)
                 promptView.onManageButtonTap = { [weak self] in
                     guard let self = self else { return }
                     TMHXActionSheet.show(

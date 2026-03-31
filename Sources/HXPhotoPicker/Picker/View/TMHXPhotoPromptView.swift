@@ -22,7 +22,7 @@ class TMHXPhotoPromptView: UIView {
         return label
     }()
     
-    private let manageButton: UIButton = {
+    let manageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Manage", for: .normal)
         button.setTitleColor(.white, for: .normal)

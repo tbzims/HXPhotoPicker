@@ -68,6 +68,8 @@ public struct PhotoListConfiguration {
         set { HX.imageResource.picker.photoList.cancel = .local(newValue) }
     }
     
+    public var manageBtnName: String = "Manage"
+    
     /// Cancel button image name in dark mode
     /// 暗黑模式下取消按钮图片名
     public var cancelDarkImageName: String {

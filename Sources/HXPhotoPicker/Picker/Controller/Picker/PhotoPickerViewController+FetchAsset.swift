@@ -58,6 +58,7 @@ extension PhotoPickerViewController {
         pickerController.fetchData.fetchPhotoAssets(assetCollection: assetCollection) { [weak self] result in
             guard let self = self else { return }
             self.listView.assetResult = result
+            self.initNavItems(addFilter)
             self.scrollToAppropriatePlace(photoAsset: result.selectedAsset)
             if self.showLoading {
                 PhotoManager.HUDView.dismiss(delay: 0, animated: true, for: self.view)
