@@ -23,7 +23,8 @@ public struct PreviewViewConfiguration {
     
     /// 背景颜色
     public var backgroundColor: UIColor = .white
-    
+    public var qualityStr: String = "Quality"
+
     /// 暗黑风格下背景颜色
     public var backgroundDarkColor: UIColor = .black
     

@@ -117,6 +117,7 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
             currentIndex = 0
         }
         if let photoAsset = photoAsset(for: currentIndex) {
+            updateTMOriginalButtonVisibility(for: photoAsset)
             if previewType != .browser {
                 if photoAsset.mediaType == .video && pickerConfig.isSingleVideo {
                     if #available(iOS 16.0, *) {

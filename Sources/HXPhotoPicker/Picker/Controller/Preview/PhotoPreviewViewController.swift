@@ -129,7 +129,15 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         }
         navBgView?.frame = .init(x: 0, y: 0, width: view.width, height: navHeight)
         TMEditBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
-        TMOriginalBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
+        let originalButtonSize = CGSize(width: 60, height: 62)
+        TMOriginalBtn.frame = CGRect(
+            x: view.width - originalButtonSize.width - 12,
+            y: view.height - UIScreen.main.bounds.size.height * 0.8,
+            width: originalButtonSize.width,
+            height: originalButtonSize.height
+        )
+        updateTMOriginalButtonLayout()
+        updateTMOriginalButtonVisibility(for: photoAsset(for: currentPreviewIndex))
     }
     
     public override func deviceOrientationWillChanged(notify: Notification) {
@@ -483,14 +491,72 @@ extension PhotoPreviewViewController {
         TMOriginalBtn = UIButton(type: .custom)
         TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalSDImg.image, for: .normal)
         TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalHDImg.image, for: .selected)
+        TMOriginalBtn.setTitle(config.qualityStr, for: .normal)
+        TMOriginalBtn.setTitleColor(.white, for: .normal)
+        TMOriginalBtn.setTitleColor(.white, for: .selected)
         TMOriginalBtn.addTarget(self, action: #selector(TMOriginalBtnAction), for: .touchUpInside)
+        TMOriginalBtn.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
+        TMOriginalBtn.titleLabel?.textAlignment = .center
+        TMOriginalBtn.titleLabel?.lineBreakMode = .byTruncatingTail
+        TMOriginalBtn.titleLabel?.layer.shadowColor = UIColor.black.withAlphaComponent(0.7).cgColor
+        TMOriginalBtn.titleLabel?.layer.shadowOpacity = 1
+        TMOriginalBtn.titleLabel?.layer.shadowRadius = 4
+        TMOriginalBtn.titleLabel?.layer.shadowOffset = .zero
+        TMOriginalBtn.titleLabel?.layer.masksToBounds = false
+        TMOriginalBtn.imageView?.contentMode = .scaleAspectFit
+        TMOriginalBtn.contentHorizontalAlignment = .center
+        TMOriginalBtn.contentVerticalAlignment = .center
+        TMOriginalBtn.clipsToBounds = false
         view.addSubview(TMOriginalBtn)
         TMOriginalBtn.isSelected = pickerController.config.isSelectedOriginal
+        updateTMOriginalButtonLayout()
+        updateTMOriginalButtonVisibility(for: photoAsset(for: currentPreviewIndex))
     }
     
     @objc func TMOriginalBtnAction() {
         TMOriginalBtn.isSelected.toggle()
         self.setOriginal(TMOriginalBtn.isSelected)
+    }
+
+    func updateTMOriginalButtonVisibility(for photoAsset: PhotoAsset?) {
+        guard TMOriginalBtn != nil else {
+            return
+        }
+        guard let photoAsset else {
+            TMOriginalBtn.isHidden = true
+            return
+        }
+        TMOriginalBtn.isHidden = photoAsset.mediaType == .video || photoAsset.isGifAsset
+    }
+
+    func updateTMOriginalButtonLayout() {
+        guard let imageView = TMOriginalBtn.imageView,
+              let titleLabel = TMOriginalBtn.titleLabel else {
+            return
+        }
+        TMOriginalBtn.layoutIfNeeded()
+        let imageSize = imageView.image?.size ?? CGSize(width: 24, height: 24)
+        let titleSize = titleLabel.intrinsicContentSize
+        let spacing: CGFloat = 1
+        TMOriginalBtn.imageEdgeInsets = UIEdgeInsets(
+            top: -(titleSize.height + spacing),
+            left: 0,
+            bottom: 0,
+            right: -titleSize.width
+        )
+        TMOriginalBtn.titleEdgeInsets = UIEdgeInsets(
+            top: 0,
+            left: -imageSize.width,
+            bottom: -(imageSize.height + spacing),
+            right: 0
+        )
+        let verticalInset = max(0, (titleSize.height + spacing) * 0.5)
+        TMOriginalBtn.contentEdgeInsets = UIEdgeInsets(
+            top: verticalInset,
+            left: 0,
+            bottom: verticalInset,
+            right: 0
+        )
     }
     
     @objc func TMEditBtnAction() {
@@ -515,6 +581,9 @@ extension PhotoPreviewViewController {
         }
         let indexPath = IndexPath(item: item, section: 0)
         collectionView.reloadItems(at: [indexPath])
+        if item == currentPreviewIndex {
+            updateTMOriginalButtonVisibility(for: photoAsset)
+        }
         if config.isShowBottomView {
             photoToolbar.reloadSelectedAsset(photoAsset)
             photoToolbar.requestOriginalAssetBtyes()
