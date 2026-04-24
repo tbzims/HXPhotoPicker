@@ -421,7 +421,7 @@ extension PhotoPickerViewController: PhotoNavigationItemDelegate {
 //                TMHXMoreItemModel(id: "file", title: "Send as Files", icon: UIImage(named: "icon_20_fillwhite_File")),
                 TMHXMoreItemModel(
                     id: "hd",
-                    title: "Send in High Quality",
+                    title: pickerConfig.photoList.sendInHighQualityBtnName,
                     icon: UIImage(named: "icon_20_hd"),
                     isSelected: pickerController.isOriginal
                 )

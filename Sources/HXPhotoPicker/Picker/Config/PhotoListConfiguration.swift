@@ -70,6 +70,8 @@ public struct PhotoListConfiguration {
     
     public var manageBtnName: String = "Manage"
     
+    public var sendInHighQualityBtnName: String = "Send in High Quality"
+    
     /// Cancel button image name in dark mode
     /// 暗黑模式下取消按钮图片名
     public var cancelDarkImageName: String {
