@@ -22,14 +22,32 @@ extension PhotoPickerController {
             let filteredAssets: [PhotoAsset]
             if maxSize > 0 {
                 filteredAssets = selectedAssetArray.filter { asset in
-                    return asset.fileSize <= maxSize
+                    if asset.mediaType == .photo {
+                        return asset.fileSize <= maxSize
+                    }else {
+                        if asset.fileSize <= config.maximumSelectedVideoFileSize {
+                            return true
+                        }else {
+                            return false
+                        }
+                    }
                 }
             } else {
                 filteredAssets = selectedAssetArray
             }
             if filteredAssets.count == 0 {
-                let text = isOriginal ? config.maximumSelectedToastOriginaSend_chat_full_image_sizeToastStr : config.maximumSelectedToastNormalSend_chat_full_image_sizeToastStr
-                PhotoManager.HUDView.showInfo(with: text, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
+                let imageText = isOriginal ? config.maximumSelectedToastOriginaSend_chat_full_image_sizeToastStr : config.maximumSelectedToastNormalSend_chat_full_image_sizeToastStr
+                let videoText = config.maximumSelectedToastNormalSend_chat_video_sizeToastStr
+                let fileText = isOriginal ? config.maximumSelectedToastOriginaSend_chat_file_sizeToastStr : config.maximumSelectedToastNormalSend_chat_file_sizeToastStr
+                let toastText: String
+                if selectedAssetArray.isEmpty == false && selectedAssetArray.allSatisfy({ $0.mediaType == .video }) {
+                    toastText = videoText
+                }else if selectedAssetArray.isEmpty == false && selectedAssetArray.allSatisfy({ $0.mediaType == .photo }) {
+                    toastText = imageText
+                }else {
+                    toastText = fileText
+                }
+                PhotoManager.HUDView.showInfo(with: toastText, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
                 return
             }
             if filteredAssets.count != selectedAssetArray.count {

@@ -170,6 +170,7 @@ public struct PickerConfiguration: IndicatorTypeConfig, PhotoDebugLogsConfig, Ph
     public var maximumSelectedToastNormalSend_chat_file_sizeToastStr: String = ""
     public var maximumSelectedToastOriginaSend_chat_full_image_sizeToastStr: String = ""
     public var maximumSelectedToastNormalSend_chat_full_image_sizeToastStr: String = ""
+    public var maximumSelectedToastNormalSend_chat_video_sizeToastStr: String = ""
     #if HXPICKER_ENABLE_EDITOR
     /// Editable resource type
     /// Video editing allowed: When the selected video duration exceeds the limit, it will automatically enter the editing interface
