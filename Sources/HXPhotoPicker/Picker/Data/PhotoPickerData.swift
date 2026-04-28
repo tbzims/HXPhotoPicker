@@ -223,25 +223,25 @@ open class PhotoPickerData {
                 if round(photoAsset.videoDuration) > Double(config.maximumSelectedVideoDuration) {
                     #if HXPICKER_ENABLE_EDITOR
                     if !config.editorOptions.contains(.video) || isFilterEditor {
-                        text = String(
-                            format: .textManager.picker.maximumSelectedVideoDurationHudTitle.text,
-                            arguments: [config.maximumSelectedVideoDuration]
+                        text = PhotoTools.formatVideoDurationLimitHudTitle(
+                            .textManager.picker.maximumSelectedVideoDurationHudTitle.text,
+                            duration: config.maximumSelectedVideoDuration
                         )
                         canSelect = false
                     }else {
                         if config.maximumVideoEditDuration > 0 &&
                             round(photoAsset.videoDuration) > Double(config.maximumVideoEditDuration) {
-                            text = String(
-                                format: .textManager.picker.maximumVideoEditDurationHudTitle.text,
-                                arguments: [config.maximumVideoEditDuration]
+                            text = PhotoTools.formatVideoDurationLimitHudTitle(
+                                .textManager.picker.maximumVideoEditDurationHudTitle.text,
+                                duration: config.maximumVideoEditDuration
                             )
                             canSelect = false
                         }
                     }
                     #else
-                    text = String(
-                        format: .textManager.picker.maximumSelectedVideoDurationHudTitle.text,
-                        arguments: [config.maximumSelectedVideoDuration]
+                    text = PhotoTools.formatVideoDurationLimitHudTitle(
+                        .textManager.picker.maximumSelectedVideoDurationHudTitle.text,
+                        duration: config.maximumSelectedVideoDuration
                     )
                     canSelect = false
                     #endif
@@ -249,9 +249,9 @@ open class PhotoPickerData {
             }
             if config.minimumSelectedVideoDuration > 0 {
                 if round(photoAsset.videoDuration) < Double(config.minimumSelectedVideoDuration) {
-                    text = String(
-                        format: .textManager.picker.minimumSelectedVideoDurationHudTitle.text,
-                        arguments: [config.minimumSelectedVideoDuration]
+                    text = PhotoTools.formatVideoDurationLimitHudTitle(
+                        .textManager.picker.minimumSelectedVideoDurationHudTitle.text,
+                        duration: config.minimumSelectedVideoDuration
                     )
                     canSelect = false
                 }

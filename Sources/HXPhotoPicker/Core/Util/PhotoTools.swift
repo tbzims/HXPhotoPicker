@@ -64,6 +64,71 @@ public struct PhotoTools {
             }
         }
     }
+
+    static func formatVideoDurationLimitHudTitle(
+        _ title: String,
+        duration: Int
+    ) -> String {
+        let duration = max(duration, 0)
+        let language = PhotoManager.shared.languageStr
+        guard language.hasPrefix("zh") else {
+            return String(format: title, arguments: [duration])
+        }
+
+        let durationText = localizedVideoDurationLimitText(
+            duration: duration,
+            isTraditionalChinese: language == "zh-Hant"
+        )
+        if title.contains("%@") {
+            return String(format: title, arguments: [durationText])
+        }
+        if title.contains("%d秒") {
+            return title.replacingOccurrences(of: "%d秒", with: durationText)
+        }
+        if title.contains("%d 秒") {
+            return title.replacingOccurrences(of: "%d 秒", with: durationText)
+        }
+        return String(format: title, arguments: [duration])
+    }
+
+    private static func localizedVideoDurationLimitText(
+        duration: Int,
+        isTraditionalChinese: Bool
+    ) -> String {
+//        let hourUnit = isTraditionalChinese ? "小時" : "小时"
+//        let minuteUnit = isTraditionalChinese ? "分鐘" : "分钟"
+//        let secondUnit = "秒"
+        
+        let hourUnit = PhotoManager.shared.hourUnit
+        let minuteUnit = PhotoManager.shared.minuteUnit
+        let secondUnit = PhotoManager.shared.secondUnit
+
+        let hours = duration / 3600
+        let minutes = (duration % 3600) / 60
+        let seconds = duration % 60
+
+        if hours > 0 {
+            if minutes == 0 && seconds == 0 {
+                return "\(hours)\(hourUnit)"
+            }
+            if seconds == 0 {
+                return "\(hours)\(hourUnit)\(minutes)\(minuteUnit)"
+            }
+            if minutes == 0 {
+                return "\(hours)\(hourUnit)\(seconds)\(secondUnit)"
+            }
+            return "\(hours)\(hourUnit)\(minutes)\(minuteUnit)\(seconds)\(secondUnit)"
+        }
+
+        if minutes > 0 {
+            if seconds == 0 {
+                return "\(minutes)\(minuteUnit)"
+            }
+            return "\(minutes)\(minuteUnit)\(seconds)\(secondUnit)"
+        }
+
+        return "\(seconds)\(secondUnit)"
+    }
     
     /// 根据视频地址获取视频时长
     public static func getVideoDuration(

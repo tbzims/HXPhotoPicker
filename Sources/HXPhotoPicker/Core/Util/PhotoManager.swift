@@ -111,7 +111,10 @@ public final class PhotoManager: NSObject {
     var thumbnailLoadMode: ThumbnailLoadMode = .complete
     var pickerCaptureTime: TimeInterval = 0
     public var entranceType: PhotoPickerEntranceType = .other
-
+    public var hourUnit: String = "hr"
+    public var minuteUnit: String = "min"
+    public var secondUnit: String = "Second"
+    
     #endif
     
     #if HXPICKER_ENABLE_PICKER || HXPICKER_ENABLE_EDITOR
