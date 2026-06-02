@@ -197,6 +197,13 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
                     self.disableMaskLayer.isHidden = false
                     self.loaddingView.isHidden = true
                     self.loaddingView.stopAnimating()
+                    //媒体资源异常
+                    PhotoManager.HUDView.showInfo(
+                        with: self.config.media_resource_exception,
+                        delay: 1.5,
+                        animated: true,
+                        addedTo: UIApplication.hx_keyWindow
+                    )
                 }
             }
         }

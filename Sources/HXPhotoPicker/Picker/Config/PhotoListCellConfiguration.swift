@@ -11,6 +11,8 @@ import UIKit
 // MARK: Photo list Cell configuration class / 照片列表Cell配置类
 public struct PhotoListCellConfiguration {
     
+    public var media_resource_exception: String = "Media resource exception"
+
     public var isShowSelectBox: Bool = true
 
     /// Customize cell without select box
