@@ -426,11 +426,15 @@ extension PhotoPreviewContentPhotoView {
         switch result {
         case .success(let dataResult):
             if asset.mediaSubType.isGif {
-                self.requestSucceed()
-                imageView.setImageData(dataResult.imageData)
-                isAnimatedCompletion = true
-                requestID = nil
-                requestCompletion = true
+                imageView.setImageData(dataResult.imageData) { [weak self] in
+                    guard let self, asset == self.photoAsset else {
+                        return
+                    }
+                    self.requestSucceed()
+                    self.isAnimatedCompletion = true
+                    self.requestID = nil
+                    self.requestCompletion = true
+                }
             }else {
                 DispatchQueue.global().async {
                     func handler(_ result: UIImage? = nil) {

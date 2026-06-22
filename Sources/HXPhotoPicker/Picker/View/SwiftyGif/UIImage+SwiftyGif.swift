@@ -218,7 +218,7 @@ public extension UIImage {
 
         if #available(iOS 10.3, *) {
             // Will be 120 on devices with ProMotion display, 60 otherwise.
-            let maximumFramesPerSecond = UIScreen.main.maximumFramesPerSecond
+            let maximumFramesPerSecond = Thread.isMainThread ? UIScreen.main.maximumFramesPerSecond : defaultMaxFramePerSecond
             if maximumFramesPerSecond == 120 {
                 maxFramePerSecond = maximumFramesPerSecond
                 displayRefreshFactors.insert(maximumFramesPerSecond, at: 0)

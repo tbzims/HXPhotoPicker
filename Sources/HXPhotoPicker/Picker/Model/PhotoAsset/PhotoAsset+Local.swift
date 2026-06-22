@@ -164,34 +164,48 @@ extension PhotoAsset {
                 resultHandler(thumbnail, self)
                 return
             }
-            var image: UIImage?
-            if let img = localImageAsset?.image?.normalizedImage() {
-                image = img
-            }else  if let imageURL = localImageAsset?.imageURL,
-                      let img = UIImage(contentsOfFile: imageURL.path)?.normalizedImage() {
-                localImageAsset?.image = img
-                image = img
-            }else if let imageURL = localLivePhoto?.imageURL,
-                     imageURL.isFileURL,
-                     let img = UIImage(contentsOfFile: imageURL.path)?.normalizedImage() {
-                image = img
-           }
-            if let image = image, urlType == .thumbnail {
-                DispatchQueue.global().async {
-                    let thumbnail = image.scaleToFillSize(
-                        size: CGSize(
-                            width: targetWidth,
-                            height: targetWidth
+            func handleImage(_ image: UIImage?) {
+                if let image = image, urlType == .thumbnail {
+                    DispatchQueue.global().async {
+                        let thumbnail = image.scaleToFillSize(
+                            size: CGSize(
+                                width: targetWidth,
+                                height: targetWidth
+                            )
                         )
-                    )
-                    self.localImageAsset?.thumbnail = thumbnail
+                        self.localImageAsset?.thumbnail = thumbnail
+                        DispatchQueue.main.async {
+                            resultHandler(thumbnail, self)
+                        }
+                    }
+                    return
+                }
+                resultHandler(image, self)
+            }
+            if let img = localImageAsset?.image?.normalizedImage() {
+                handleImage(img)
+                return
+            }else  if let imageURL = localImageAsset?.imageURL,
+                      imageURL.isFileURL {
+                DispatchQueue.global().async {
+                    let image = UIImage(contentsOfFile: imageURL.path)?.normalizedImage()
                     DispatchQueue.main.async {
-                        resultHandler(thumbnail, self)
+                        self.localImageAsset?.image = image
+                        handleImage(image)
+                    }
+                }
+                return
+            }else if let imageURL = localLivePhoto?.imageURL,
+                     imageURL.isFileURL {
+                DispatchQueue.global().async {
+                    let image = UIImage(contentsOfFile: imageURL.path)?.normalizedImage()
+                    DispatchQueue.main.async {
+                        handleImage(image)
                     }
                 }
                 return
             }
-            resultHandler(image, self)
+            resultHandler(nil, self)
         }else {
             PhotoTools.getVideoCoverImage(
                 for: self

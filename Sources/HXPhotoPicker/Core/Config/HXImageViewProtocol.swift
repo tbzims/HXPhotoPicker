@@ -18,6 +18,7 @@ import AVFoundation
 /// PickerConfiguration.imageViewProtocol  = SDImageView.self
 public protocol HXImageViewProtocol: UIImageView {
     func setImageData(_ imageData: Data?)
+    func setImageData(_ imageData: Data?, completionHandler: (() -> Void)?)
     @discardableResult
     func setImage(with resource: ImageDownloadResource, placeholder: UIImage?, options: ImageDownloadOptionsInfo?, progressHandler: ((CGFloat) -> Void)?, completionHandler: ((Result<UIImage, ImageDownloadError>) -> Void)?) -> ImageDownloadTask?
     
@@ -38,6 +39,11 @@ public protocol HXImageViewProtocol: UIImageView {
 }
 
 public extension HXImageViewProtocol {
+    func setImageData(_ imageData: Data?, completionHandler: (() -> Void)?) {
+        setImageData(imageData)
+        completionHandler?()
+    }
+
     func setVideoCover(with url: URL, placeholder: UIImage?, completionHandler: ((Result<UIImage, ImageDownloadError>) -> Void)?) -> ImageDownloadTask? {
         weak var imageGenerator: AVAssetImageGenerator?
         let avAsset = PhotoTools.getVideoThumbnailImage(url: url, atTime: 0.1) {
