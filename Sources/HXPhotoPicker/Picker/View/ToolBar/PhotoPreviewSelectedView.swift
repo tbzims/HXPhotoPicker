@@ -42,6 +42,25 @@ class PhotoPreviewSelectedView: UIView,
     //长按拖拽移动位置
     var allowDrop: Bool = false
     var assetCount: Int { photoAssetArray.count }
+    var reservedTrailingWidth: CGFloat = 95 {
+        didSet { setNeedsLayout() }
+    }
+    var verticalInsets = UIEdgeInsets(top: 10, left: 0, bottom: 5, right: 0) {
+        didSet {
+            reloadSectionInset()
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+    var isEdgeGradientEnabled: Bool = true {
+        didSet {
+            shadeView.layer.mask = isEdgeGradientEnabled ? shadeMaskLayer : nil
+        }
+    }
+    var itemCornerRadius: CGFloat = 2.5
+    var itemBorderWidth: CGFloat = 0
+    var itemBorderColor: UIColor?
+    var fixedItemSize: CGSize?
+    var keepsFirstItemLeftAligned: Bool = false
     
     var photoAssetArray: [PhotoAsset] = []
     private var currentSelectedIndexPath: IndexPath?
@@ -97,21 +116,28 @@ class PhotoPreviewSelectedView: UIView,
         
     func reloadSectionInset() {
         if x == 0 {
-            collectionViewLayout.sectionInset.top = 10
-            collectionViewLayout.sectionInset.bottom = 5
+            collectionViewLayout.sectionInset.top = verticalInsets.top
+            collectionViewLayout.sectionInset.bottom = verticalInsets.bottom
             var leftInset: CGFloat
             var rightInset: CGFloat
-            if leftMargin > 0 {
+            if verticalInsets.left > 0 {
+                leftInset = verticalInsets.left
+            } else if leftMargin > 0 {
                 leftInset = leftMargin
             }else {
                 leftInset = 12
             }
-            if UIDevice.rightMargin > 0 {
+            if verticalInsets.right > 0 {
+                rightInset = verticalInsets.right
+            } else if UIDevice.rightMargin > 0 {
                 rightInset = UIDevice.rightMargin
             }else {
                 rightInset = 12
             }
-            if #available(iOS 26.0, *), !PhotoManager.isIos26Compatibility {
+            if verticalInsets.left == 0,
+               verticalInsets.right == 0,
+               #available(iOS 26.0, *),
+               !PhotoManager.isIos26Compatibility {
                 if leftMargin > 0 {
                     leftInset += 12
                 }else {
@@ -162,7 +188,16 @@ class PhotoPreviewSelectedView: UIView,
         }else {
             collectionView.insertItems(at: [indexPath])
         }
-        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        if beforeIsEmpty, keepsFirstItemLeftAligned {
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+            collectionView.setContentOffset(.zero, animated: false)
+        } else {
+            collectionView.selectItem(
+                at: indexPath,
+                animated: true,
+                scrollPosition: .centeredHorizontally
+            )
+        }
         currentSelectedIndexPath = indexPath
         if beforeIsEmpty {
             alpha = 0
@@ -253,6 +288,9 @@ class PhotoPreviewSelectedView: UIView,
         cell.delegate = self
         cell.isPhotoList = isPhotoList
         cell.tickColor = tickColor
+        cell.photoView.layer.cornerRadius = itemCornerRadius
+        cell.photoView.layer.borderWidth = itemBorderWidth
+        cell.photoView.layer.borderColor = itemBorderColor?.cgColor
         cell.photoAsset = photoAssetArray[indexPath.item]
         return cell
     }
@@ -281,7 +319,13 @@ class PhotoPreviewSelectedView: UIView,
         myCell.cancelRequest()
     }
     func getItemSize(photoAsset: PhotoAsset) -> CGSize {
-        let minWidth: CGFloat = 70 - collectionViewLayout.sectionInset.top - collectionViewLayout.sectionInset.bottom
+        if let fixedItemSize {
+            return fixedItemSize
+        }
+        let minWidth = max(
+            0,
+            bounds.height - collectionViewLayout.sectionInset.top - collectionViewLayout.sectionInset.bottom
+        )
 //        let maxWidth: CGFloat = minWidth / 9 * 16
         let maxHeight: CGFloat = minWidth
 //        let aspectRatio = maxHeight / photoAsset.imageSize.height
@@ -309,7 +353,12 @@ class PhotoPreviewSelectedView: UIView,
         if !collectionView.frame.equalTo(bounds) {
             reloadSectionInset()
         }
-        let frame = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: bounds.size.width - 79 - 16, height: bounds.size.height)
+        let frame = CGRect(
+            x: bounds.origin.x,
+            y: bounds.origin.y,
+            width: max(0, bounds.size.width - reservedTrailingWidth),
+            height: bounds.size.height
+        )
         collectionView.frame = frame
     }
     

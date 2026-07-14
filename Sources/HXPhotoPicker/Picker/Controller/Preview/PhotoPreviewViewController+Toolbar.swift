@@ -65,6 +65,33 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
     public func photoToolbar(didFinishClick toolbar: PhotoToolBar) {
         didFinishClick()
     }
+
+    public func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar) {
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            options: [.beginFromCurrentState, .curveEaseInOut, .allowUserInteraction]
+        ) {
+            self.configBottomViewFrame()
+            self.photoToolbar.setNeedsLayout()
+            self.photoToolbar.layoutIfNeeded()
+        }
+    }
+
+    public func photoToolbar(
+        _ toolbar: PhotoToolBar,
+        didChangeInputPresentation isExpanded: Bool,
+        keyboardOffset: CGFloat,
+        duration: TimeInterval,
+        options: UIView.AnimationOptions
+    ) {
+        updateInputPresentation(
+            isExpanded: isExpanded,
+            keyboardOffset: keyboardOffset,
+            duration: duration,
+            options: options
+        )
+    }
     
     public func photoToolbar(_ toolbar: PhotoToolBar, didSelectedAsset asset: PhotoAsset) {
         if previewAssets.contains(asset) {

@@ -821,6 +821,7 @@ extension PhotoPickerListViewController: UICollectionViewDelegate {
         return true
     }
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        delegate?.photoListWillBeginDragging(self)
         if scrollToTop { return }
         updateCellLoadMode(.complete)
         cellReloadImage()

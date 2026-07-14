@@ -220,9 +220,9 @@ extension TMHXMoreShowAlert: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        items[indexPath.row].isSelected.toggle()
-        tableView.reloadRows(at: [indexPath], with: .none)
-        onClickItem?(items[indexPath.row], items)
+        let item = items[indexPath.row]
+        onClickItem?(item, items)
+        dismissSelf()
     }
 }
 

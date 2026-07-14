@@ -23,6 +23,13 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     }
     
     public var viewHeight: CGFloat {
+        if usesCustomInputView {
+            if type == .picker {
+                guard selectedView.assetCount > 0 else { return 0 }
+                return selectedViewHeight + customInputContext.preferredHeight
+            }
+            return customInputContext.preferredHeight
+        }
         backgroundView.backgroundColor = .clear
         if pickerConfig.selectMode == .single, isShowPrompt, type != .browser {
             return 55 + UIDevice.bottomMargin
@@ -63,6 +70,16 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             selectedView.contentOffset = contentOffset
         }
     }
+
+    public var customInputText: String? {
+        guard usesCustomInputView else { return nil }
+        return customInputContext.inputText
+    }
+
+    public func dismissCustomInput() {
+        guard usesCustomInputView else { return }
+        customInputContext.dismissInput()
+    }
     
     var previewAssets: [PhotoAsset] = []
     private var previewPage: Int?
@@ -85,6 +102,8 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     private var originalLoadingView: UIActivityIndicatorView!
     private var finishBtn: UIButton!
     private var finishMaskView: TMPreviewSelectedGradientMaskView?
+    private var customInputView: UIView?
+    private var customInputContext: PhotoPickerCustomInputViewContext!
     private var isOriginalLoading: Bool = false
     private var originalobserve: NSKeyValueObservation?
     
@@ -112,6 +131,12 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             return pickerConfig.previewView.bottomView.isShowPreviewList
         }
     }
+    private var usesCustomInputView: Bool {
+        type != .browser && pickerConfig.photoList.bottomView.customInputViewProvider != nil
+    }
+    private var selectedViewHeight: CGFloat {
+        pickerConfig.photoList.bottomView.selectedViewHeight
+    }
     
     private var allowPreviewDidScroll: Bool = true
     private var assetCount: Int = 0
@@ -128,7 +153,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         super.init(frame: .zero)
         
         backgroundView = UIView()
-        backgroundView.backgroundColor = .clear
+        backgroundView.backgroundColor = usesCustomInputView && type == .picker ? pickerConfig.navigationViewBackgroundColor : .clear
         addSubview(backgroundView)
         contentView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 50 + UIDevice.bottomMargin))
         contentView.isHidden = false
@@ -257,7 +282,56 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             guard let finishBtn = finishBtn else { return }
             finishBtn.addTarget(self, action: #selector(didFinishButtonClick), for: .touchUpInside)
 //            contentView.addSubview(finishBtn)
-            selectedView.addSubview(finishBtn)
+            if !usesCustomInputView, let selectedView {
+                selectedView.addSubview(finishBtn)
+            } else {
+                finishBtn.isHidden = true
+            }
+        }
+        if usesCustomInputView,
+           let provider = pickerConfig.photoList.bottomView.customInputViewProvider {
+            let context = PhotoPickerCustomInputViewContext()
+            context.updateAllowsFinishWithoutSelection(type == .preview)
+            context.updateUsesTransparentBackground(type == .preview)
+            context.onPreferredHeightChanged = { [weak self] _ in
+                guard let self else { return }
+                self.setNeedsLayout()
+                self.toolbarDelegate?.photoToolbarDidUpdateHeight(self)
+            }
+            context.onInputPresentationChanged = { [weak self] isExpanded, keyboardOffset, duration, options in
+                guard let self else { return }
+                self.toolbarDelegate?.photoToolbar(
+                    self,
+                    didChangeInputPresentation: isExpanded,
+                    keyboardOffset: keyboardOffset,
+                    duration: duration,
+                    options: options
+                )
+            }
+            context.onFinish = { [weak self] in
+                guard let self else { return }
+                self.toolbarDelegate?.photoToolbar(didFinishClick: self)
+            }
+            customInputContext = context
+            let inputView = provider(context)
+            customInputView = inputView
+            addSubview(inputView)
+            if type == .picker, let selectedView {
+                selectedView.reservedTrailingWidth = 0
+                selectedView.verticalInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
+                selectedView.collectionViewLayout.minimumLineSpacing = 8
+                selectedView.collectionViewLayout.minimumInteritemSpacing = 8
+                selectedView.isEdgeGradientEnabled = false
+                selectedView.itemCornerRadius = 4
+                selectedView.itemBorderWidth = 0.5
+                selectedView.itemBorderColor = UIColor.white.withAlphaComponent(0.5)
+                selectedView.fixedItemSize = .init(width: 40, height: 40)
+                selectedView.keepsFirstItemLeftAligned = true
+                selectedView.allowDrop = true
+            } else if type == .preview {
+                selectedView?.isHidden = true
+                previewListView?.isHidden = true
+            }
         }
         layoutSubviews()
         bringSubviewToFront(contentView)
@@ -331,6 +405,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     
     public func selectedAssetDidChanged(_ photoAssets: [PhotoAsset]) {
         if type == .browser { return }
+        customInputContext?.updateSelectedCount(photoAssets.count)
         updateFinishButtonTitle(photoAssets)
     }
     
@@ -472,6 +547,18 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         }
         let leftMargin = self.leftMargin
         if type == .picker {
+            if usesCustomInputView {
+                let stripHeight = selectedView.assetCount > 0 ? selectedViewHeight : 0
+                selectedView.frame = .init(x: 0, y: 0, width: width, height: stripHeight)
+                selectedView.collectionView.collectionViewLayout.invalidateLayout()
+                customInputView?.frame = .init(
+                    x: 0,
+                    y: stripHeight,
+                    width: width,
+                    height: customInputContext.preferredHeight
+                )
+                return
+            }
             if isShowPrompt {
                 if pickerConfig.selectMode != .single {
                     promptView.frame = .init(x: 0, y: 0, width: width, height: 70)
@@ -501,6 +588,10 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             updateFinishButtonFrame()
             updateOriginalViewFrame()
         }else if type == .preview {
+            if usesCustomInputView {
+                customInputView?.frame = bounds
+                return
+            }
             #if HXPICKER_ENABLE_EDITOR
             if UIDevice.leftMargin > 0 {
                 editBtn.hxPicker_x = UIDevice.leftMargin
@@ -706,7 +797,17 @@ extension PhotoToolBarView {
     func configColor() {
         let config = type == .picker ? pickerConfig.photoList.bottomView : pickerConfig.previewView.bottomView
         let isDark = PhotoManager.isDark
-        backgroundColor = isDark ? config.backgroundDarkColor : config.backgroundColor
+        if usesCustomInputView {
+            if type == .preview {
+                backgroundColor = .clear
+                backgroundView.backgroundColor = .clear
+            } else {
+                backgroundColor = pickerConfig.navigationViewBackgroundColor
+                backgroundView.backgroundColor = pickerConfig.navigationViewBackgroundColor
+            }
+        } else {
+            backgroundColor = isDark ? config.backgroundDarkColor : config.backgroundColor
+        }
         tintColor = isDark ? config.barTintDarkColor : config.barTintColor
         let style: UIBlurEffect.Style = {
             if isDark {
@@ -884,6 +985,12 @@ extension PhotoToolBarView {
     private func updateFinishButtonTitle(_ photoAssets: [PhotoAsset]) {
         let count = photoAssets.count
         assetCount = count
+        if usesCustomInputView {
+            if type == .picker {
+                previewBtn.isEnabled = count > 0
+            }
+            return
+        }
         let finishTitle: String
         if type == .picker {
             finishTitle = pickerConfig.photoList.bottomView.finishButtonTitle

@@ -16,6 +16,7 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
         isPreviewSelect: Bool = false,
         animated: Bool
     ) {
+        photoToolbar.dismissCustomInput()
         if config.previewStyle == .present {
             var config = pickerConfig
             config.isSelectedOriginal = pickerController.isOriginal
@@ -59,6 +60,7 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
             photoToolbar.updateOriginalState(isOriginal)
             requestSelectedAssetFileSize()
         }
+        updateHDNavigationItem(isOriginal: isOriginal)
     }
     func previewViewController(
         _ previewController: PhotoPreviewViewController,
@@ -145,10 +147,15 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
         }
         previewController.pickerController.disablesCustomDismiss = true
         if pickerConfig.isMultipleSelect {
-            pickerController.finishCallback()
+            pickerController.finishCallback(
+                customInputText: previewController.photoToolbar.customInputText
+            )
         }else {
             if let photoAsset = photoAssets.first {
-                pickerController.singleFinishCallback(for: photoAsset)
+                pickerController.singleFinishCallback(
+                    for: photoAsset,
+                    customInputText: previewController.photoToolbar.customInputText
+                )
             }
         }
     }

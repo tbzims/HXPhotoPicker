@@ -23,6 +23,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
     var previewView: PhotoPreviewViewCell?
     var previewCenter: CGPoint = .zero
     var navigationBarAlpha: CGFloat = 1
+    private var shouldStartPreviewChromeFade = false
     
     required init(pickerController: PhotoPickerController) {
         super.init(pickerController: pickerController)
@@ -133,6 +134,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
         }
         
         self.transitionContext = transitionContext
+        startPreviewChromeFadeIfNeeded()
     }
     
     public func gestureRecognizer(
@@ -146,6 +148,10 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
             return true
         }
         return !isDragging
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        pickerController?.previewViewController?.isCustomMessageInputExpanded != true
     }
     
     @objc
@@ -172,6 +178,9 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
     func interationFactor(_ gestureRecognizer: UIPanGestureRecognizer) -> (allowInteraction:Bool, isTracking: Bool) {
         var isTracking = false
         let previewVC = pickerController?.previewViewController
+        if previewVC?.isCustomMessageInputExpanded == true {
+            return (false, isTracking)
+        }
         if pickerController?.topViewController != previewVC {
             return (false, isTracking)
         }
@@ -203,6 +212,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
         beganPoint = gestureRecognizer.location(in: gestureRecognizer.view)
         canInteration = true
         canTransition = true
+        shouldStartPreviewChromeFade = true
         
         pickerController.dismiss(animated: true, completion: nil)
     }
@@ -255,17 +265,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
         backgroundView.alpha = alpha
         
         if !previewViewController.statusBarShouldBeHidden {
-            var bottomViewAlpha = 1 - scale * 1.5
-            if bottomViewAlpha < 0 {
-                bottomViewAlpha = 0
-            }
-            previewViewController.photoToolbar.alpha = bottomViewAlpha
-            previewViewController.navBgView?.alpha = bottomViewAlpha
-            previewViewController.navigationController?.navigationBar.alpha = alpha
-            previewViewController.TMEditBtn.alpha = bottomViewAlpha
-            previewViewController.TMOriginalBtn.alpha = bottomViewAlpha
             previewViewController.TMOriginalBtn.transform = CGAffineTransform.init(scaleX: previewViewScale, y: previewViewScale)
-            navigationBarAlpha = alpha
         }
         pickerController.pickerDelegate?
             .pickerController(pickerController, interPercentUpdate: alpha, type: PickerInteractiveTransitionType.dismiss)
@@ -316,7 +316,11 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
         previewViewController.navigationController?.view.isUserInteractionEnabled = false
         let toVC = self.transitionContext?.viewController(forKey: .to) as? PhotoPickerViewController
         let picker = self.pickerController
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0,
+            options: [.beginFromCurrentState, .curveEaseOut, .allowUserInteraction]
+        ) {
             previewView.transform = .identity
             previewView.center = self.previewCenter
             self.backgroundView.alpha = 1
@@ -324,6 +328,9 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
                 previewViewController.photoToolbar.alpha = 1
                 previewViewController.navBgView?.alpha = 1
                 previewViewController.navigationController?.navigationBar.alpha = 1
+                previewViewController.TMEditBtn.alpha = 1
+                previewViewController.TMOriginalBtn.alpha = 1
+                previewViewController.TMOriginalBtn.transform = .identity
             }
             if let picker {
                 picker.pickerDelegate?
@@ -346,7 +353,11 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
             self.transitionContext?.completeTransition(false)
             self.transitionContext = nil
             self.canInteration = false
+            self.shouldStartPreviewChromeFade = false
             self.panGestureRecognizer.isEnabled = true
+            if previewViewController.usesCustomMessageInput {
+                previewViewController.restorePreviewChrome()
+            }
         }
     }
     
@@ -432,6 +443,7 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
                 self.backgroundView.removeFromSuperview()
                 self.transitionContext?.completeTransition(true)
                 self.transitionContext = nil
+                self.shouldStartPreviewChromeFade = false
                 self.panGestureRecognizer.isEnabled = true
             }
         }
@@ -447,5 +459,27 @@ public class PhotoBrowserInteractiveAnimator: PhotoBrowserInteractiveTransition,
             pickerController?.view.backgroundColor = backgroundColor
         }
     }
-}
 
+    private func animatePreviewChrome(alpha: CGFloat, duration: TimeInterval) {
+        guard let previewViewController, !previewViewController.statusBarShouldBeHidden else {
+            return
+        }
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: [.beginFromCurrentState, .curveEaseOut, .allowUserInteraction]
+        ) {
+            previewViewController.photoToolbar.alpha = alpha
+            previewViewController.navBgView?.alpha = alpha
+            previewViewController.navigationController?.navigationBar.alpha = alpha
+            previewViewController.TMEditBtn.alpha = alpha
+            previewViewController.TMOriginalBtn.alpha = alpha
+        }
+    }
+
+    private func startPreviewChromeFadeIfNeeded() {
+        guard shouldStartPreviewChromeFade else { return }
+        shouldStartPreviewChromeFade = false
+        animatePreviewChrome(alpha: 0, duration: 0.5)
+    }
+}

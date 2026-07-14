@@ -11,6 +11,35 @@ import MobileCoreServices
 import AVFoundation
 import Photos
 
+public final class PhotoPickerHDButton: UIControl {
+    private let iconView = UIImageView()
+    private let selectedIconView = UIImageView(image: UIImage(named: "hx_hd_done_yes"))
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.frame.size = CGSize(width: 44, height: 44)
+        accessibilityLabel = "HD"
+
+        iconView.contentMode = .center
+        iconView.frame = bounds
+        iconView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(iconView)
+
+        selectedIconView.frame = CGRect(x: 26, y: 24, width: 12, height: 12)
+        addSubview(selectedIconView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func update(isOriginal: Bool) {
+        iconView.image = UIImage(named: isOriginal ? "hx_nav_hd_yes" : "hx_nav_hd_no")
+        selectedIconView.isHidden = !isOriginal
+        accessibilityValue = isOriginal ? "On" : "Off"
+    }
+}
+
 public class PhotoPickerViewController: PhotoBaseViewController {
     let config: PhotoListConfiguration
     override init(config: PickerConfiguration) {
@@ -33,6 +62,7 @@ public class PhotoPickerViewController: PhotoBaseViewController {
     var appropriatePlaceAsset: PhotoAsset?
     var navigationBarHeight: CGFloat?
     weak var finishItem: PhotoNavigationItem?
+    private weak var hdButton: PhotoPickerHDButton?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -235,7 +265,7 @@ public class PhotoPickerViewController: PhotoBaseViewController {
 extension PhotoPickerViewController {
     
     var shouldShowMoreNavigationItem: Bool {
-        !listView.assets.isEmpty
+        config.bottomView.customInputViewProvider != nil || !listView.assets.isEmpty
     }
     
     func initView() {
@@ -256,7 +286,7 @@ extension PhotoPickerViewController {
         initTitleView()
         updateTitle()
     }
-    
+
     func initTitleView() {
         navigationItem.titleView = titleView
     }
@@ -265,6 +295,7 @@ extension PhotoPickerViewController {
         let items = config.leftNavigationItems + config.rightNavigationItems
         var leftItems: [UIBarButtonItem] = []
         var rightItems: [UIBarButtonItem] = []
+        var moreItemIndex: Int?
         for (index, item) in items.enumerated() {
             let isLeft = index < config.leftNavigationItems.count
             let view = item.init(config: pickerConfig)
@@ -327,7 +358,18 @@ extension PhotoPickerViewController {
 //                leftItems.append(.initCustomView(customView: view))
             }else {
                 rightItems.append(.initCustomView(customView: view))
+                if view.itemType == .more {
+                    moreItemIndex = rightItems.count - 1
+                }
             }
+        }
+        if config.bottomView.customInputViewProvider != nil {
+            let hdButton = PhotoPickerHDButton()
+            hdButton.update(isOriginal: pickerController.isOriginal)
+            hdButton.addTarget(self, action: #selector(didHDItemClick), for: .touchUpInside)
+            self.hdButton = hdButton
+            let insertionIndex = moreItemIndex.map { $0 + 1 } ?? rightItems.count
+            rightItems.insert(.init(customView: hdButton), at: insertionIndex)
         }
         navigationItem.leftItemsSupplementBackButton = true
         if pickerConfig.albumShowMode.isPop {
@@ -340,6 +382,14 @@ extension PhotoPickerViewController {
         }
         navigationItem.leftBarButtonItems = leftItems
         navigationItem.rightBarButtonItems = rightItems
+    }
+
+    @objc private func didHDItemClick() {
+        setOriginal(!pickerController.isOriginal)
+    }
+
+    func updateHDNavigationItem(isOriginal: Bool) {
+        hdButton?.update(isOriginal: isOriginal)
     }
     
     private func makeCustomCancelItem() -> UIBarButtonItem {
@@ -420,24 +470,17 @@ extension PhotoPickerViewController: PhotoNavigationItemDelegate {
             let items = [
 //                TMHXMoreItemModel(id: "file", title: "Send as Files", icon: UIImage(named: "icon_20_fillwhite_File")),
                 TMHXMoreItemModel(
-                    id: "hd",
-                    title: pickerConfig.photoList.sendInHighQualityBtnName,
-                    icon: UIImage(named: "icon_20_hd"),
-                    isSelected: pickerController.isOriginal
+                    id: "noGroup",
+                    title: pickerConfig.photoList.sendWithoutGroup,
+                    icon: UIImage(named: "icon_20_ungroup"),
+                    isSelected: false
                 )
 //                TMHXMoreItemModel(id: "ungroup", title: "Send Without Group", icon: UIImage(named: "icon_20_ungroup"))
             ]
 
             let alert = TMHXMoreShowAlert(items: items)
 
-            alert.onClickItem = { [weak self] model, _ in
-                guard let self else {
-                    return
-                }
-                if model.id == "hd" {
-                    self.setOriginal(model.isSelected)
-                }
-            }
+            alert.onClickItem = { _, _ in }
 
             alert.show(from: photoItem, in: UIApplication.hx_keyWindow)
         }

@@ -28,6 +28,14 @@ public protocol PhotoToolBarDelegate: AnyObject {
     #endif
     
     func photoToolbar(didFinishClick toolbar: PhotoToolBar)
+    func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar)
+    func photoToolbar(
+        _ toolbar: PhotoToolBar,
+        didChangeInputPresentation isExpanded: Bool,
+        keyboardOffset: CGFloat,
+        duration: TimeInterval,
+        options: UIView.AnimationOptions
+    )
     
     func photoToolbar(_ toolbar: PhotoToolBar, didSelectedAsset asset: PhotoAsset)
     func photoToolbar(_ toolbar: PhotoToolBar, didMoveAsset fromIndex: Int, with toIndex: Int)
@@ -44,6 +52,14 @@ public extension PhotoToolBarDelegate {
     func photoToolbar(_ toolbar: PhotoToolBar, didMoveAsset fromIndex: Int, with toIndex: Int) { }
     func photoToolbar(_ toolbar: PhotoToolBar, didDeleteAsset asset: PhotoAsset) { }
     func photoToolbar(_ toolbar: PhotoToolBar, previewMoveTo asset: PhotoAsset) { }
+    func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar) { }
+    func photoToolbar(
+        _ toolbar: PhotoToolBar,
+        didChangeInputPresentation isExpanded: Bool,
+        keyboardOffset: CGFloat,
+        duration: TimeInterval,
+        options: UIView.AnimationOptions
+    ) { }
 }
 
 /// 具体实现可参考`PhotoToolbarView`
@@ -59,6 +75,10 @@ public protocol PhotoToolBar: UIView, PhotoPickerDataStatus {
     
     /// 视图整体高度
     var viewHeight: CGFloat { get }
+
+    var customInputText: String? { get }
+
+    func dismissCustomInput()
     
     var selectViewOffset: CGPoint? { get set }
     
@@ -123,6 +143,10 @@ public protocol PhotoToolBar: UIView, PhotoPickerDataStatus {
 }
 
 public extension PhotoToolBar {
+    func dismissCustomInput() { }
+}
+
+public extension PhotoToolBar {
     
     static func isShow(_ config: PickerConfiguration,  type: PhotoToolBarType) -> Bool {
         if type == .picker, config.selectMode == .single {
@@ -134,6 +158,7 @@ public extension PhotoToolBar {
     }
     
     var selectViewOffset: CGPoint? { get { nil } set { } }
+    var customInputText: String? { nil }
     
     #if HXPICKER_ENABLE_EDITOR
     func updateEditState(_ isEnabled: Bool) { }

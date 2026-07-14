@@ -47,11 +47,13 @@ public protocol PhotoPickerListDelegate: PhotoControllerEvent {
     func photoList(_ photoList: PhotoPickerList, didSelectedAsset asset: PhotoAsset)
     func photoList(_ photoList: PhotoPickerList, didDeselectedAsset asset: PhotoAsset)
     func photoList(_ photoList: PhotoPickerList, updateAsset asset: PhotoAsset)
+    func photoListWillBeginDragging(_ photoList: PhotoPickerList)
 }
 
 public extension PhotoPickerListDelegate {
     func photoList(_ photoList: PhotoPickerList, didSelectedAsset asset: PhotoAsset) { }
     func photoList(_ photoList: PhotoPickerList, didDeselectedAsset asset: PhotoAsset) { }
+    func photoListWillBeginDragging(_ photoList: PhotoPickerList) { }
 }
 
 public protocol PhotoPickerList:

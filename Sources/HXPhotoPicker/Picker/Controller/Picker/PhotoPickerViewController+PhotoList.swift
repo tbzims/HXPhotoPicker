@@ -79,6 +79,10 @@ extension PhotoPickerViewController: PhotoPickerListDelegate {
         }
         finishItem?.selectedAssetDidChanged(pickerController.selectedAssetArray)
     }
+
+    public func photoListWillBeginDragging(_ photoList: PhotoPickerList) {
+        photoToolbar.dismissCustomInput()
+    }
     
     public func photoList(_ photoList: PhotoPickerList, openEditor asset: PhotoAsset, with image: UIImage?) {
         asset.playerTime = 0

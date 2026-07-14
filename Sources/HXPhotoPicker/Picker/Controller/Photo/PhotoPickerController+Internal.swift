@@ -11,7 +11,7 @@ import Photos
 
 // MARK: ViewControllers function
 extension PhotoPickerController {
-    func finishCallback() {
+    func finishCallback(customInputText: String? = nil) {
 #if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
 #endif
@@ -56,7 +56,8 @@ extension PhotoPickerController {
             }
             let result = PickerResult(
                 photoAssets: filteredAssets,
-                isOriginal: isOriginal
+                isOriginal: isOriginal,
+                customInputText: customInputText ?? activeCustomInputText
             )
             
             finishHandler?(result, self)
@@ -75,7 +76,8 @@ extension PhotoPickerController {
         }else {
             let result = PickerResult(
                 photoAssets: selectedAssetArray,
-                isOriginal: isOriginal
+                isOriginal: isOriginal,
+                customInputText: customInputText ?? activeCustomInputText
             )
             finishHandler?(result, self)
             pickerDelegate?.pickerController(
@@ -93,13 +95,17 @@ extension PhotoPickerController {
         
         
     }
-    func singleFinishCallback(for photoAsset: PhotoAsset) {
+    func singleFinishCallback(
+        for photoAsset: PhotoAsset,
+        customInputText: String? = nil
+    ) {
         #if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
         #endif
         let result = PickerResult(
             photoAssets: [photoAsset],
-            isOriginal: isOriginal
+            isOriginal: isOriginal,
+            customInputText: customInputText ?? activeCustomInputText
         )
         finishHandler?(result, self)
         pickerDelegate?.pickerController(
@@ -128,6 +134,10 @@ extension PhotoPickerController {
                 dismiss(animated: true, completion: nil)
             }
         }
+    }
+    private var activeCustomInputText: String? {
+        previewViewController?.photoToolbar?.customInputText ??
+        pickerViewController?.photoToolbar?.customInputText
     }
     func originalButtonCallback() {
         pickerDelegate?.pickerController(

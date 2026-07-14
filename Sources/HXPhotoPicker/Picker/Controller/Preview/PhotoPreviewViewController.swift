@@ -9,6 +9,31 @@
 import UIKit
 import Photos
 
+private final class PreviewNavigationGradientView: UIView {
+    private let gradientLayer = CAGradientLayer()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        gradientLayer.colors = [
+            UIColor.black.withAlphaComponent(0.3).cgColor,
+            UIColor.black.withAlphaComponent(0).cgColor
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.addSublayer(gradientLayer)
+        isUserInteractionEnabled = false
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 public class PhotoPreviewViewController: PhotoBaseViewController {
     
     weak var delegate: PhotoPreviewViewControllerDelegate?
@@ -21,9 +46,18 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
     public var collectionView: UICollectionView!
     /// 是否处于转场动画过程中
     public var isTransitioning: Bool = false
-    public var navBgView: UIToolbar?
+    public var navBgView: UIView?
     public var photoToolbar: PhotoToolBar!
     public var statusBarShouldBeHidden: Bool = false
+    private let previewMediaContainerView = UIView()
+    private let inputDimmingView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.32)
+        view.alpha = 0
+        view.isUserInteractionEnabled = false
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return view
+    }()
     
     private var collectionViewLayout: UICollectionViewFlowLayout!
     var numberOfPages: PhotoBrowser.NumberOfPagesHandler?
@@ -49,6 +83,10 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         }
         return previewAssets.count
     }
+    var usesCustomMessageInput: Bool {
+        pickerConfig.photoList.bottomView.customInputViewProvider != nil
+    }
+    var isCustomMessageInputExpanded = false
     
     public var TMEditBtn: UIButton!
     public var TMOriginalBtn: UIButton!
@@ -95,6 +133,10 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if usesCustomMessageInput {
+            previewMediaContainerView.bounds = view.bounds
+            previewMediaContainerView.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+        }
         let margin: CGFloat = 20
         let itemWidth = view.width + margin
         collectionViewLayout.minimumLineSpacing = margin
@@ -155,12 +197,18 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
     }
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if usesCustomMessageInput {
+            updateNavigationBarAppearance(isPreview: true)
+        }
         if isShowToolbar {
             photoToolbar.viewWillAppear(self)
         }
     }
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if usesCustomMessageInput {
+            restorePreviewChrome()
+        }
         viewDidAppear = true
         requestPreviewAsset()
         let isFullscreen = pickerController.modalPresentationStyle == .fullScreen || (splitViewController?.modalPresentationStyle == .fullScreen)
@@ -284,7 +332,22 @@ extension PhotoPreviewViewController {
                 forCellWithReuseIdentifier: PreviewVideoViewCell.className
             )
         }
-        view.addSubview(collectionView)
+        if usesCustomMessageInput {
+            previewMediaContainerView.frame = view.bounds
+            previewMediaContainerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.addSubview(previewMediaContainerView)
+            previewMediaContainerView.addSubview(collectionView)
+        } else {
+            view.addSubview(collectionView)
+        }
+
+        if usesCustomMessageInput {
+            inputDimmingView.frame = view.bounds
+            inputDimmingView.addGestureRecognizer(
+                UITapGestureRecognizer(target: self, action: #selector(didTapInputDimmingView))
+            )
+            view.addSubview(inputDimmingView)
+        }
         
         initToolbar()
         
@@ -471,9 +534,8 @@ extension PhotoPreviewViewController {
                 }
             }
         }
-        if !pickerConfig.adaptiveBarAppearance, previewType != .browser {
-            let navBgView = UIToolbar()
-            navBgView.barStyle = pickerConfig.navigationBarStyle
+        if (!pickerConfig.adaptiveBarAppearance || usesCustomMessageInput), previewType != .browser {
+            let navBgView = PreviewNavigationGradientView()
             view.addSubview(navBgView)
             self.navBgView = navBgView
         }
@@ -574,6 +636,72 @@ extension PhotoPreviewViewController {
             width: view.width,
             height: bottomHeight
         )
+    }
+
+    func updateInputPresentation(
+        isExpanded: Bool,
+        keyboardOffset: CGFloat,
+        duration: TimeInterval,
+        options: UIView.AnimationOptions
+    ) {
+        guard usesCustomMessageInput else { return }
+        isCustomMessageInputExpanded = isExpanded
+        inputDimmingView.isUserInteractionEnabled = isExpanded
+        let upwardOffset = isExpanded ? min(80, max(56, keyboardOffset * 0.22)) : 0
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: [options, .beginFromCurrentState, .allowUserInteraction]
+        ) {
+            self.inputDimmingView.alpha = isExpanded ? 1 : 0
+            self.previewMediaContainerView.transform = CGAffineTransform(
+                translationX: 0,
+                y: -upwardOffset
+            )
+        }
+    }
+
+    @objc
+    private func didTapInputDimmingView() {
+        photoToolbar.dismissCustomInput()
+    }
+
+    func updateNavigationBarAppearance(isPreview: Bool) {
+        guard let navigationBar = navigationController?.navigationBar else { return }
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            if isPreview {
+                appearance.configureWithTransparentBackground()
+                appearance.backgroundColor = .clear
+            } else {
+                appearance.configureWithOpaqueBackground()
+                appearance.backgroundColor = pickerConfig.navigationViewBackgroundColor
+            }
+            appearance.shadowColor = .clear
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+            navigationBar.compactAppearance = appearance
+        } else {
+            navigationBar.setBackgroundImage(isPreview ? UIImage() : nil, for: .default)
+            navigationBar.shadowImage = UIImage()
+        }
+        navigationBar.isTranslucent = isPreview
+    }
+
+    func restorePreviewChrome() {
+        guard !statusBarShouldBeHidden else { return }
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        updateNavigationBarAppearance(isPreview: true)
+        navigationController?.navigationBar.layer.removeAllAnimations()
+        navigationController?.navigationBar.alpha = 1
+        navigationController?.navigationBar.setNeedsLayout()
+        navigationController?.navigationBar.layoutIfNeeded()
+        navBgView?.layer.removeAllAnimations()
+        navBgView?.isHidden = false
+        navBgView?.alpha = 1
+        photoToolbar.layer.removeAllAnimations()
+        photoToolbar.isHidden = false
+        photoToolbar.alpha = 1
     }
     func reloadCell(for item: Int) {
         guard let photoAsset = photoAsset(for: item) else {

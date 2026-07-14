@@ -18,6 +18,9 @@ public struct PickerResult {
     /// Whether to select the original image
     /// 是否选择的原图
     public var isOriginal: Bool
+
+    /// Optional message-level text supplied by a custom picker input view.
+    public let customInputText: String?
     
     /// isOriginal = false
     /// The original image does not select the compression parameter when getting the URL
@@ -33,10 +36,12 @@ public struct PickerResult {
     ///   - isOriginal: Whether the original image / 是否原图
     public init(
         photoAssets: [PhotoAsset],
-        isOriginal: Bool
+        isOriginal: Bool,
+        customInputText: String? = nil
     ) {
         self.photoAssets = photoAssets
         self.isOriginal = isOriginal
+        self.customInputText = customInputText
     }
 }
 

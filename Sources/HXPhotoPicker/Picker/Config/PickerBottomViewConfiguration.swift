@@ -8,8 +8,75 @@
 
 import UIKit
 
+public final class PhotoPickerCustomInputViewContext {
+    public var onSelectedCountChanged: ((Int) -> Void)?
+    public var onDismissInput: (() -> Void)?
+
+    public private(set) var selectedCount: Int = 0
+    public private(set) var preferredHeight: CGFloat = 0
+    public private(set) var inputText: String = ""
+    public private(set) var allowsFinishWithoutSelection = false
+    public private(set) var usesTransparentBackground = false
+
+    var onPreferredHeightChanged: ((CGFloat) -> Void)?
+    var onInputPresentationChanged: ((Bool, CGFloat, TimeInterval, UIView.AnimationOptions) -> Void)?
+    var onFinish: (() -> Void)?
+
+    public func updatePreferredHeight(_ height: CGFloat) {
+        let normalizedHeight = max(0, height)
+        guard abs(preferredHeight - normalizedHeight) >= 0.5 else { return }
+        preferredHeight = normalizedHeight
+        onPreferredHeightChanged?(normalizedHeight)
+    }
+
+    public func finish() {
+        guard selectedCount > 0 || allowsFinishWithoutSelection else { return }
+        onFinish?()
+    }
+
+    public func updateInputText(_ text: String) {
+        inputText = text
+    }
+
+    public func updateInputPresentation(
+        isExpanded: Bool,
+        keyboardOffset: CGFloat,
+        duration: TimeInterval,
+        options: UIView.AnimationOptions
+    ) {
+        onInputPresentationChanged?(
+            isExpanded,
+            max(0, keyboardOffset),
+            duration,
+            options
+        )
+    }
+
+    func dismissInput() {
+        onDismissInput?()
+    }
+
+    func updateSelectedCount(_ count: Int) {
+        selectedCount = count
+        onSelectedCountChanged?(count)
+    }
+
+    func updateAllowsFinishWithoutSelection(_ isAllowed: Bool) {
+        allowsFinishWithoutSelection = isAllowed
+    }
+
+    func updateUsesTransparentBackground(_ isEnabled: Bool) {
+        usesTransparentBackground = isEnabled
+    }
+}
+
 // MARK: Bottom toolbar configuration class / 底部工具栏配置类
 public struct PickerBottomViewConfiguration {
+    /// Builds an optional business-owned input view below the selected-assets strip.
+    public var customInputViewProvider: ((PhotoPickerCustomInputViewContext) -> UIView)?
+
+    /// Height of the selected-assets strip. The default preserves the built-in toolbar layout.
+    public var selectedViewHeight: CGFloat = 70
     
     public var selectMorePictures: String?
     public var changeSettings: String?

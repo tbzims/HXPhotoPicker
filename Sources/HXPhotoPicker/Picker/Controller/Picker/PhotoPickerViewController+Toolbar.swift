@@ -43,11 +43,20 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
     
     func updateToolbarFrame() {
         if photoToolbar.viewHeight != photoToolbar.height {
-            UIView.animate(withDuration: 0.25) {
+            UIView.animate(
+                withDuration: 0.2,
+                delay: 0,
+                options: [.beginFromCurrentState, .curveEaseInOut, .allowUserInteraction]
+            ) {
                 self.layoutToolbar()
-                self.photoToolbar.layoutSubviews()
+                self.photoToolbar.setNeedsLayout()
+                self.photoToolbar.layoutIfNeeded()
             }
         }
+    }
+
+    public func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar) {
+        updateToolbarFrame()
     }
     
     func requestSelectedAssetFileSize() {
@@ -71,10 +80,11 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
     public func photoToolbar(_ toolbar: PhotoToolBar, didOriginalClick isSelected: Bool) {
         pickerController.config.isSelectedOriginal = isSelected
         pickerController.isOriginal = isSelected
+        updateHDNavigationItem(isOriginal: isSelected)
         pickerController.originalButtonCallback()
         if isSelected {
             requestSelectedAssetFileSize()
-        }else {
+        } else {
             pickerController.pickerData.cancelRequestAssetFileSize(isPreview: false)
         }
     }
@@ -129,11 +139,12 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
         photoToolbar.updateOriginalState(isOriginal)
         if !isOriginal {
             pickerController.pickerData.cancelRequestAssetFileSize(isPreview: false)
-        }else {
-            photoToolbar.requestOriginalAssetBtyes()
+        } else {
+            requestSelectedAssetFileSize()
         }
         pickerController.config.isSelectedOriginal = isOriginal
         pickerController.isOriginal = isOriginal
+        updateHDNavigationItem(isOriginal: isOriginal)
         pickerController.originalButtonCallback()
     }
 }

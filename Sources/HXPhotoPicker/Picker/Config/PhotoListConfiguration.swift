@@ -71,6 +71,7 @@ public struct PhotoListConfiguration {
     public var manageBtnName: String = "Manage"
     
     public var sendInHighQualityBtnName: String = "Send in High Quality"
+    public var sendWithoutGroup: String = "Send Without Group"
     
     /// Cancel button image name in dark mode
     /// 暗黑模式下取消按钮图片名
@@ -208,7 +209,7 @@ public struct PhotoListConfiguration {
     public var emptyView: EmptyViewConfiguration = .init()
     
     /// 预览样式
-    public var previewStyle: PhotoPickerPreviewJumpStyle = .push
+    public var previewStyle: PhotoPickerPreviewJumpStyle = .present
     
     /// 初始滚动到指定`PhotoAsset`对应的标识，为空时 默认滚动到最后一个选中的`PhotoAsset`
     ///  PHAsset.localIdentifier / PhotoAsset.localAssetIdentifier
