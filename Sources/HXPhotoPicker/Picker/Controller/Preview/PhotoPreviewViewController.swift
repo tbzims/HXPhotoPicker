@@ -153,6 +153,8 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
             }
         }
         configBottomViewFrame()
+        updateCurrentVideoSliderLayout()
+        updateBottomGradientExtension()
         if firstLayoutSubviews {
             guard let photoAsset = photoAsset(for: currentPreviewIndex) else {
                 return
@@ -646,6 +648,7 @@ extension PhotoPreviewViewController {
     ) {
         guard usesCustomMessageInput else { return }
         isCustomMessageInputExpanded = isExpanded
+        updateBottomGradientExtension()
         inputDimmingView.isUserInteractionEnabled = isExpanded
         let upwardOffset = isExpanded ? min(80, max(56, keyboardOffset * 0.22)) : 0
         UIView.animate(
@@ -658,7 +661,44 @@ extension PhotoPreviewViewController {
                 translationX: 0,
                 y: -upwardOffset
             )
+            self.updateCurrentVideoSliderLayout()
         }
+    }
+
+    func updateCurrentVideoSliderLayout() {
+        guard usesCustomMessageInput else { return }
+        for case let cell as PreviewVideoControlViewCell in collectionView.visibleCells {
+            updateVideoSliderLayout(for: cell)
+        }
+    }
+
+    func updateVideoSliderLayout(for cell: PreviewVideoControlViewCell) {
+        guard usesCustomMessageInput else { return }
+        let sliderHeight: CGFloat = 56
+        let sliderBottom = photoToolbar.frame.minY
+        cell.sliderView.frame = CGRect(
+            x: 0,
+            y: sliderBottom - sliderHeight,
+            width: cell.bounds.width,
+            height: sliderHeight
+        )
+        cell.isExternalSliderHidden = isCustomMessageInputExpanded
+        cell.sliderView.isHidden = isCustomMessageInputExpanded
+        cell.sliderView.alpha = isCustomMessageInputExpanded ? 0 : 1
+        cell.maskBackgroundView.frame = cell.sliderView.frame
+        cell.maskLayer.frame = CGRect(
+            x: 0,
+            y: -20,
+            width: cell.bounds.width,
+            height: cell.maskBackgroundView.bounds.height + 20
+        )
+    }
+
+    func updateBottomGradientExtension() {
+        guard usesCustomMessageInput else { return }
+        let isVideo = photoAsset(for: currentPreviewIndex)?.mediaType == .video
+        let extensionHeight: CGFloat = isVideo && !isCustomMessageInputExpanded ? 106 : 0
+        photoToolbar.updateCustomInputBottomGradientExtension(extensionHeight)
     }
 
     @objc

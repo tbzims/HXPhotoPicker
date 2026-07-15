@@ -62,6 +62,14 @@ open class PreviewVideoViewCell: PhotoPreviewViewCell {
     public func pauseVideo() {
         scrollContentView.videoView.stopPlay()
     }
+
+    public func toggleVideoPlayback() {
+        if playButton.isSelected {
+            pauseVideo()
+        } else {
+            playVideo()
+        }
+    }
     
     /// 视频加载成功准备播放
     /// - Parameter duration: 视频总时长

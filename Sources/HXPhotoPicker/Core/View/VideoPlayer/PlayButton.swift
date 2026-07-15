@@ -17,6 +17,7 @@ class PlayButton: UIControl {
     }
     
     private var playLayer: CAShapeLayer!
+    private var pausedImageLayer: CALayer!
     
     init() {
         super.init(frame: .zero)
@@ -29,9 +30,20 @@ class PlayButton: UIControl {
         playLayer.shadowColor = UIColor.black.withAlphaComponent(0.3).cgColor
         playLayer.shadowOpacity = 0.3
         layer.addSublayer(playLayer)
+        pausedImageLayer = CALayer()
+        pausedImageLayer.contentsGravity = .resizeAspect
+        pausedImageLayer.contentsScale = UIScreen._scale
+        pausedImageLayer.contents = UIImage(named: "icon_24_pause")?.cgImage
+        pausedImageLayer.shadowColor = UIColor.black.cgColor
+        pausedImageLayer.shadowOpacity = 0.3
+        pausedImageLayer.shadowRadius = 2
+        pausedImageLayer.shadowOffset = CGSize(width: 0, height: 1)
+        layer.addSublayer(pausedImageLayer)
     }
     
     private func updatePlay() {
+        pausedImageLayer.isHidden = isSelected
+        playLayer.isHidden = !isSelected
         let path: UIBezierPath = .init()
         let widthMargin: CGFloat = 13
         let heightMargin: CGFloat = 18
@@ -48,12 +60,6 @@ class PlayButton: UIControl {
             path.addLine(to: .init(x: rightLineStartPoint.x - 3, y: rightLineStartPoint.y))
             path.addLine(to: .init(x: rightLineStartPoint.x - 3, y: rightLineStartPoint.y + heightMargin))
             path.addLine(to: .init(x: rightLineStartPoint.x, y: rightLineStartPoint.y + heightMargin))
-            path.close()
-        }else {
-            let startPoint: CGPoint = .init(x: width * 0.5 + widthMargin * 0.5, y: height * 0.5)
-            path.move(to: startPoint)
-            path.addLine(to: .init(x: startPoint.x - widthMargin, y: startPoint.y + heightMargin * 0.5))
-            path.addLine(to: .init(x: startPoint.x - widthMargin, y: startPoint.y - heightMargin * 0.5))
             path.close()
         }
         let animation: CABasicAnimation = getAnimation(playLayer.path, path.cgPath, 0.25)
@@ -81,6 +87,13 @@ class PlayButton: UIControl {
     override func layoutSubviews() {
         super.layoutSubviews()
         playLayer.frame = bounds
+        let imageSide = min(24, min(width, height))
+        pausedImageLayer.frame = CGRect(
+            x: (width - imageSide) * 0.5,
+            y: (height - imageSide) * 0.5,
+            width: imageSide,
+            height: imageSide
+        )
         updatePlay()
     }
     

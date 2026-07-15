@@ -51,6 +51,7 @@ extension PhotoPreviewViewController: UICollectionViewDataSource {
             videoCell.videoPlayType = config.videoPlayType
             videoCell.statusBarShouldBeHidden = statusBarShouldBeHidden
             videoCell.previewType = previewType
+            (videoCell as? PreviewVideoControlViewCell)?.usesExternalSliderLayout = usesCustomMessageInput
         }
         cell.contentMaximumZoomScale = config.maximumZoomScale
         cell.delegate = self
@@ -73,6 +74,9 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
             myCell.scrollView.zoomScale = 1
         }
         myCell.checkContentSize()
+        if let videoCell = myCell as? PreviewVideoControlViewCell {
+            updateVideoSliderLayout(for: videoCell)
+        }
         pickerController.pickerDelegate?.pickerController(
             pickerController,
             previewCellWillDisplay: myCell.photoAsset,
@@ -162,6 +166,7 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
             pickerController.previewUpdateCurrentlyDisplayedAsset(photoAsset: photoAsset, index: currentIndex)
         }
         self.currentPreviewIndex = currentIndex
+        updateBottomGradientExtension()
         if !firstLayoutSubviews && isShowToolbar {
             photoToolbar.previewListDidScroll(scrollView)
         }
@@ -203,9 +208,6 @@ extension PhotoPreviewViewController: PhotoPreviewViewCellDelegate {
         delegate?.previewViewController(self, requestFailed: cell.photoAsset)
     }
     func cell(singleTap cell: PhotoPreviewViewCell) {
-        guard let navigationController = navigationController else {
-            return
-        }
         if let pickerDelegate = pickerController.pickerDelegate,
            !pickerDelegate.pickerController(
             pickerController,
@@ -213,62 +215,10 @@ extension PhotoPreviewViewController: PhotoPreviewViewCellDelegate {
             at: currentPreviewIndex) {
             return
         }
-        let isHidden = navigationController.navigationBar.isHidden
-        statusBarShouldBeHidden = !isHidden
-        if self.modalPresentationStyle == .fullScreen ||
-            pickerController.splitViewController?.modalPresentationStyle == .fullScreen {
-            navigationController.setNeedsStatusBarAppearanceUpdate()
-        }
-        navigationController.setNavigationBarHidden(statusBarShouldBeHidden, animated: true)
-        let currentCell = getCell(for: currentPreviewIndex)
-        currentCell?.statusBarShouldBeHidden = statusBarShouldBeHidden
-        let videoCell = currentCell as? PreviewVideoViewCell
-        if !statusBarShouldBeHidden {
-            if isShowToolbar {
-                photoToolbar.isHidden = false
-            }
-            navBgView?.isHidden = false
-            if currentCell?.photoAsset.mediaType == .video && config.singleClickCellAutoPlayVideo {
-                currentCell?.scrollContentView.videoView.stopPlay()
-            }
-            if previewType != .browser {
-                videoCell?.hideToolView()
-            }else {
-                videoCell?.showToolView()
-            }
-            if let photoAsset = currentCell?.photoAsset, photoAsset.mediaSubType.isHDRPhoto || photoAsset.mediaSubType.isLivePhoto {
-                currentCell?.showScrollContainerSubview()
-            }
-        }else {
-            if currentCell?.photoAsset.mediaType == .video && config.singleClickCellAutoPlayVideo {
-                currentCell?.scrollContentView.videoView.startPlay()
-            }
-            if previewType != .browser {
-                videoCell?.showToolView()
-            }else {
-                videoCell?.hideToolView()
-            }
-            if let photoAsset = currentCell?.photoAsset, photoAsset.mediaSubType.isHDRPhoto || photoAsset.mediaSubType.isLivePhoto {
-                currentCell?.hideScrollContainerSubview()
-            }
-        }
-        if isShowToolbar {
-            UIView.animate(withDuration: 0.25) {
-                self.photoToolbar.alpha = self.statusBarShouldBeHidden ? 0 : 1
-            } completion: {
-                if $0 {
-                    self.photoToolbar.isHidden = self.statusBarShouldBeHidden
-                }
-            }
-        }
-
-        UIView.animate(withDuration: 0.25) {
-            self.navBgView?.alpha = self.statusBarShouldBeHidden ? 0 : 1
-            self.updateColors()
-        } completion: {
-            if $0 {
-                self.navBgView?.isHidden = self.statusBarShouldBeHidden
-            }
+        if let videoCell = cell as? PreviewVideoViewCell {
+            videoCell.toggleVideoPlayback()
+        } else if previewType != .browser {
+            didSelectBoxControlClick()
         }
         pickerController.pickerDelegate?.pickerController(
             pickerController,

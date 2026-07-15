@@ -79,6 +79,8 @@ public protocol PhotoToolBar: UIView, PhotoPickerDataStatus {
     var customInputText: String? { get }
 
     func dismissCustomInput()
+
+    func updateCustomInputBottomGradientExtension(_ height: CGFloat)
     
     var selectViewOffset: CGPoint? { get set }
     
@@ -144,6 +146,7 @@ public protocol PhotoToolBar: UIView, PhotoPickerDataStatus {
 
 public extension PhotoToolBar {
     func dismissCustomInput() { }
+    func updateCustomInputBottomGradientExtension(_ height: CGFloat) { }
 }
 
 public extension PhotoToolBar {

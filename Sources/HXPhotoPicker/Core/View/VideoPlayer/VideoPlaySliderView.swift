@@ -91,24 +91,24 @@ public class VideoPlaySliderView: UIView, SliderViewDelegate {
     
     private func initViews() {
         playButton = PlayButton()
-        playButton.size = CGSize(width: 30, height: 40)
+        playButton.size = CGSize(width: 40, height: 56)
         playButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didPlayButton)))
         
         sliderView = SliderView(style)
         sliderView.delegate = self
         
-        currentTimeLb = UILabel(frame: CGRect(x: 0, y: 0, width: 65, height: 30))
+        currentTimeLb = UILabel(frame: CGRect(x: 0, y: 0, width: 65, height: 18))
         currentTimeLb.text = "--:--"
         currentTimeLb.textColor = .white
-        currentTimeLb.font = .regularPingFang(ofSize: 15)
+        currentTimeLb.font = .regularPingFang(ofSize: 13)
         currentTimeLb.layer.shadowColor = UIColor.black.withAlphaComponent(0.7).cgColor
         currentTimeLb.layer.shadowOpacity = 0.5
         currentTimeLb.layer.shadowOffset = .init(width: -1, height: 1)
         
-        totalTimeLb = UILabel(frame: CGRect(x: 0, y: 0, width: 65, height: 30))
+        totalTimeLb = UILabel(frame: CGRect(x: 0, y: 0, width: 65, height: 18))
         totalTimeLb.text = "--:--"
         totalTimeLb.textColor = .white
-        totalTimeLb.font = .regularPingFang(ofSize: 15)
+        totalTimeLb.font = .regularPingFang(ofSize: 13)
         totalTimeLb.layer.shadowColor = UIColor.black.withAlphaComponent(0.7).cgColor
         totalTimeLb.layer.shadowOpacity = 0.5
         totalTimeLb.layer.shadowOffset = .init(width: -1, height: 1)
@@ -119,8 +119,8 @@ public class VideoPlaySliderView: UIView, SliderViewDelegate {
             totalTimeLb.alpha = 0
             totalTimeLb.textAlignment = .right
         }else {
-            currentTimeLb.textAlignment = .center
-            totalTimeLb.textAlignment = .center
+            currentTimeLb.textAlignment = .left
+            totalTimeLb.textAlignment = .right
         }
     }
     
@@ -217,18 +217,22 @@ public class VideoPlaySliderView: UIView, SliderViewDelegate {
     public override func layoutSubviews() {
         super.layoutSubviews()
         if style == .picker {
-            playButton.x = 15 + UIDevice.leftMargin
-            playButton.centerY = 25
-            
-            currentTimeLb.x = playButton.frame.maxX + 5
-            currentTimeLb.centerY = playButton.centerY
-            totalTimeLb.x = width - totalTimeLb.width - 15 - UIDevice.rightMargin
-            totalTimeLb.centerY = currentTimeLb.centerY
-            
-            let sliderX: CGFloat = currentTimeLb.frame.maxX + 5
-            let sliderW: CGFloat = totalTimeLb.x - 5 - sliderX
-            sliderView.frame = .init(x: sliderX, y: 0, width: sliderW, height: height)
-            sliderView.centerY = totalTimeLb.centerY
+            let horizontalMargin: CGFloat = 12
+            playButton.x = horizontalMargin + UIDevice.leftMargin
+            playButton.y = 0
+
+            let sliderX = playButton.frame.maxX + 12
+            let sliderRight = width - horizontalMargin - UIDevice.rightMargin
+            let sliderWidth = max(0, sliderRight - sliderX)
+            sliderView.frame = .init(x: sliderX, y: 0, width: sliderWidth, height: 40)
+
+            currentTimeLb.frame = CGRect(x: sliderX, y: 34, width: 65, height: 18)
+            totalTimeLb.frame = CGRect(
+                x: sliderRight - 65,
+                y: currentTimeLb.y,
+                width: 65,
+                height: 18
+            )
         }else {
             let sliderX: CGFloat
             if width < 100 {

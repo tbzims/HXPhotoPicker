@@ -12,6 +12,8 @@ open class PreviewVideoControlViewCell: PreviewVideoViewCell, VideoPlaySliderVie
     public var maskLayer: CAGradientLayer!
     public var maskBackgroundView: UIView!
     public var sliderView: VideoPlaySliderView!
+    var usesExternalSliderLayout = false
+    var isExternalSliderHidden = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,6 +45,11 @@ open class PreviewVideoControlViewCell: PreviewVideoViewCell, VideoPlaySliderVie
         sliderView.isPlaying = false
     }
     public override func showToolView() {
+        if usesExternalSliderLayout {
+            sliderView.isHidden = isExternalSliderHidden
+            sliderView.alpha = isExternalSliderHidden ? 0 : 1
+            return
+        }
         if sliderView.alpha == 0 {
             sliderView.isHidden = false
             UIView.animate(withDuration: 0.15) {
@@ -52,6 +59,9 @@ open class PreviewVideoControlViewCell: PreviewVideoViewCell, VideoPlaySliderVie
         showMask()
     }
     public override func hideToolView() {
+        if usesExternalSliderLayout {
+            return
+        }
         if sliderView.alpha == 1 {
             UIView.animate(withDuration: 0.15) {
                 self.sliderView.alpha = 0
@@ -100,12 +110,14 @@ open class PreviewVideoControlViewCell: PreviewVideoViewCell, VideoPlaySliderVie
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        sliderView.frame = CGRect(
-            x: 0,
-            y: height - 50 - UIDevice.bottomMargin,
-            width: width,
-            height: 50 + UIDevice.bottomMargin
-        )
+        if !usesExternalSliderLayout {
+            sliderView.frame = CGRect(
+                x: 0,
+                y: height - 56 - UIDevice.bottomMargin,
+                width: width,
+                height: 56
+            )
+        }
         maskBackgroundView.frame = sliderView.frame
         maskLayer.frame = CGRect(x: 0, y: -20, width: width, height: maskBackgroundView.height + 20)
     }

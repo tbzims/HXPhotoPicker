@@ -11,6 +11,7 @@ import UIKit
 public final class PhotoPickerCustomInputViewContext {
     public var onSelectedCountChanged: ((Int) -> Void)?
     public var onDismissInput: (() -> Void)?
+    public var onBottomGradientExtensionChanged: ((CGFloat) -> Void)?
 
     public private(set) var selectedCount: Int = 0
     public private(set) var preferredHeight: CGFloat = 0
@@ -67,6 +68,10 @@ public final class PhotoPickerCustomInputViewContext {
 
     func updateUsesTransparentBackground(_ isEnabled: Bool) {
         usesTransparentBackground = isEnabled
+    }
+
+    func updateBottomGradientExtension(_ height: CGFloat) {
+        onBottomGradientExtensionChanged?(max(0, height))
     }
 }
 

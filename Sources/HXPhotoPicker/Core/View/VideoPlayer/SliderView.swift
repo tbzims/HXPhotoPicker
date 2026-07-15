@@ -81,14 +81,14 @@ class SliderView: UIView {
         
         trackView = UIView()
         trackView.backgroundColor = .white
-        trackView.layer.masksToBounds = true
         trackView.layer.cornerRadius = 1
-        trackView.layer.shadowColor = UIColor.black.withAlphaComponent(0.3).cgColor
-        trackView.layer.shadowOpacity = 0.3
+        trackView.layer.shadowColor = UIColor.black.cgColor
+        trackView.layer.shadowOpacity = 0.4
+        trackView.layer.shadowRadius = 2
+        trackView.layer.shadowOffset = CGSize(width: 0, height: 1)
         
         progressView = UIView()
         progressView.backgroundColor = .white.withAlphaComponent(0.2)
-        progressView.layer.masksToBounds = true
         progressView.layer.cornerRadius = 1
         
         bufferView = UIView()
