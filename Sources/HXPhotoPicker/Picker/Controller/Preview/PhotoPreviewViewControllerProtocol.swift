@@ -23,6 +23,11 @@ protocol PhotoPreviewViewControllerDelegate: AnyObject {
         updatePhotoAsset photoAsset: PhotoAsset,
         at index: Int
     )
+    func previewViewController(
+        _ previewController: PhotoPreviewViewController,
+        didUpdateCaption text: String,
+        for photoAsset: PhotoAsset
+    )
     #if HXPICKER_ENABLE_EDITOR
     func previewViewController(
         _ previewController: PhotoPreviewViewController,
@@ -74,6 +79,11 @@ extension PhotoPreviewViewControllerDelegate {
         didSelectBox photoAsset: PhotoAsset,
         isSelected: Bool,
         updateCell: Bool
+    ) { }
+    func previewViewController(
+        _ previewController: PhotoPreviewViewController,
+        didUpdateCaption text: String,
+        for photoAsset: PhotoAsset
     ) { }
     #if HXPICKER_ENABLE_EDITOR
     func previewViewController(

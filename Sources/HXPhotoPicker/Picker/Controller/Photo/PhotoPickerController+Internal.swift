@@ -11,17 +11,21 @@ import Photos
 
 // MARK: ViewControllers function
 extension PhotoPickerController {
-    func finishCallback(customInputText: String? = nil) {
+    func finishCallback(
+        customInputText: String? = nil,
+        photoAssets: [PhotoAsset]? = nil
+    ) {
 #if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
 #endif
+        let resultAssets = photoAssets ?? selectedAssetArray
         if config.entranceType == .chatSend {
             let maxSize = isOriginal
             ? config.maximumSelectedToastOriginaPhotoFileSize
             : config.maximumSelectedToastPhotoFileSize
             let filteredAssets: [PhotoAsset]
             if maxSize > 0 {
-                filteredAssets = selectedAssetArray.filter { asset in
+                filteredAssets = resultAssets.filter { asset in
                     if asset.mediaType == .photo {
                         return asset.fileSize <= maxSize
                     }else {
@@ -33,16 +37,16 @@ extension PhotoPickerController {
                     }
                 }
             } else {
-                filteredAssets = selectedAssetArray
+                filteredAssets = resultAssets
             }
             if filteredAssets.count == 0 {
                 let imageText = isOriginal ? config.maximumSelectedToastOriginaSend_chat_full_image_sizeToastStr : config.maximumSelectedToastNormalSend_chat_full_image_sizeToastStr
                 let videoText = config.maximumSelectedToastNormalSend_chat_video_sizeToastStr
                 let fileText = isOriginal ? config.maximumSelectedToastOriginaSend_chat_file_sizeToastStr : config.maximumSelectedToastNormalSend_chat_file_sizeToastStr
                 let toastText: String
-                if selectedAssetArray.isEmpty == false && selectedAssetArray.allSatisfy({ $0.mediaType == .video }) {
+                if resultAssets.isEmpty == false && resultAssets.allSatisfy({ $0.mediaType == .video }) {
                     toastText = videoText
-                }else if selectedAssetArray.isEmpty == false && selectedAssetArray.allSatisfy({ $0.mediaType == .photo }) {
+                }else if resultAssets.isEmpty == false && resultAssets.allSatisfy({ $0.mediaType == .photo }) {
                     toastText = imageText
                 }else {
                     toastText = fileText
@@ -50,14 +54,16 @@ extension PhotoPickerController {
                 PhotoManager.HUDView.showInfo(with: toastText, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
                 return
             }
-            if filteredAssets.count != selectedAssetArray.count {
+            if filteredAssets.count != resultAssets.count {
                 let text = isOriginal ? config.maximumSelectedToastOriginaSend_chat_file_sizeToastStr : config.maximumSelectedToastNormalSend_chat_file_sizeToastStr
                 PhotoManager.HUDView.showInfo(with: text, delay: 1.5, animated: true, addedTo: UIApplication.shared.keyWindow)
             }
             let result = PickerResult(
                 photoAssets: filteredAssets,
                 isOriginal: isOriginal,
-                customInputText: customInputText ?? activeCustomInputText
+                customInputText: albumMessageText,
+                mediaCaptions: selectedMediaCaptions(for: filteredAssets),
+                sendsItemsSeparately: sendsAlbumItemsSeparately
             )
             
             finishHandler?(result, self)
@@ -75,9 +81,11 @@ extension PhotoPickerController {
             }
         }else {
             let result = PickerResult(
-                photoAssets: selectedAssetArray,
+                photoAssets: resultAssets,
                 isOriginal: isOriginal,
-                customInputText: customInputText ?? activeCustomInputText
+                customInputText: customInputText ?? activeCustomInputText,
+                mediaCaptions: [:],
+                sendsItemsSeparately: false
             )
             finishHandler?(result, self)
             pickerDelegate?.pickerController(
@@ -105,7 +113,13 @@ extension PhotoPickerController {
         let result = PickerResult(
             photoAssets: [photoAsset],
             isOriginal: isOriginal,
-            customInputText: customInputText ?? activeCustomInputText
+            customInputText: config.entranceType == .chatSend
+                ? albumMessageText
+                : customInputText ?? activeCustomInputText,
+            mediaCaptions: config.entranceType == .chatSend
+                ? selectedMediaCaptions(for: [photoAsset])
+                : [:],
+            sendsItemsSeparately: config.entranceType == .chatSend && sendsAlbumItemsSeparately
         )
         finishHandler?(result, self)
         pickerDelegate?.pickerController(
@@ -138,6 +152,12 @@ extension PhotoPickerController {
     private var activeCustomInputText: String? {
         previewViewController?.photoToolbar?.customInputText ??
         pickerViewController?.photoToolbar?.customInputText
+    }
+    private func selectedMediaCaptions(for assets: [PhotoAsset]) -> [String: String] {
+        Dictionary(uniqueKeysWithValues: assets.compactMap { asset in
+            guard let caption = albumMediaCaptions[asset.identifier] else { return nil }
+            return (asset.identifier, caption)
+        })
     }
     func originalButtonCallback() {
         pickerDelegate?.pickerController(

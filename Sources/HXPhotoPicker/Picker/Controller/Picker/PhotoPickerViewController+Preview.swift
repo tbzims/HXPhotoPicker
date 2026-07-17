@@ -29,6 +29,7 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
                 previewType: .picker,
                 delegate: self
             )
+            previewVC.albumMediaCaptions = pickerController.albumMediaCaptions
             previewVC.previewViewController?.delegate = self
             present(previewVC, animated: animated)
             return
@@ -100,6 +101,14 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
             requestSelectedAssetFileSize()
         }
     }
+
+    func previewViewController(
+        _ previewController: PhotoPreviewViewController,
+        didUpdateCaption text: String,
+        for photoAsset: PhotoAsset
+    ) {
+        pickerController.updateAlbumCaption(text, for: photoAsset)
+    }
     
     func previewViewController(
         _ previewController: PhotoPreviewViewController,
@@ -146,9 +155,11 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
             return
         }
         previewController.pickerController.disablesCustomDismiss = true
+        pickerController.isOriginal = previewController.pickerController.isOriginal
+        pickerController.albumMediaCaptions = previewController.pickerController.albumMediaCaptions
         if pickerConfig.isMultipleSelect {
             pickerController.finishCallback(
-                customInputText: previewController.photoToolbar.customInputText
+                photoAssets: photoAssets
             )
         }else {
             if let photoAsset = photoAssets.first {

@@ -22,6 +22,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
             type: previewType != .browser ? .preview : .browser
         )
         photoToolbar.toolbarDelegate = self
+        bindCurrentAssetCaption()
         view.addSubview(photoToolbar)
         if previewType != .browser {
             photoToolbar.updateOriginalState(pickerController.isOriginal)
@@ -98,6 +99,19 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
             scrollToPhotoAsset(asset)
         }else {
             photoToolbar.selectedViewScrollTo(nil, animated: true)
+        }
+    }
+
+    func bindCurrentAssetCaption() {
+        let asset = photoAsset(for: currentPreviewIndex)
+        photoToolbar.configureCustomInput(text: pickerController.albumCaption(for: asset)) { [weak self] text in
+            guard let self, let asset = self.photoAsset(for: self.currentPreviewIndex) else { return }
+            self.pickerController.updateAlbumCaption(text, for: asset)
+            self.delegate?.previewViewController(
+                self,
+                didUpdateCaption: text,
+                for: asset
+            )
         }
     }
     
@@ -270,9 +284,18 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
     }
     
     func didFinishClick() {
+        func finish(_ assets: [PhotoAsset], singleAsset: PhotoAsset? = nil) {
+            delegate?.previewViewController(didFinishButton: self, photoAssets: assets)
+            let delegateHandlesPresent = pickerController.config.photoList.previewStyle == .present && delegate != nil
+            guard !delegateHandlesPresent else { return }
+            if let singleAsset {
+                pickerController.singleFinishCallback(for: singleAsset)
+            } else {
+                pickerController.finishCallback(photoAssets: assets)
+            }
+        }
         if !pickerController.selectedAssetArray.isEmpty {
-            delegate?.previewViewController(didFinishButton: self, photoAssets: pickerController.selectedAssetArray)
-            pickerController.finishCallback()
+            finish(pickerController.selectedAssetArray)
             return
         }
         if assetCount == 0 {
@@ -309,10 +332,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
                             updateCell: false
                         )
                     }
-                    delegate?.previewViewController(didFinishButton: self, photoAssets: [photoAsset])
-                    pickerController.singleFinishCallback(
-                        for: photoAsset
-                    )
+                    finish([photoAsset], singleAsset: photoAsset)
                 }
             }else {
                 if pickerConfig.isSingleVideo {
@@ -328,10 +348,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
                                 updateCell: false
                             )
                         }
-                        delegate?.previewViewController(didFinishButton: self, photoAssets: [photoAsset])
-                        pickerController.singleFinishCallback(
-                            for: photoAsset
-                        )
+                        finish([photoAsset], singleAsset: photoAsset)
                     }
                 }else {
                     if pickerController.pickerData.append(
@@ -345,8 +362,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
                                 updateCell: false
                             )
                         }
-                        delegate?.previewViewController(didFinishButton: self, photoAssets: pickerController.selectedAssetArray)
-                        pickerController.finishCallback()
+                        finish(pickerController.selectedAssetArray)
                     }
                 }
             }
@@ -397,6 +413,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
         guard let photoToolbar = photoToolbar else {
             return
         }
+        updateTMOriginalButtonState(isOriginal)
         photoToolbar.updateOriginalState(isOriginal)
         if !isOriginal {
             pickerController.pickerData.cancelRequestAssetFileSize(isPreview: true)

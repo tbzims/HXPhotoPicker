@@ -26,6 +26,9 @@ extension PhotoPickerViewController: PhotoToolBarDelegate {
         }
         photoToolbar = toolbar.init(pickerConfig, type: .picker)
         photoToolbar.toolbarDelegate = self
+        photoToolbar.configureCustomInput(text: pickerController.albumMessageText) { [weak self] text in
+            self?.pickerController.albumMessageText = text
+        }
         photoToolbar.updateOriginalState(pickerController.isOriginal)
         if let bottomContainerView {
             bottomContainerView.addSubview(photoToolbar)

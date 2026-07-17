@@ -90,6 +90,12 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
     
     public var TMEditBtn: UIButton!
     public var TMOriginalBtn: UIButton!
+    private let tmOriginalSelectedIconView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "hx_hd_done_yes"))
+        imageView.isHidden = true
+        imageView.isUserInteractionEnabled = false
+        return imageView
+    }()
 
     
     override init(config: PickerConfiguration) {
@@ -553,8 +559,8 @@ extension PhotoPreviewViewController {
         view.addSubview(TMEditBtn)
         TMEditBtn.isHidden = true
         TMOriginalBtn = UIButton(type: .custom)
-        TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalSDImg.image, for: .normal)
-        TMOriginalBtn.setImage(.imageResource.editor.tools.tmOriginalHDImg.image, for: .selected)
+        TMOriginalBtn.setImage(UIImage(named: "icon_24_hd_big"), for: .normal)
+        TMOriginalBtn.setImage(UIImage(named: "icon_24_hd_fill_big"), for: .selected)
         TMOriginalBtn.setTitle(config.qualityStr, for: .normal)
         TMOriginalBtn.setTitleColor(.white, for: .normal)
         TMOriginalBtn.setTitleColor(.white, for: .selected)
@@ -571,14 +577,16 @@ extension PhotoPreviewViewController {
         TMOriginalBtn.contentHorizontalAlignment = .center
         TMOriginalBtn.contentVerticalAlignment = .center
         TMOriginalBtn.clipsToBounds = false
+        TMOriginalBtn.addSubview(tmOriginalSelectedIconView)
         view.addSubview(TMOriginalBtn)
-        TMOriginalBtn.isSelected = pickerController.config.isSelectedOriginal
+        updateTMOriginalButtonState(pickerController.isOriginal)
         updateTMOriginalButtonLayout()
         updateTMOriginalButtonVisibility(for: photoAsset(for: currentPreviewIndex))
     }
     
     @objc func TMOriginalBtnAction() {
         TMOriginalBtn.isSelected.toggle()
+        updateTMOriginalButtonState(TMOriginalBtn.isSelected)
         self.setOriginal(TMOriginalBtn.isSelected)
     }
 
@@ -621,6 +629,20 @@ extension PhotoPreviewViewController {
             bottom: verticalInset,
             right: 0
         )
+        TMOriginalBtn.layoutIfNeeded()
+        tmOriginalSelectedIconView.bounds = CGRect(x: 0, y: 0, width: 16, height: 16)
+        tmOriginalSelectedIconView.center = CGPoint(
+            x: imageView.frame.maxX - 14,
+            y: imageView.frame.maxY - 14
+        )
+        TMOriginalBtn.bringSubviewToFront(tmOriginalSelectedIconView)
+    }
+
+    func updateTMOriginalButtonState(_ isOriginal: Bool) {
+        guard TMOriginalBtn != nil else { return }
+        TMOriginalBtn.isSelected = isOriginal
+        tmOriginalSelectedIconView.isHidden = !isOriginal
+        TMOriginalBtn.accessibilityValue = isOriginal ? "On" : "Off"
     }
     
     @objc func TMEditBtnAction() {

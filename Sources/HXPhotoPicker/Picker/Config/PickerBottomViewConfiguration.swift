@@ -12,6 +12,7 @@ public final class PhotoPickerCustomInputViewContext {
     public var onSelectedCountChanged: ((Int) -> Void)?
     public var onDismissInput: (() -> Void)?
     public var onBottomGradientExtensionChanged: ((CGFloat) -> Void)?
+    public var onInputTextUpdate: ((String) -> Void)?
 
     public private(set) var selectedCount: Int = 0
     public private(set) var preferredHeight: CGFloat = 0
@@ -22,6 +23,7 @@ public final class PhotoPickerCustomInputViewContext {
     var onPreferredHeightChanged: ((CGFloat) -> Void)?
     var onInputPresentationChanged: ((Bool, CGFloat, TimeInterval, UIView.AnimationOptions) -> Void)?
     var onFinish: (() -> Void)?
+    var onInputTextChanged: ((String) -> Void)?
 
     public func updatePreferredHeight(_ height: CGFloat) {
         let normalizedHeight = max(0, height)
@@ -37,6 +39,13 @@ public final class PhotoPickerCustomInputViewContext {
 
     public func updateInputText(_ text: String) {
         inputText = text
+        onInputTextChanged?(text)
+    }
+
+    func setInputText(_ text: String) {
+        guard inputText != text else { return }
+        inputText = text
+        onInputTextUpdate?(text)
     }
 
     public func updateInputPresentation(

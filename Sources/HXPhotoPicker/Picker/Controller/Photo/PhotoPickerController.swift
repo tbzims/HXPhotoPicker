@@ -38,6 +38,20 @@ open class PhotoPickerController: UINavigationController {
     
     /// 是否选中了原图，配置不显示原图按钮时，内部也是根据此属性来判断是否获取原图数据
     public var isOriginal: Bool = false
+
+    var albumMessageText = ""
+    var albumMediaCaptions: [String: String] = [:]
+    var sendsAlbumItemsSeparately = false
+
+    func albumCaption(for photoAsset: PhotoAsset?) -> String {
+        guard let identifier = photoAsset?.identifier else { return "" }
+        return albumMediaCaptions[identifier] ?? ""
+    }
+
+    func updateAlbumCaption(_ text: String, for photoAsset: PhotoAsset?) {
+        guard let identifier = photoAsset?.identifier else { return }
+        albumMediaCaptions[identifier] = text
+    }
     
     /// fetch Assets 时的选项配置
     public var options: PHFetchOptions {

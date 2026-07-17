@@ -166,6 +166,9 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
             pickerController.previewUpdateCurrentlyDisplayedAsset(photoAsset: photoAsset, index: currentIndex)
         }
         self.currentPreviewIndex = currentIndex
+        if !scrollView.isDragging && !scrollView.isDecelerating {
+            bindCurrentAssetCaption()
+        }
         updateBottomGradientExtension()
         if !firstLayoutSubviews && isShowToolbar {
             photoToolbar.previewListDidScroll(scrollView)
@@ -179,6 +182,7 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
         if scrollView.isTracking {
             return
         }
+        bindCurrentAssetCaption()
         let cell = getCell(for: currentPreviewIndex)
         cell?.requestPreviewAsset()
         if let cell {
@@ -196,6 +200,19 @@ extension PhotoPreviewViewController: UICollectionViewDelegate {
                 at: currentPreviewIndex
             )
         }
+    }
+
+    public func scrollViewDidEndDragging(
+        _ scrollView: UIScrollView,
+        willDecelerate decelerate: Bool
+    ) {
+        guard scrollView == collectionView, !orientationDidChange, !decelerate else { return }
+        bindCurrentAssetCaption()
+    }
+
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        guard scrollView == collectionView, !orientationDidChange else { return }
+        bindCurrentAssetCaption()
     }
 }
 

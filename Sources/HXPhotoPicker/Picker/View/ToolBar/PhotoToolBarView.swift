@@ -85,6 +85,17 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         guard usesCustomInputView else { return }
         customInputContext.updateBottomGradientExtension(height)
     }
+
+    public func configureCustomInput(text: String, onTextChanged: @escaping (String) -> Void) {
+        guard usesCustomInputView else { return }
+        customInputContext.onInputTextChanged = onTextChanged
+        customInputContext.setInputText(text)
+    }
+
+    public func updateCustomInputText(_ text: String) {
+        guard usesCustomInputView else { return }
+        customInputContext.setInputText(text)
+    }
     
     var previewAssets: [PhotoAsset] = []
     private var previewPage: Int?

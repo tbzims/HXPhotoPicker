@@ -480,7 +480,12 @@ extension PhotoPickerViewController: PhotoNavigationItemDelegate {
 
             let alert = TMHXMoreShowAlert(items: items)
 
-            alert.onClickItem = { _, _ in }
+            alert.onClickItem = { [weak self] item, _ in
+                guard item.id == "noGroup" else { return }
+                guard let self, !self.pickerController.selectedAssetArray.isEmpty else { return }
+                self.pickerController.sendsAlbumItemsSeparately = true
+                self.pickerController.finishCallback()
+            }
 
             alert.show(from: photoItem, in: UIApplication.hx_keyWindow)
         }

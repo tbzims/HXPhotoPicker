@@ -21,6 +21,12 @@ public struct PickerResult {
 
     /// Optional message-level text supplied by a custom picker input view.
     public let customInputText: String?
+
+    /// Per-media captions keyed by `PhotoAsset.identifier`.
+    public let mediaCaptions: [String: String]
+
+    /// Sends each selected media as an independent one-item album message.
+    public let sendsItemsSeparately: Bool
     
     /// isOriginal = false
     /// The original image does not select the compression parameter when getting the URL
@@ -37,11 +43,15 @@ public struct PickerResult {
     public init(
         photoAssets: [PhotoAsset],
         isOriginal: Bool,
-        customInputText: String? = nil
+        customInputText: String? = nil,
+        mediaCaptions: [String: String] = [:],
+        sendsItemsSeparately: Bool = false
     ) {
         self.photoAssets = photoAssets
         self.isOriginal = isOriginal
         self.customInputText = customInputText
+        self.mediaCaptions = mediaCaptions
+        self.sendsItemsSeparately = sendsItemsSeparately
     }
 }
 
