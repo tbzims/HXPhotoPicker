@@ -87,6 +87,7 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         pickerConfig.photoList.bottomView.customInputViewProvider != nil
     }
     var isCustomMessageInputExpanded = false
+    private var isClosingPreview = false
     
     public var TMEditBtn: UIButton!
     public var TMOriginalBtn: UIButton!
@@ -594,6 +595,10 @@ extension PhotoPreviewViewController {
         guard TMOriginalBtn != nil else {
             return
         }
+        guard !isClosingPreview else {
+            TMOriginalBtn.isHidden = true
+            return
+        }
         guard let photoAsset else {
             TMOriginalBtn.isHidden = true
             return
@@ -984,7 +989,10 @@ extension PhotoPreviewViewController {
     
     @objc func didCancelItemClick() {
 //        pickerController.cancelCallback()
-        self.TMOriginalBtn.isHidden = true
+        isClosingPreview = true
+        TMOriginalBtn.layer.removeAllAnimations()
+        TMOriginalBtn.alpha = 0
+        TMOriginalBtn.isHidden = true
         if let viewControllers = navigationController?.viewControllers,
            viewControllers.count > 1 {
             navigationController?.popViewController(animated: true)

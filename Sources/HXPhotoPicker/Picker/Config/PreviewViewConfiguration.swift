@@ -108,7 +108,7 @@ public struct PreviewViewConfiguration {
 extension PreviewViewConfiguration {
     public struct LivePhotoMark {
         
-        public var allowShow: Bool = true
+        public var allowShow: Bool = false
         
         public var blurStyle: UIBlurEffect.Style = .extraLight
         public var blurDarkStyle: UIBlurEffect.Style = .dark
@@ -119,7 +119,7 @@ extension PreviewViewConfiguration {
         public var imageDarkColor: UIColor = "#ffffff".hx.color
         public var textDarkColor: UIColor = "#ffffff".hx.color
         
-        public var allowMutedShow: Bool = true
+        public var allowMutedShow: Bool = false
         public var mutedImageColor: UIColor = "#666666".hx.color
         public var mutedImageDarkColor: UIColor = "#ffffff".hx.color
         
@@ -130,7 +130,7 @@ extension PreviewViewConfiguration {
     
     public struct HDRMark {
         
-        public var allowShow: Bool = true
+        public var allowShow: Bool = false
         
         public var blurStyle: UIBlurEffect.Style = .extraLight
         public var blurDarkStyle: UIBlurEffect.Style = .dark
