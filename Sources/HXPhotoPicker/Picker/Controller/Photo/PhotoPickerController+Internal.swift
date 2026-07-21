@@ -13,7 +13,8 @@ import Photos
 extension PhotoPickerController {
     func finishCallback(
         customInputText: String? = nil,
-        photoAssets: [PhotoAsset]? = nil
+        photoAssets: [PhotoAsset]? = nil,
+        notifyAfterDismiss: Bool = false
     ) {
 #if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
@@ -66,19 +67,7 @@ extension PhotoPickerController {
                 sendsItemsSeparately: sendsAlbumItemsSeparately
             )
             
-            finishHandler?(result, self)
-            pickerDelegate?.pickerController(
-                self,
-                didFinishSelection: result
-            )
-            
-            if previewType == .picker {
-                disablesCustomDismiss = true
-            }
-            isDismissed = true
-            if autoDismiss {
-                dismiss(true)
-            }
+            completeSelection(result, notifyAfterDismiss: notifyAfterDismiss)
         }else {
             let result = PickerResult(
                 photoAssets: resultAssets,
@@ -87,25 +76,15 @@ extension PhotoPickerController {
                 mediaCaptions: [:],
                 sendsItemsSeparately: false
             )
-            finishHandler?(result, self)
-            pickerDelegate?.pickerController(
-                self,
-                didFinishSelection: result
-            )
-            if previewType == .picker {
-                disablesCustomDismiss = true
-            }
-            isDismissed = true
-            if autoDismiss {
-                dismiss(true)
-            }
+            completeSelection(result, notifyAfterDismiss: notifyAfterDismiss)
         }
         
         
     }
     func singleFinishCallback(
         for photoAsset: PhotoAsset,
-        customInputText: String? = nil
+        customInputText: String? = nil,
+        notifyAfterDismiss: Bool = false
     ) {
         #if HXPICKER_ENABLE_EDITOR
         pickerData.removeAllEditedPhotoAsset()
@@ -121,15 +100,26 @@ extension PhotoPickerController {
                 : [:],
             sendsItemsSeparately: config.entranceType == .chatSend && sendsAlbumItemsSeparately
         )
-        finishHandler?(result, self)
-        pickerDelegate?.pickerController(
-            self,
-            didFinishSelection: result
-        )
+        completeSelection(result, notifyAfterDismiss: notifyAfterDismiss)
+    }
+
+    private func completeSelection(_ result: PickerResult, notifyAfterDismiss: Bool) {
+        let notify = {
+            self.finishHandler?(result, self)
+            self.pickerDelegate?.pickerController(
+                self,
+                didFinishSelection: result
+            )
+        }
         if previewType == .picker {
             disablesCustomDismiss = true
         }
         isDismissed = true
+        if autoDismiss, notifyAfterDismiss {
+            dismiss(true, completion: notify)
+            return
+        }
+        notify()
         if autoDismiss {
             dismiss(true)
         }

@@ -159,13 +159,15 @@ extension PhotoPickerViewController: PhotoPreviewViewControllerDelegate {
         pickerController.albumMediaCaptions = previewController.pickerController.albumMediaCaptions
         if pickerConfig.isMultipleSelect {
             pickerController.finishCallback(
-                photoAssets: photoAssets
+                photoAssets: photoAssets,
+                notifyAfterDismiss: true
             )
         }else {
             if let photoAsset = photoAssets.first {
                 pickerController.singleFinishCallback(
                     for: photoAsset,
-                    customInputText: previewController.photoToolbar.customInputText
+                    customInputText: previewController.photoToolbar.customInputText,
+                    notifyAfterDismiss: true
                 )
             }
         }
