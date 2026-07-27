@@ -30,6 +30,7 @@ extension PhotoPickerController: PhotoPickerDataDelegate {
     }
     
     public func pickerData(_ pickerData: PhotoPickerData, didUnselectAsset photoAsset: PhotoAsset, at index: Int) {
+        clearAlbumMessageTextIfSelectionIsEmpty()
         pickerDelegate?.pickerController(self, didUnselectAsset: photoAsset, atIndex: index)
     }
     

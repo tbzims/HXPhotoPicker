@@ -52,6 +52,24 @@ open class PhotoPickerController: UINavigationController {
         guard let identifier = photoAsset?.identifier else { return }
         albumMediaCaptions[identifier] = text
     }
+
+    func clearAlbumMessageTextIfSelectionIsEmpty() {
+        guard config.entranceType == .chatSend,
+              selectedAssetArray.isEmpty,
+              !albumMessageText.isEmpty else {
+            return
+        }
+        albumMessageText = ""
+        let updateInput: () -> Void = { [weak self] in
+            guard let self else { return }
+            self.pickerViewController?.photoToolbar?.updateCustomInputText("")
+        }
+        if Thread.isMainThread {
+            updateInput()
+        } else {
+            DispatchQueue.main.async(execute: updateInput)
+        }
+    }
     
     /// fetch Assets 时的选项配置
     public var options: PHFetchOptions {
