@@ -25,8 +25,8 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     public var viewHeight: CGFloat {
         if usesCustomInputView {
             if type == .picker {
-                guard selectedView.assetCount > 0 else { return 0 }
-                return selectedViewHeight + customInputContext.preferredHeight
+                let selectedStripHeight = selectedView.assetCount > 0 ? selectedViewHeight : 0
+                return selectedStripHeight + customInputContext.preferredHeight
             }
             return customInputContext.preferredHeight
         }
@@ -427,11 +427,24 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
     
     public func insertSelectedAsset(_ photoAsset: PhotoAsset) {
         if !isShowSelectedView { return }
+        let wasEmpty = selectedView.assetCount == 0
         selectedView.insertPhotoAsset(photoAsset: photoAsset) { [weak self] in
             guard let self, self.isShowPrompt else {
                 return
             }
             self.promptView.alpha = 0
+        }
+        guard wasEmpty else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.selectedView.assetCount > 0 else { return }
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+            self.selectedView.isHidden = false
+            self.selectedView.setNeedsLayout()
+            self.selectedView.layoutIfNeeded()
+            self.selectedView.collectionView.collectionViewLayout.invalidateLayout()
+            self.selectedView.collectionView.reloadData()
+            self.selectedView.collectionView.layoutIfNeeded()
         }
     }
     
