@@ -35,7 +35,7 @@ public class TMHXActionSheet: UIView {
 
     public static func show(actions: [TMHXAction],cancelStr:String,cancelColor:UIColor) {
 
-        guard let window = UIApplication.shared.keyWindow else { return }
+        guard let window = UIApplication.hx_keyWindow else { return }
 
         let sheet = TMHXActionSheet(frame: window.bounds)
         sheet.actions = actions
@@ -48,7 +48,7 @@ public class TMHXActionSheet: UIView {
     // MARK: - Dismiss
 
     public static func dismiss() {
-        guard let window = UIApplication.shared.keyWindow else { return }
+        guard let window = UIApplication.hx_keyWindow else { return }
         for view in window.subviews {
             if let sheet = view as? TMHXActionSheet {
                 sheet.animateDismiss()

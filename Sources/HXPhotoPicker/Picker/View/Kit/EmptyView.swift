@@ -9,6 +9,8 @@
 import UIKit
 
 public class PhotoPickerEmptyView: UIView {
+    var onTap: (() -> Void)?
+
     private var titleLb: UILabel!
     private var subTitleLb: UILabel!
     private var emptyImgV: UIView!
@@ -51,8 +53,16 @@ public class PhotoPickerEmptyView: UIView {
             addSubview(emptyBgV)
             
         }
+
+        addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(didTapEmptyView))
+        )
         
         configColor()
+    }
+
+    @objc private func didTapEmptyView() {
+        onTap?()
     }
     
     private func configColor() {

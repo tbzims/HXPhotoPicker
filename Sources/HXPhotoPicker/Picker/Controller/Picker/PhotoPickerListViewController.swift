@@ -60,6 +60,12 @@ open class PhotoPickerListViewController:
     public var swipeSelectLastLocalPoint: CGPoint?
     private var promptView: TMHXPhotoPromptView!
     private var postFeedTopBgV: UIView?
+    private weak var limitedAuthorizationTapHostView: UIView?
+    private lazy var limitedAuthorizationTapGesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(didTapLimitedAuthorizationManage)
+    )
+    private var isShowingLimitedAuthorizationActions = false
     private var isShowPrompt: Bool {
         AssetPermissionsUtil.isPromptShow
     }
@@ -98,6 +104,17 @@ open class PhotoPickerListViewController:
         initViews()
         self.pickerConfig.onPickerListViewReady?(self)
     }
+
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        installLimitedAuthorizationTapGestureIfNeeded()
+    }
+
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        limitedAuthorizationTapHostView?.removeGestureRecognizer(limitedAuthorizationTapGesture)
+        limitedAuthorizationTapHostView = nil
+    }
     
     func initViews() {
         collectionViewLayout = UICollectionViewFlowLayout()
@@ -130,6 +147,10 @@ open class PhotoPickerListViewController:
             swipeSelectPanGR = panGR
         }
         emptyView = PhotoPickerEmptyView(config: config.emptyView)
+        emptyView.onTap = { [weak self] in
+            guard let self else { return }
+            self.delegate?.photoListWillBeginDragging(self)
+        }
 
         if isShowPrompt {
             promptView = TMHXPhotoPromptView(frame: CGRectZero, promptStr: pickerConfig.photoList.bottomView.can_only_access_limited_authorized_photos ?? "zzz")
@@ -137,17 +158,7 @@ open class PhotoPickerListViewController:
             promptView.backgroundColor = config.backgroundColor
             promptView.onManageButtonTap = { [weak self] in
                 guard let self = self else { return }
-                TMHXActionSheet.show(
-                    actions: [
-                        .init(title: self.config.bottomView.selectMorePictures ?? "Select More pictures") {
-                            self.delegate?.photoList(didLimitCell: self)
-                        },
-                        .init(title: self.config.bottomView.changeSettings ?? "Change settings") {
-                            PhotoTools.openSettingsURL()
-                        }
-                    ],cancelStr: self.config.bottomView.cancel ?? "Cancel",
-                    cancelColor: config.bottomView.finishButtonBackgroundColor
-                )
+                self.showLimitedAuthorizationActions()
             }
             view.addSubview(promptView)
         }
@@ -313,6 +324,47 @@ open class PhotoPickerListViewController:
         }else {
             emptyView.removeFromSuperview()
         }
+        if let promptView, !promptView.isHidden {
+            view.bringSubviewToFront(promptView)
+        }
+    }
+
+    private func showLimitedAuthorizationActions() {
+        guard !isShowingLimitedAuthorizationActions else { return }
+        isShowingLimitedAuthorizationActions = true
+        view.window?.endEditing(true)
+        delegate?.photoListWillBeginDragging(self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            guard let self else { return }
+            TMHXActionSheet.show(
+                actions: [
+                    .init(title: self.config.bottomView.selectMorePictures ?? "Select More pictures") {
+                        self.delegate?.photoList(didLimitCell: self)
+                    },
+                    .init(title: self.config.bottomView.changeSettings ?? "Change settings") {
+                        PhotoTools.openSettingsURL()
+                    }
+                ],
+                cancelStr: self.config.bottomView.cancel ?? "Cancel",
+                cancelColor: self.config.bottomView.finishButtonBackgroundColor
+            )
+            self.isShowingLimitedAuthorizationActions = false
+        }
+    }
+
+    private func installLimitedAuthorizationTapGestureIfNeeded() {
+        guard isShowPrompt else { return }
+        let hostView = parent?.view ?? view
+        guard limitedAuthorizationTapHostView !== hostView else { return }
+        limitedAuthorizationTapHostView?.removeGestureRecognizer(limitedAuthorizationTapGesture)
+        limitedAuthorizationTapGesture.cancelsTouchesInView = false
+        limitedAuthorizationTapGesture.delegate = self
+        hostView?.addGestureRecognizer(limitedAuthorizationTapGesture)
+        limitedAuthorizationTapHostView = hostView
+    }
+
+    @objc private func didTapLimitedAuthorizationManage() {
+        showLimitedAuthorizationActions()
     }
     
     public func scrollToCenter(for photoAsset: PhotoAsset?) {
@@ -418,17 +470,7 @@ open class PhotoPickerListViewController:
                 promptView.manageButton.setTitle(config.manageBtnName, for: .normal)
                 promptView.onManageButtonTap = { [weak self] in
                     guard let self = self else { return }
-                    TMHXActionSheet.show(
-                        actions: [
-                            .init(title: self.config.bottomView.selectMorePictures ?? "Select More pictures") {
-                                self.delegate?.photoList(didLimitCell: self)
-                            },
-                            .init(title: self.config.bottomView.changeSettings ?? "Change settings") {
-                                PhotoTools.openSettingsURL()
-                            }
-                        ],cancelStr: self.config.bottomView.cancel ?? "Cancel",
-                        cancelColor: config.bottomView.finishButtonBackgroundColor
-                    )
+                    self.showLimitedAuthorizationActions()
                 }
                 view.addSubview(promptView)
             }
@@ -446,6 +488,9 @@ open class PhotoPickerListViewController:
         }else {
             collectionView.frame = CGRect(x: 0, y: topHeight, width: view.bounds.size.width, height: view.bounds.size.height - topHeight)
 //            postFeedTopBgV.isHidden = true
+        }
+        if let promptView, !promptView.isHidden {
+            view.bringSubviewToFront(promptView)
         }
         
         emptyView.width = view.width
@@ -1016,6 +1061,26 @@ extension PhotoPickerListViewController: PhotoPeekViewControllerDelegate {
 }
 
 extension PhotoPickerListViewController: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        guard gestureRecognizer === limitedAuthorizationTapGesture else {
+            return true
+        }
+        guard
+            isShowPrompt,
+            let promptView,
+            !promptView.isHidden,
+            promptView.alpha > 0,
+            promptView.window != nil
+        else {
+            return false
+        }
+        let point = touch.location(in: promptView.manageButton)
+        return promptView.manageButton.bounds.insetBy(dx: -8, dy: -8).contains(point)
+    }
+
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer != swipeSelectPanGR {
             return true
