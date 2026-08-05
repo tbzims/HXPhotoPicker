@@ -496,7 +496,7 @@ open class PhotoPickerListViewController:
         emptyView.width = view.width
         emptyView.center = CGPoint(
             x: view.width * 0.5,
-            y: (view.height - contentInset.top - contentInset.bottom) * 0.5
+            y: (view.height - contentInset.top - contentInset.bottom) * 0.475
         )
         
         if orientationDidChange {
