@@ -328,6 +328,10 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
                 guard let self else { return }
                 self.toolbarDelegate?.photoToolbar(didFinishClick: self)
             }
+            context.onConfirmInput = { [weak self] in
+                guard let self else { return }
+                self.toolbarDelegate?.photoToolbarDidConfirmCustomInput(self)
+            }
             customInputContext = context
             let inputView = provider(context)
             customInputView = inputView

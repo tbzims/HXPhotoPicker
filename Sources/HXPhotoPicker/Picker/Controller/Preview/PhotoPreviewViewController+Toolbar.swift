@@ -67,6 +67,22 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
         didFinishClick()
     }
 
+    public func photoToolbarDidConfirmCustomInput(_ toolbar: PhotoToolBar) {
+        guard previewType == .picker,
+              let text = toolbar.customInputText,
+              !text.isEmpty,
+              let photoAsset = photoAsset(for: currentPreviewIndex),
+              !pickerController.selectedAssetArray.contains(photoAsset) else {
+            return
+        }
+        let maximumSelectedCount = pickerConfig.maximumSelectedCount
+        guard maximumSelectedCount <= 0 ||
+                pickerController.selectedAssetArray.count < maximumSelectedCount else {
+            return
+        }
+        changeSelectBoxControlClick(isSelect: true)
+    }
+
     public func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar) {
         UIView.animate(
             withDuration: 0.2,

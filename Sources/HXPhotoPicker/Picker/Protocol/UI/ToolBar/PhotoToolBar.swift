@@ -28,6 +28,7 @@ public protocol PhotoToolBarDelegate: AnyObject {
     #endif
     
     func photoToolbar(didFinishClick toolbar: PhotoToolBar)
+    func photoToolbarDidConfirmCustomInput(_ toolbar: PhotoToolBar)
     func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar)
     func photoToolbar(
         _ toolbar: PhotoToolBar,
@@ -52,6 +53,7 @@ public extension PhotoToolBarDelegate {
     func photoToolbar(_ toolbar: PhotoToolBar, didMoveAsset fromIndex: Int, with toIndex: Int) { }
     func photoToolbar(_ toolbar: PhotoToolBar, didDeleteAsset asset: PhotoAsset) { }
     func photoToolbar(_ toolbar: PhotoToolBar, previewMoveTo asset: PhotoAsset) { }
+    func photoToolbarDidConfirmCustomInput(_ toolbar: PhotoToolBar) { }
     func photoToolbarDidUpdateHeight(_ toolbar: PhotoToolBar) { }
     func photoToolbar(
         _ toolbar: PhotoToolBar,
