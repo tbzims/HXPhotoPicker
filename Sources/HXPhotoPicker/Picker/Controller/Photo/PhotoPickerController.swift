@@ -50,6 +50,10 @@ open class PhotoPickerController: UINavigationController {
 
     func updateAlbumCaption(_ text: String, for photoAsset: PhotoAsset?) {
         guard let identifier = photoAsset?.identifier else { return }
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            albumMediaCaptions.removeValue(forKey: identifier)
+            return
+        }
         albumMediaCaptions[identifier] = text
     }
     

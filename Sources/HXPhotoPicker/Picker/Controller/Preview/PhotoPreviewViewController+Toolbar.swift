@@ -70,7 +70,7 @@ extension PhotoPreviewViewController: PhotoToolBarDelegate {
     public func photoToolbarDidConfirmCustomInput(_ toolbar: PhotoToolBar) {
         guard previewType == .picker,
               let text = toolbar.customInputText,
-              !text.isEmpty,
+              !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               let photoAsset = photoAsset(for: currentPreviewIndex),
               !pickerController.selectedAssetArray.contains(photoAsset) else {
             return
