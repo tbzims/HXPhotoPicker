@@ -191,13 +191,20 @@ open class PhotoPickerData {
                 }
             }
             if !isFilterMaxCount {
-                if config.maximumSelectedPhotoCount > 0, selectedPhotoAssets.count >= config.maximumSelectedPhotoCount {
-                    text = String.init(format: .textManager.picker.maximumSelectedPhotoHudTitle.text, arguments: [config.maximumSelectedPhotoCount])
-                    canSelect = false
-                }else {
-                    if selectedAssets.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
+                if config.entranceType == .chatSend {
+                    if selectedAssets.count >= config.maximumSelectedCount {
                         text = .textManager.picker.maximumSelectedHudTitle.text
                         canSelect = false
+                    }
+                }else {
+                    if config.maximumSelectedPhotoCount > 0, selectedPhotoAssets.count >= config.maximumSelectedPhotoCount {
+                        text = String.init(format: .textManager.picker.maximumSelectedPhotoHudTitle.text, arguments: [config.maximumSelectedPhotoCount])
+                        canSelect = false
+                    }else {
+                        if selectedAssets.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
+                            text = .textManager.picker.maximumSelectedHudTitle.text
+                            canSelect = false
+                        }
                     }
                 }
             }
