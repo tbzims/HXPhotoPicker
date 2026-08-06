@@ -29,6 +29,8 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
     public var selectMaskLayer: CALayer!
     
     public var syncICloudRequestID: PHImageRequestID?
+    private var syncICloudAssetIdentifier: String?
+    private var syncICloudGeneration = 0
     
     /// iCloud下载进度视图
     var loaddingView: PhotoLoadingView!
@@ -131,13 +133,16 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
     }
     
     open func cancelSyncICloud() {
+        syncICloudGeneration += 1
         guard let id = syncICloudRequestID else {
+            syncICloudAssetIdentifier = nil
             return
         }
         loaddingView.isHidden = true
         loaddingView.stopAnimating()
         PHImageManager.default().cancelImageRequest(id)
         syncICloudRequestID = nil
+        syncICloudAssetIdentifier = nil
     }
     
     open func checkICloundStatus(
@@ -162,26 +167,53 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
     }
     
     open func syncICloud() {
+        let assetIdentifier = photoAsset.identifier
+        // cell 再次展示同一资源时继续使用原请求，并恢复模型中记录的进度。
+        if photoAsset.downloadStatus == .downloading,
+           syncICloudRequestID != nil,
+           syncICloudAssetIdentifier == assetIdentifier {
+            disableMaskLayer.isHidden = true
+            loaddingView.isHidden = false
+            loaddingView.startAnimating()
+            if photoAsset.downloadProgress > 0 {
+                loaddingView.progress = CGFloat(photoAsset.downloadProgress)
+            }
+            return
+        }
         cancelSyncICloud()
         disableMaskLayer.isHidden = true
         loaddingView.isHidden = false
         loaddingView.startAnimating()
+        if photoAsset.downloadProgress > 0 {
+            loaddingView.progress = CGFloat(photoAsset.downloadProgress)
+        }
+        syncICloudAssetIdentifier = assetIdentifier
+        syncICloudGeneration += 1
+        let generation = syncICloudGeneration
         syncICloudRequestID = photoAsset.syncICloud { [weak self] in
-            guard let self = self, $0 == self.photoAsset else {
+            guard let self = self,
+                  generation == self.syncICloudGeneration,
+                  $0 == self.photoAsset else {
                 return
             }
             self.syncICloudRequestID = $1
         } progressHandler: { [weak self] in
-            guard let self = self, $0 == self.photoAsset else {
+            guard let self = self,
+                  generation == self.syncICloudGeneration,
+                  $0 == self.photoAsset else {
                 return
             }
             if $1 > 0 {
-                self.loaddingView.progress = $1
+                self.loaddingView.progress = CGFloat(self.photoAsset.downloadProgress)
             }
         } completionHandler: { [weak self] in
-            guard let self = self, $0 == self.photoAsset else {
+            guard let self = self,
+                  generation == self.syncICloudGeneration,
+                  $0 == self.photoAsset else {
                 return
             }
+            self.syncICloudRequestID = nil
+            self.syncICloudAssetIdentifier = nil
             if $1 {
                 self.requestICloudState()
                 if self.photoAsset.mediaType == .video, self.photoAsset.videoTime == nil {

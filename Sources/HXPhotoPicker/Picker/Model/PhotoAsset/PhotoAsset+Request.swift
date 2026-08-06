@@ -336,9 +336,12 @@ public extension PhotoAsset {
         return AssetManager.requestImageData(for: phAsset, version: version) { iCloudRequestID in
             iCloudHandler?(self, iCloudRequestID)
         } progressHandler: { progress, _, _, _ in
-            self.downloadProgress = Double(progress)
+            // PhotoKit 重建请求时可能先从较小值回调，不能覆盖复用前已经展示的进度。
+            let normalizedProgress = max(self.downloadProgress, Double(progress))
+            self.downloadProgress = normalizedProgress
+            self.downloadStatus = .downloading
             DispatchQueue.main.async {
-                progressHandler?(self, progress)
+                progressHandler?(self, normalizedProgress)
             }
         } resultHandler: { result in
             switch result {
@@ -414,9 +417,11 @@ public extension PhotoAsset {
         ) { (iCloudRequestID) in
             iCloudHandler?(self, iCloudRequestID)
         } progressHandler: { (progress, _, _, _) in
-            self.downloadProgress = progress
+            let normalizedProgress = max(self.downloadProgress, progress)
+            self.downloadProgress = normalizedProgress
+            self.downloadStatus = .downloading
             DispatchQueue.main.async {
-                progressHandler?(self, progress)
+                progressHandler?(self, normalizedProgress)
             }
         } resultHandler: { (livePhoto, info, downloadSuccess) in
             if downloadSuccess {
@@ -1088,9 +1093,11 @@ public extension PhotoAsset {
         ) { (iCloudRequestID) in
             iCloudHandler?(self, iCloudRequestID)
         } progressHandler: { (progress, _, _, _) in
-            self.downloadProgress = progress
+            let normalizedProgress = max(self.downloadProgress, progress)
+            self.downloadProgress = normalizedProgress
+            self.downloadStatus = .downloading
             DispatchQueue.main.async {
-                progressHandler?(self, progress)
+                progressHandler?(self, normalizedProgress)
             }
         } resultHandler: { (result) in
             switch result {
