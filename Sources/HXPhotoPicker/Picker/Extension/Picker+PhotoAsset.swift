@@ -123,14 +123,19 @@ public extension PhotoAsset {
         hudAddedTo view: UIView? = UIApplication.shared.keyWindow,
         completion: @escaping (PhotoAsset, Bool) -> Void
     ) -> Bool {
-        guard let phAsset = phAsset,
+        guard phAsset != nil,
               downloadStatus != .succeed else {
             return false
         }
         if mediaType == .photo && !allowSyncPhoto {
             return false
         }
-        if phAsset.inICloud {
+        // 大图预览已经发起 iCloud 同步时，勾选只更新选择状态，继续复用原请求。
+        // 这里再次同步会生成第二个 PhotoKit 请求和阻塞式 HUD，造成界面假死及进度回退。
+        if downloadStatus == .downloading {
+            return false
+        }
+        if inICloud {
             syncICloud(
                 hudAddedTo: view,
                 completion: completion
@@ -241,7 +246,12 @@ public extension PhotoAsset {
     ) {
         var loadingView: PhotoHUDProtocol?
         syncICloud { _, _ in
-            loadingView = PhotoManager.HUDView.showProgress(with: .textPhotoList.iCloudSyncHudTitle.text + "...", progress: 0, animated: true, addedTo: view)
+            loadingView = PhotoManager.HUDView.showProgress(
+                with: .textPhotoList.iCloudSyncHudTitle.text + "...",
+                progress: CGFloat(self.downloadProgress),
+                animated: true,
+                addedTo: view
+            )
         } progressHandler: { _, progress in
             loadingView?.setProgress(CGFloat(progress))
         } completionHandler: { photoAsset, isSuccess in

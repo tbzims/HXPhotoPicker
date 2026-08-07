@@ -148,14 +148,14 @@ open class PhotoPickerViewCell: PhotoPickerBaseViewCell {
     open func checkICloundStatus(
         allowSyncPhoto: Bool
     ) -> Bool {
-        guard let phAsset = photoAsset.phAsset,
+        guard photoAsset.phAsset != nil,
               photoAsset.downloadStatus != .succeed else {
             return false
         }
         if photoAsset.mediaType == .photo && !allowSyncPhoto {
             return false
         }
-        if phAsset.inICloud {
+        if photoAsset.inICloud {
             if photoAsset.downloadStatus != .downloading {
                 syncICloud()
             }

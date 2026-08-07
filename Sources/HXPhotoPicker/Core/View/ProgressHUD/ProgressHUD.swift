@@ -405,6 +405,7 @@ final class ProgressHUD: UIView {
             addedTo: view,
             mode: .circleProgress
         )
+        progressView.progress = progress
         progressView.showHUD(
             text: text,
             animated: animated,
