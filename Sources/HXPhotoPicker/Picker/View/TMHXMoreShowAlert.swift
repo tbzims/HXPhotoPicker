@@ -17,6 +17,8 @@ final class TMHXMoreShowAlert: UIView {
     private let rowHeight: CGFloat = 42
     private let contentWidth: CGFloat = 268
     private let contentCornerRadius: CGFloat = 20
+    private let presentationDuration: TimeInterval = 0.2
+    private let collapsedScale: CGFloat = 0.01
     private let contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
     private let menuHorizontalPadding: CGFloat = 0
     private let menuVerticalPadding: CGFloat = 0
@@ -136,19 +138,13 @@ extension TMHXMoreShowAlert {
         repositionContentView()
         layoutIfNeeded()
         
-        shadowView.transform = CGAffineTransform(translationX: 0, y: -12).scaledBy(x: 0.96, y: 0.96)
-        
-        UIView.animate(
-            withDuration: 0.24,
-            delay: 0,
-            usingSpringWithDamping: 0.92,
-            initialSpringVelocity: 0.4,
-            options: [.curveEaseOut]
-        ) {
+        setTopRightAnimationAnchor()
+        shadowView.transform = CGAffineTransform(scaleX: collapsedScale, y: collapsedScale)
+
+        UIView.animate(withDuration: presentationDuration, delay: 0, options: [.curveEaseOut]) {
             self.alertMaskView.alpha = 1
             self.shadowView.alpha = 1
             self.shadowView.transform = .identity
-            self.layoutIfNeeded()
         }
     }
     
@@ -182,6 +178,12 @@ extension TMHXMoreShowAlert {
         let preferredY = max(anchorFrame.maxY + menuVerticalPadding, minimumTopPosition())
         let maxY = bounds.height - safeBottom - menuVerticalPadding - contentHeight
         topConstraint.constant = max(minimumTopPosition(), min(preferredY, maxY))
+    }
+
+    private func setTopRightAnimationAnchor() {
+        let currentFrame = shadowView.frame
+        shadowView.layer.anchorPoint = CGPoint(x: 1, y: 0)
+        shadowView.frame = currentFrame
     }
     
     private func minimumTopPosition() -> CGFloat {
