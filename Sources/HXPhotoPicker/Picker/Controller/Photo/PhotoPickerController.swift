@@ -239,6 +239,7 @@ open class PhotoPickerController: UINavigationController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
+        PhotoManager.shared.firstLoadAssets = true
         if PhotoManager.isRTL {
             navigationBar.semanticContentAttribute = .forceRightToLeft
         }else {

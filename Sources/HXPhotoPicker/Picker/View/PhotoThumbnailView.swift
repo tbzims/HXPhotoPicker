@@ -184,7 +184,7 @@ extension PhotoThumbnailView {
     
     private func requestCompletion(_ image: UIImage?) {
         if fadeImage {
-            imageView.setImage(image, animated: _image == nil ? false : firstLoadImage)
+            imageView.setImage(image, animated: _image == nil && firstLoadImage)
         }else {
             imageView.image = image
         }
