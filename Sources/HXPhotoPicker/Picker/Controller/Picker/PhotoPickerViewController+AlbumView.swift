@@ -97,25 +97,23 @@ extension PhotoPickerViewController: PhotoAlbumListDelegate {
     }
     
     func updateAlbumViewFrame() {
+        let topY = getAlbumViewTopY()
         self.albumView.size = CGSize(width: view.width, height: getAlbumViewHeight())
         if titleView.isSelected {
-            if self.navigationController?.modalPresentationStyle == UIModalPresentationStyle.fullScreen &&
-                UIDevice.isPortrait {
-                if let barHeight = self.navigationController?.navigationBar.frame.maxY {
-                    self.albumView.y = barHeight
-                }else {
-                    self.albumView.y = UIDevice.navigationBarHeight
-                }
-            }else {
-                if let barHeight = self.navigationController?.navigationBar.frame.maxY {
-                    self.albumView.y = barHeight
-                }else {
-                    self.albumView.y = 0
-                }
-            }
+            self.albumView.y = topY
         }else {
             self.albumView.y = -self.albumView.height
         }
+    }
+
+    private func getAlbumViewTopY() -> CGFloat {
+        if let barHeight = navigationController?.navigationBar.frame.maxY {
+            return barHeight
+        }
+        if navigationController?.modalPresentationStyle == .fullScreen, UIDevice.isPortrait {
+            return UIDevice.navigationBarHeight
+        }
+        return 0
     }
     
     func getAlbumViewHeight() -> CGFloat {
@@ -124,10 +122,11 @@ extension PhotoPickerViewController: PhotoAlbumListDelegate {
             pickerConfig.allowLoadPhotoLibrary {
             albumViewHeight += 40
         }
-        if albumViewHeight > view.height * 1.0 {
-            albumViewHeight = view.height * 1.0
-        }
-        return albumViewHeight
+        let maximumHeight = max(
+            0,
+            view.height - getAlbumViewTopY() - UIDevice.HXsafeAreaInsets.bottom
+        )
+        return min(albumViewHeight, maximumHeight)
     }
     
     public func albumList(
