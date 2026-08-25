@@ -43,6 +43,11 @@ open class PhotoPickerController: UINavigationController {
     var albumMediaCaptions: [String: String] = [:]
     var sendsAlbumItemsSeparately = false
 
+    func updateAlbumMessageText(_ text: String) {
+        // 与大图预览的描述输入保持一致：全空格或全换行按空内容处理，正常文本保留原始格式。
+        albumMessageText = text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "" : text
+    }
+
     func albumCaption(for photoAsset: PhotoAsset?) -> String {
         guard let identifier = photoAsset?.identifier else { return "" }
         return albumMediaCaptions[identifier] ?? ""
