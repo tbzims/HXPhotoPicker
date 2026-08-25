@@ -270,13 +270,21 @@ open class PhotoPickerData {
                         canSelect = false
                     }
                 }
-                if config.maximumSelectedVideoCount > 0, selectedVideoAssets.count >= config.maximumSelectedVideoCount {
-                    text = String.init(format: .textManager.picker.maximumSelectedVideoHudTitle.text, arguments: [config.maximumSelectedVideoCount])
-                    canSelect = false
-                }else {
-                    if selectedAssets.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
+                if config.entranceType == .chatSend {
+                    // 聊天发送统一提示总选择数，避免达到视频数量上限时重复出现“最多只能选择9个视频”。
+                    if selectedAssets.count >= config.maximumSelectedCount {
                         text = .textManager.picker.maximumSelectedHudTitle.text
                         canSelect = false
+                    }
+                }else {
+                    if config.maximumSelectedVideoCount > 0, selectedVideoAssets.count >= config.maximumSelectedVideoCount {
+                        text = String.init(format: .textManager.picker.maximumSelectedVideoHudTitle.text, arguments: [config.maximumSelectedVideoCount])
+                        canSelect = false
+                    }else {
+                        if selectedAssets.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
+                            text = .textManager.picker.maximumSelectedHudTitle.text
+                            canSelect = false
+                        }
                     }
                 }
             }

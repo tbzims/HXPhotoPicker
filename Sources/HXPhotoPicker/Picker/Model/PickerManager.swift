@@ -532,15 +532,23 @@ extension PickerManager {
                     canSelect = false
                 }
             }
-            if config.maximumSelectedVideoCount > 0 {
-                if selectedVideoAssetArray.count >= config.maximumSelectedVideoCount {
-                    text = String.init(format: .textManager.picker.maximumSelectedVideoHudTitle.text, arguments: [config.maximumSelectedVideoCount])
+            if config.entranceType == .chatSend {
+                // 聊天发送统一提示总选择数，避免旧选择流程仍显示视频专属上限提示。
+                if selectedAssetArray.count >= config.maximumSelectedCount {
+                    text = .textManager.picker.maximumSelectedHudTitle.text
                     canSelect = false
                 }
             }else {
-                if selectedAssetArray.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
-                    text = .textManager.picker.maximumSelectedHudTitle.text
-                    canSelect = false
+                if config.maximumSelectedVideoCount > 0 {
+                    if selectedVideoAssetArray.count >= config.maximumSelectedVideoCount {
+                        text = String.init(format: .textManager.picker.maximumSelectedVideoHudTitle.text, arguments: [config.maximumSelectedVideoCount])
+                        canSelect = false
+                    }
+                }else {
+                    if selectedAssetArray.count >= config.maximumSelectedCount && config.maximumSelectedCount > 0 {
+                        text = .textManager.picker.maximumSelectedHudTitle.text
+                        canSelect = false
+                    }
                 }
             }
         }
