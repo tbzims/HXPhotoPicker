@@ -65,6 +65,14 @@ open class PhotoPickerListViewController:
         target: self,
         action: #selector(didTapLimitedAuthorizationManage)
     )
+    /// Tapping the empty area of the asset grid should have the same effect as
+    /// beginning to drag the list: dismiss the custom message input/keyboard.
+    /// This is especially important when limited photo access leaves unused
+    /// space below the available assets.
+    private lazy var dismissInputTapGesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(didTapAssetList)
+    )
     private var isShowingLimitedAuthorizationActions = false
     private var isShowPrompt: Bool {
         AssetPermissionsUtil.isPromptShow
@@ -125,6 +133,8 @@ open class PhotoPickerListViewController:
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.clipsToBounds = true
+        dismissInputTapGesture.cancelsTouchesInView = false
+        collectionView.addGestureRecognizer(dismissInputTapGesture)
         if !config.allowSwipeToSelect {
             collectionView.delaysContentTouches = false
         }
@@ -365,6 +375,10 @@ open class PhotoPickerListViewController:
 
     @objc private func didTapLimitedAuthorizationManage() {
         showLimitedAuthorizationActions()
+    }
+
+    @objc private func didTapAssetList() {
+        delegate?.photoListWillBeginDragging(self)
     }
     
     public func scrollToCenter(for photoAsset: PhotoAsset?) {
