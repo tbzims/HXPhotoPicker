@@ -127,12 +127,12 @@ public extension PhotoAsset {
               downloadStatus != .succeed else {
             return false
         }
-        if mediaType == .photo && !allowSyncPhoto {
-            return false
-        }
-        // 大图预览已经发起 iCloud 同步时，勾选只更新选择状态，继续复用原请求。
-        // 这里再次同步会生成第二个 PhotoKit 请求和阻塞式 HUD，造成界面假死及进度回退。
+        // 资源正在同步下载时统一禁止勾选，等待当前请求完成后再允许选择。
+        // 返回 true 表示仍处于 iCloud 处理状态，但不会重复发起下载请求。
         if downloadStatus == .downloading {
+            return true
+        }
+        if mediaType == .photo && !allowSyncPhoto {
             return false
         }
         if inICloud {
