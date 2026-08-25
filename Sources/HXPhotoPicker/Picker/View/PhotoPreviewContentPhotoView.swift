@@ -188,7 +188,9 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
     }
     
     func showLoadingView(text: String?) {
-        loadingView = PhotoManager.HUDView.showProgress(with: text?.localized, progress: 0, animated: true, addedTo: hudSuperview)
+        // 列表页可能已经开始下载同一份 iCloud 资源，预览页创建进度提示时直接复用模型中的进度，避免画面从 0% 回退。
+        let progress = CGFloat(photoAsset?.downloadProgress ?? 0)
+        loadingView = PhotoManager.HUDView.showProgress(with: text?.localized, progress: progress, animated: true, addedTo: hudSuperview)
         isProgressHUD = true
     }
     
