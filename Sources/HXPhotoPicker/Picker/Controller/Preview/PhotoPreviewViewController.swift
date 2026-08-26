@@ -375,7 +375,6 @@ extension PhotoPreviewViewController {
         if previewType != .none && pickerController.modalPresentationStyle != .custom {
             updateColors()
         }
-        let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
         //        let cancelItem = UIBarButtonItem(
         //            image: imageType.image,
         //            style: .plain,
@@ -386,8 +385,12 @@ extension PhotoPreviewViewController {
         //        navigationItem.leftBarButtonItem = cancelItem
         let btn = UIButton(type: .custom)
         //        btn.setImage(imageType.image, for: .normal)
-        btn.setImage(UIImage(named: "icon_24_back_white"), for: .normal)
+        btn.setImage(
+            UIImage(named: "common_back_white_2.1")?.withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         btn.tintColor = .white
+        btn.alpha = 1
         btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
         
         // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
@@ -401,7 +404,6 @@ extension PhotoPreviewViewController {
         if pickerConfig.isMultipleSelect || previewType != .browser {
             if previewType != .browser {
                 if previewType == .picker {
-                    let imageType: HX.ImageResource.ImageType = pickerController.config.photoList.previewStyle == .present ? .imageResource.picker.preview.back : .imageResource.picker.preview.cancel
                     //                    let cancelItem = UIBarButtonItem(
                     //                        image: imageType.image,
                     //                        style: .plain,
@@ -411,8 +413,12 @@ extension PhotoPreviewViewController {
                     //                    navigationItem.leftBarButtonItem = cancelItem
                     let btn = UIButton(type: .custom)
                     //                    btn.setImage(imageType.image, for: .normal)
-                    btn.setImage(UIImage(named: "icon_24_back_white"), for: .normal)
+                    btn.setImage(
+                        UIImage(named: "common_back_white_2.1")?.withRenderingMode(.alwaysOriginal),
+                        for: .normal
+                    )
                     btn.tintColor = .white
+                    btn.alpha = 1
                     btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
                     
                     // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
@@ -512,8 +518,12 @@ extension PhotoPreviewViewController {
                 //                ).hidesShared()
                 //                navigationItem.leftBarButtonItem = cancelItem
                 let btn = UIButton(type: .custom)
-                btn.setImage(imageType.image, for: .normal)
+                btn.setImage(
+                    UIImage(named: "common_back_white_2.1")?.withRenderingMode(.alwaysOriginal),
+                    for: .normal
+                )
                 btn.tintColor = .white
+                btn.alpha = 1
                 btn.addTarget(self, action: #selector(didCancelItemClick), for: .touchUpInside)
                 
                 // ✅ 扩大点击区域（关键：给按钮一个更大的frame + 内容居中）
