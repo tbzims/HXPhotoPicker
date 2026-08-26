@@ -698,6 +698,11 @@ extension PhotoPreviewViewController {
                 translationX: 0,
                 y: -upwardOffset
             )
+            // 输入框展开时同步渐隐顶部导航和原图质量按钮，收起时恢复显示。
+            let topControlsAlpha: CGFloat = isExpanded ? 0 : 1
+            self.navigationController?.navigationBar.alpha = topControlsAlpha
+            self.navBgView?.alpha = topControlsAlpha
+            self.TMOriginalBtn?.alpha = topControlsAlpha
             self.updateCurrentVideoSliderLayout()
         }
     }
