@@ -36,9 +36,9 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
     private var loadAssetLocalIdentifier: String?
     private var isAnimatedCompletion: Bool = false
     private var imageTask: Any?
+    private var iCloudProgressObserverID: UUID?
     
     var loadingView: PhotoHUDProtocol?
-    var isProgressHUD: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,8 +57,15 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
     }
     
     func updateContent(_ oldAsset: PhotoAsset?) {
+        oldAsset?.removeICloudProgressObserver(iCloudProgressObserverID)
+        iCloudProgressObserverID = nil
         photoAsset.loadNetworkImageHandler = nil
         requestFailed(info: [PHImageCancelledKey: 1], isICloud: false)
+        iCloudProgressObserverID = photoAsset.addICloudProgressObserver { [weak self] asset, progress in
+            guard let self, self.photoAsset == asset else { return }
+            // 列表页已经发起的 PhotoKit 请求也会实时驱动预览页进度。
+            self.updateProgress(progress: progress, isICloud: true)
+        }
         isAnimatedCompletion = false
         switch photoAsset.mediaSubType {
         case .localImage:
@@ -109,10 +116,8 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
             canRequest = false
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
             if loadingView == nil {
-                let text: String = .textPreview.iCloudSyncHudTitle.text + "(" + String(Int(photoAsset.downloadProgress * 100)) + "%)"
-                let toView = hudSuperview
-                loadingView = PhotoManager.HUDView.show(with: text, delay: 0, animated: true, addedTo: toView)
-                isProgressHUD = false
+                // 复用已有 iCloud 请求时也统一使用进度 HUD，不再另外展示文字百分比 Toast。
+                showLoadingView(text: .textPreview.iCloudSyncHudTitle.text)
             }
         }else {
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -190,8 +195,14 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
     func showLoadingView(text: String?) {
         // 列表页可能已经开始下载同一份 iCloud 资源，预览页创建进度提示时直接复用模型中的进度，避免画面从 0% 回退。
         let progress = CGFloat(photoAsset?.downloadProgress ?? 0)
+        if let loadingView {
+            loadingView.setProgress(progress)
+            if let text {
+                loadingView.setText(text.localized)
+            }
+            return
+        }
         loadingView = PhotoManager.HUDView.showProgress(with: text?.localized, progress: progress, animated: true, addedTo: hudSuperview)
-        isProgressHUD = true
     }
     
     func showOtherSubview() {
@@ -229,6 +240,7 @@ class PhotoPreviewContentPhotoView: UIView, PhotoPreviewContentViewProtocol {
     }
     
     deinit {
+        photoAsset?.removeICloudProgressObserver(iCloudProgressObserverID)
         cancelRequest()
     }
     
@@ -410,12 +422,7 @@ extension PhotoPreviewContentPhotoView {
         guard let loadingView = loadingView else {
             return
         }
-        if isProgressHUD {
-            loadingView.setProgress(CGFloat(progress))
-        }else {
-            let text: String = .textPreview.iCloudSyncHudTitle.text + "(" + String(Int(photoAsset.downloadProgress * 100)) + "%)"
-            loadingView.setText(text)
-        }
+        loadingView.setProgress(CGFloat(progress))
     }
     
     func requestOriginalCompletion(

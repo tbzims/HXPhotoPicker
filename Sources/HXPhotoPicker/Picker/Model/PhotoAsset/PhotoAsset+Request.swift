@@ -38,9 +38,12 @@ public extension PhotoAsset {
         return AssetManager.requestImage(for: phAsset, targetSize: phAsset.targetSize, resizeMode: .fast) {
             iCloudHandler?(self, $0)
         } progressHandler: { progress, error, stop, info in
-            self.downloadProgress = progress
+            // PhotoKit 重建请求时可能先回调较小值，保证列表与预览页的共享进度不回退。
+            let normalizedProgress = max(self.downloadProgress, progress)
+            self.downloadProgress = normalizedProgress
+            self.downloadStatus = .downloading
             DispatchQueue.main.async {
-                progressHandler?(self, progress)
+                progressHandler?(self, normalizedProgress)
             }
         } resultHandler: {
             if $0 != nil {
@@ -1151,9 +1154,12 @@ public extension PhotoAsset {
         ) { (iCloudRequestID) in
             iCloudHandler?(self, iCloudRequestID)
         } progressHandler: { (progress, _, _, _) in
-            self.downloadProgress = progress
+            // 视频预览与列表可能同时请求，避免新请求将已有进度覆盖为较小值。
+            let normalizedProgress = max(self.downloadProgress, progress)
+            self.downloadProgress = normalizedProgress
+            self.downloadStatus = .downloading
             DispatchQueue.main.async {
-                progressHandler?(self, progress)
+                progressHandler?(self, normalizedProgress)
             }
         } resultHandler: { (result) in
             switch result {

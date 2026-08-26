@@ -260,7 +260,13 @@ open class PhotoAsset: Equatable {
     public var downloadStatus: DownloadStatus = .unknow
     
     /// iCloud下载进度，如果取消了会记录上次进度
-    public var downloadProgress: Double = 0
+    public var downloadProgress: Double = 0 {
+        didSet {
+            notifyICloudProgressObservers()
+        }
+    }
+    private let iCloudProgressObserverLock = NSLock()
+    private var iCloudProgressObservers: [UUID: PhotoAssetProgressHandler] = [:]
     
     var localIndex: Int = 0
     var pFileSize: Int?
@@ -277,6 +283,42 @@ open class PhotoAsset: Equatable {
 
 // MARK: Self-use
 extension PhotoAsset {
+
+    /// 监听同一资源的 iCloud 下载进度，便于列表与预览页共享已发起的下载请求。
+    @discardableResult
+    func addICloudProgressObserver(_ observer: @escaping PhotoAssetProgressHandler) -> UUID {
+        let observerID = UUID()
+        iCloudProgressObserverLock.lock()
+        iCloudProgressObservers[observerID] = observer
+        let progress = downloadProgress
+        iCloudProgressObserverLock.unlock()
+        observer(self, progress)
+        return observerID
+    }
+
+    func removeICloudProgressObserver(_ observerID: UUID?) {
+        guard let observerID else { return }
+        iCloudProgressObserverLock.lock()
+        iCloudProgressObservers.removeValue(forKey: observerID)
+        iCloudProgressObserverLock.unlock()
+    }
+
+    private func notifyICloudProgressObservers() {
+        iCloudProgressObserverLock.lock()
+        let observers = Array(iCloudProgressObservers.values)
+        let progress = downloadProgress
+        iCloudProgressObserverLock.unlock()
+        guard !observers.isEmpty else { return }
+        let notify = { [weak self] in
+            guard let self else { return }
+            observers.forEach { $0(self, progress) }
+        }
+        if Thread.isMainThread {
+            notify()
+        } else {
+            DispatchQueue.main.async(execute: notify)
+        }
+    }
     
     var cameraAsset: PhotoAsset? {
         var photoAsset: PhotoAsset?
