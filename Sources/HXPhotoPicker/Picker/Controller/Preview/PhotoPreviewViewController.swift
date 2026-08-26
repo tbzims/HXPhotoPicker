@@ -182,7 +182,7 @@ public class PhotoPreviewViewController: PhotoBaseViewController {
         TMEditBtn.frame = CGRect(x: view.width - 56, y: view.height - UIScreen.main.bounds.size.height * 0.8, width: 44, height: 44)
         let originalButtonSize = CGSize(width: 60, height: 62)
         TMOriginalBtn.frame = CGRect(
-            x: view.width - originalButtonSize.width - 12,
+            x: view.width - originalButtonSize.width,
             y: view.height - UIScreen.main.bounds.size.height * 0.8,
             width: originalButtonSize.width,
             height: originalButtonSize.height
