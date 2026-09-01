@@ -404,7 +404,7 @@ extension PhotoAsset {
             DispatchQueue.global().async {
                 let duration = PhotoTools.getVideoDuration(videoURL: self.localVideoAsset?.videoURL)
                 self.pVideoDuration = duration
-                self.pVideoTime = PhotoTools.transformVideoDurationToString(
+                self.pVideoTime = PhotoTools.transformVideoTotalDurationToString(
                     duration: duration
                 )
                 DispatchQueue.main.async {

@@ -189,7 +189,7 @@ open class PhotoAsset: Equatable {
         }else {
             videoDuration = localVideoAsset.duration
         }
-        pVideoTime = PhotoTools.transformVideoDurationToString(duration: videoDuration)
+        pVideoTime = PhotoTools.transformVideoTotalDurationToString(duration: videoDuration)
         pVideoDuration = videoDuration
         self.localVideoAsset = localVideoAsset
         mediaType = .video
@@ -248,7 +248,7 @@ open class PhotoAsset: Equatable {
         mediaSubType = .networkVideo
         if networkVideoAsset.duration > 0 {
             pVideoDuration = networkVideoAsset.duration
-            pVideoTime = PhotoTools.transformVideoDurationToString(duration: networkVideoAsset.duration)
+            pVideoTime = PhotoTools.transformVideoTotalDurationToString(duration: networkVideoAsset.duration)
         }
     }
     
@@ -348,7 +348,7 @@ extension PhotoAsset {
             mediaSubType = .video
             if !phAsset.mediaSubtypes.contains(.videoHighFrameRate) {
                 pVideoDuration = phAsset.duration
-                pVideoTime = PhotoTools.transformVideoDurationToString(duration: TimeInterval(round(phAsset.duration)))
+                pVideoTime = PhotoTools.transformVideoTotalDurationToString(duration: TimeInterval(round(phAsset.duration)))
             }else {
                 let options = PHVideoRequestOptions()
                 options.deliveryMode = .fastFormat

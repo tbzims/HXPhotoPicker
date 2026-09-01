@@ -197,7 +197,7 @@ extension PhotoAsset {
     func updateVideoDuration(_ duration: TimeInterval) {
         requestVideoDurationId = nil
         pVideoDuration = duration
-        pVideoTime = PhotoTools.transformVideoDurationToString(duration: duration)
+        pVideoTime = PhotoTools.transformVideoTotalDurationToString(duration: duration)
     }
      
 }

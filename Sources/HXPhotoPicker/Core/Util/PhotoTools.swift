@@ -65,6 +65,11 @@ public struct PhotoTools {
         }
     }
 
+    /// 格式化视频总时长。总时长不足 1 秒时按 1 秒展示，但播放进度仍可从 0 秒开始。
+    public static func transformVideoTotalDurationToString(duration: TimeInterval) -> String {
+        return transformVideoDurationToString(duration: max(duration, 1))
+    }
+
     static func formatVideoDurationLimitHudTitle(
         _ title: String,
         duration: Int

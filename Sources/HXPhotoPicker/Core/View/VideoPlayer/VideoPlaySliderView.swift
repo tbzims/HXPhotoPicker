@@ -46,7 +46,7 @@ public class VideoPlaySliderView: UIView, SliderViewDelegate {
     var playDuration: CGFloat = 0
     var videoDuration: CGFloat = 0 {
         didSet {
-            totalTimeLb.text = PhotoTools.transformVideoDurationToString(duration: TimeInterval(videoDuration))
+            totalTimeLb.text = PhotoTools.transformVideoTotalDurationToString(duration: TimeInterval(videoDuration))
             currentTimeLb.text = "00:00"
             if style == .editor {
                 currentTimeLb.width = currentTimeLb.textWidth

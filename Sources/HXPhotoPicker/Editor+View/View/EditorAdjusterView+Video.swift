@@ -209,7 +209,7 @@ extension EditorAdjusterView {
                     let fileSize = urlConfig.url.fileSize
                     let videoDuration = PhotoTools.getVideoDuration(videoURL: urlConfig.url)
                     let coverImage = PhotoTools.getVideoThumbnailImage(videoURL: urlConfig.url, atTime: 0.1)
-                    let videoTime = PhotoTools.transformVideoDurationToString(duration: videoDuration)
+                    let videoTime = PhotoTools.transformVideoTotalDurationToString(duration: videoDuration)
                     DispatchQueue.main.async {
                         let videoResult = VideoEditedResult(
                             urlConfig: urlConfig,

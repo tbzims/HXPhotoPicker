@@ -357,7 +357,7 @@ extension EditorViewController {
                     let fileSize = url.fileSize
                     let videoDuration = PhotoTools.getVideoDuration(videoURL: url)
                     let coverImage = PhotoTools.getVideoThumbnailImage(videoURL: url, atTime: 0.1)
-                    let videoTime = PhotoTools.transformVideoDurationToString(duration: videoDuration)
+                    let videoTime = PhotoTools.transformVideoTotalDurationToString(duration: videoDuration)
                     DispatchQueue.main.async {
                         PhotoManager.HUDView.dismiss(delay: 0, animated: true, for: self.view)
                         self.videoProcessCompletion(
