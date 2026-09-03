@@ -26,6 +26,13 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         if usesCustomInputView {
             if type == .picker {
                 let selectedStripHeight = selectedView.assetCount > 0 ? selectedViewHeight : 0
+                if pickerConfig.photoList.bottomView.customInputViewOverlaysSelectedView {
+                    // 已选资源栏本身不包含底部安全区，覆盖布局仍需与默认朋友圈底栏保持同高。
+                    return max(
+                        selectedStripHeight + UIDevice.bottomMargin,
+                        customInputContext.preferredHeight
+                    )
+                }
                 return selectedStripHeight + customInputContext.preferredHeight
             }
             return customInputContext.preferredHeight
@@ -309,6 +316,7 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             let context = PhotoPickerCustomInputViewContext()
             context.updateAllowsFinishWithoutSelection(type == .preview)
             context.updateUsesTransparentBackground(type == .preview)
+            context.updateBottomSafeAreaHeight(UIDevice.bottomMargin)
             context.onPreferredHeightChanged = { [weak self] _ in
                 guard let self else { return }
                 self.setNeedsLayout()
@@ -337,16 +345,21 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
             customInputView = inputView
             addSubview(inputView)
             if type == .picker, let selectedView {
-                selectedView.reservedTrailingWidth = 0
-                selectedView.verticalInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
-                selectedView.collectionViewLayout.minimumLineSpacing = 8
-                selectedView.collectionViewLayout.minimumInteritemSpacing = 8
-                selectedView.isEdgeGradientEnabled = false
-                selectedView.itemCornerRadius = 4
-                selectedView.itemBorderWidth = 0.5
-                selectedView.itemBorderColor = UIColor.white.withAlphaComponent(0.5)
-                selectedView.fixedItemSize = .init(width: 40, height: 40)
-                selectedView.keepsFirstItemLeftAligned = true
+                if pickerConfig.photoList.bottomView.customInputViewUsesCompactSelectedViewStyle {
+                    selectedView.reservedTrailingWidth = 0
+                    selectedView.verticalInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
+                    selectedView.collectionViewLayout.minimumLineSpacing = 8
+                    selectedView.collectionViewLayout.minimumInteritemSpacing = 8
+                    selectedView.isEdgeGradientEnabled = false
+                    selectedView.itemCornerRadius = 4
+                    selectedView.itemBorderWidth = 0.5
+                    selectedView.itemBorderColor = UIColor.white.withAlphaComponent(0.5)
+                    selectedView.fixedItemSize = .init(width: 40, height: 40)
+                    selectedView.keepsFirstItemLeftAligned = true
+                } else if pickerConfig.photoList.bottomView.customInputViewOverlaysSelectedView {
+                    // 兼容底栏保留朋友圈缩略图尺寸，但首张选中后应立即固定在左侧。
+                    selectedView.keepsFirstItemLeftAligned = true
+                }
                 selectedView.allowDrop = true
             } else if type == .preview {
                 selectedView?.isHidden = true
@@ -363,6 +376,11 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
         }
         if promptView != nil {
             bringSubviewToFront(promptView)
+        }
+        if pickerConfig.photoList.bottomView.customInputViewOverlaysSelectedView,
+           let customInputView {
+            // 覆盖模式只让业务按钮处于最上层，未命中的区域由自定义 View 透传给缩略图列表。
+            bringSubviewToFront(customInputView)
         }
         configColor()
     }
@@ -584,12 +602,16 @@ public class PhotoToolBarView: UIView, PhotoToolBar {
                 let stripHeight = selectedView.assetCount > 0 ? selectedViewHeight : 0
                 selectedView.frame = .init(x: 0, y: 0, width: width, height: stripHeight)
                 selectedView.collectionView.collectionViewLayout.invalidateLayout()
-                customInputView?.frame = .init(
-                    x: 0,
-                    y: stripHeight,
-                    width: width,
-                    height: customInputContext.preferredHeight
-                )
+                if pickerConfig.photoList.bottomView.customInputViewOverlaysSelectedView {
+                    customInputView?.frame = bounds
+                } else {
+                    customInputView?.frame = .init(
+                        x: 0,
+                        y: stripHeight,
+                        width: width,
+                        height: customInputContext.preferredHeight
+                    )
+                }
                 return
             }
             if isShowPrompt {

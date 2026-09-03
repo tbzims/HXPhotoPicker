@@ -19,6 +19,7 @@ public final class PhotoPickerCustomInputViewContext {
     public private(set) var inputText: String = ""
     public private(set) var allowsFinishWithoutSelection = false
     public private(set) var usesTransparentBackground = false
+    public private(set) var bottomSafeAreaHeight: CGFloat = 0
 
     var onPreferredHeightChanged: ((CGFloat) -> Void)?
     var onInputPresentationChanged: ((Bool, CGFloat, TimeInterval, UIView.AnimationOptions) -> Void)?
@@ -87,12 +88,25 @@ public final class PhotoPickerCustomInputViewContext {
     func updateBottomGradientExtension(_ height: CGFloat) {
         onBottomGradientExtensionChanged?(max(0, height))
     }
+
+    func updateBottomSafeAreaHeight(_ height: CGFloat) {
+        bottomSafeAreaHeight = max(0, height)
+    }
 }
 
 // MARK: Bottom toolbar configuration class / 底部工具栏配置类
 public struct PickerBottomViewConfiguration {
     /// Builds an optional business-owned input view below the selected-assets strip.
     public var customInputViewProvider: ((PhotoPickerCustomInputViewContext) -> UIView)?
+
+    /// 自定义底栏是否覆盖在已选资源栏上。用于注入与默认朋友圈底栏一致的发送按钮布局。
+    public var customInputViewOverlaysSelectedView = false
+
+    /// 自定义底栏是否使用紧凑的已选资源样式，默认保持现有图文输入栏的展示效果。
+    public var customInputViewUsesCompactSelectedViewStyle = true
+
+    /// 是否允许展示右上角 More。兼容旧消息发送时可关闭入口，但不影响其他选择器场景。
+    public var showsMoreNavigationItem = true
 
     /// Height of the selected-assets strip. The default preserves the built-in toolbar layout.
     public var selectedViewHeight: CGFloat = 70

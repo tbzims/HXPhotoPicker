@@ -265,7 +265,8 @@ public class PhotoPickerViewController: PhotoBaseViewController {
 extension PhotoPickerViewController {
     
     var shouldShowMoreNavigationItem: Bool {
-        config.bottomView.customInputViewProvider != nil || !listView.assets.isEmpty
+        config.bottomView.showsMoreNavigationItem &&
+        (config.bottomView.customInputViewProvider != nil || !listView.assets.isEmpty)
     }
     
     func initView() {
