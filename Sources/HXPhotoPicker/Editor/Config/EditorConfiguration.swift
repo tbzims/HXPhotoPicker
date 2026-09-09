@@ -265,6 +265,10 @@ public extension EditorConfiguration {
         /// 圆形裁剪框
         /// isResetToOriginal = false，可以避免重置时恢复原始宽高
         public var isRoundCrop: Bool = false
+
+        /// 圆形框仅用于头像预览，图片导出保留裁剪区域四角，得到 1:1 方图。
+        /// 仅影响图片输出；默认 false，保留原有圆形图片裁剪行为。
+        public var isRoundCropMaskOnly: Bool = false
         
         /// default fixed ratio
         /// 默认固定比例

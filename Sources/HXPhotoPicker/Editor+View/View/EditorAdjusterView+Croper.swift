@@ -69,10 +69,10 @@ extension EditorAdjusterView {
         return isCropImage
     }
     
-    func cropImage(completion: @escaping (Result<ImageEditedResult, EditorError>) -> Void) {
+    func cropImage(roundCropMaskOnly: Bool = false, completion: @escaping (Result<ImageEditedResult, EditorError>) -> Void) {
         if !Thread.isMainThread {
             DispatchQueue.main.async {
-                self.cropImage(completion: completion)
+                self.cropImage(roundCropMaskOnly: roundCropMaskOnly, completion: completion)
             }
             return
         }
@@ -90,8 +90,9 @@ extension EditorAdjusterView {
             canvasImage: canvasImage,
             mosaicLayer: contentView.mosaicView.count > 0 ? contentView.mosaicView.layer : nil,
             stickersLayer: contentView.stickerView.count > 0 ? contentView.stickerView.layer : nil,
-            isCropImage: isCropImage,
-            isRound: isCropRund,
+            // 遮罩仍是圆形，只在导出时关闭圆形抠图；原图恰好为方图时也允许正常完成。
+            isCropImage: isCropImage || (isCropRund && roundCropMaskOnly),
+            isRound: isCropRund && !roundCropMaskOnly,
             maskImage: maskImage,
             angle: currentAngle,
             mirrorScale: currentMirrorScale,

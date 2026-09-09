@@ -789,10 +789,12 @@ public extension EditorView {
     }
     
     /// 裁剪图片
+    /// roundCropMaskOnly 为 true 时只保留圆形交互遮罩，图片导出不执行圆形抠图。
     func cropImage(
+        roundCropMaskOnly: Bool = false,
         _ completion: @escaping (Result<ImageEditedResult, EditorError>) -> Void
     ) {
-        adjusterView.cropImage(completion: completion)
+        adjusterView.cropImage(roundCropMaskOnly: roundCropMaskOnly, completion: completion)
     }
     
     /// Does the video need to be cropped

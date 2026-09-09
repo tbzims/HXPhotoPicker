@@ -65,7 +65,7 @@ extension EditorViewController {
         if editorView.isCropedImage || imageFilter != nil || filterEditFator.isApply {
             PhotoManager.HUDView.show(with: .textManager.editor.processingHUDTitle.text, delay: 0, animated: true, addedTo: view)
             if editorView.isCropedImage {
-                editorView.cropImage { [weak self] result in
+                editorView.cropImage(roundCropMaskOnly: config.cropSize.isRoundCropMaskOnly) { [weak self] result in
                     guard let self = self else { return }
                     PhotoManager.HUDView.dismiss(delay: 0, animated: true, for: self.view)
                     switch result {

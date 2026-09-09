@@ -34,4 +34,6 @@ public enum PhotoPickerEntranceType: Int {
     case other = 6
     /// 发布动态时增加图片
     case addPostFeed = 7
+    /// 编辑群头像：独立入口，避免与个人头像业务混用；原有类型编号保持不变。
+    case editGroupAvatar = 8
 }
