@@ -601,19 +601,9 @@ extension PhotoPreviewViewController {
         self.setOriginal(TMOriginalBtn.isSelected)
     }
 
-    func updateTMOriginalButtonVisibility(for photoAsset: PhotoAsset?) {
-        guard TMOriginalBtn != nil else {
-            return
-        }
-        guard !isClosingPreview else {
-            TMOriginalBtn.isHidden = true
-            return
-        }
-        guard let photoAsset else {
-            TMOriginalBtn.isHidden = true
-            return
-        }
-        TMOriginalBtn.isHidden = photoAsset.mediaType == .video || photoAsset.isGifAsset
+    func updateTMOriginalButtonVisibility(for _: PhotoAsset?) {
+        // 大图预览统一隐藏高清切换入口，避免翻页或重新布局时再次显示。
+        TMOriginalBtn?.isHidden = true
     }
 
     func updateTMOriginalButtonLayout() {
