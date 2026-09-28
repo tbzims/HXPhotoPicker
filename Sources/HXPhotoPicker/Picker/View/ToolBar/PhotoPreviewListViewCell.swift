@@ -39,6 +39,8 @@ class PhotoPreviewListViewCell: UICollectionViewCell {
             layer.masksToBounds = true
         }
         photoView = PhotoThumbnailView()
+        // 大图预览页底部的小图同样使用白底，保持两种预览样式一致。
+        photoView.backgroundColor = .white
         photoView.imageView.size = size
         contentView.addSubview(photoView)
         

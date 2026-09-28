@@ -77,6 +77,8 @@ open class PhotoPreviewSelectedViewCell: UICollectionViewCell {
         }
         
         photoView = PhotoThumbnailView()
+        // 底部缩略图统一使用白底，透明图片和加载空档也保持白色背景。
+        photoView.backgroundColor = .white
         photoView.layer.masksToBounds = true
         photoView.layer.cornerRadius = 2.5
 //        photoView.imageView.size = size
